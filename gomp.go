@@ -40,12 +40,36 @@ func onGameModeInit() {
 	})
 }
 
+// Player connect events
+
+//export onIncomingConnection
+func onIncomingConnection(plrHandle unsafe.Pointer, ipAddress *C.char, port C.ushort) {
+	event.Dispatch(eventDispatcher, event.TypeIncomingConnection, &incomingConnectionEvent{
+		Player:    newPlayer(plrHandle, getComponent()),
+		IPAddress: C.GoString(ipAddress),
+		Port:      int(port),
+	})
+}
+
 //export onPlayerConnect
 func onPlayerConnect(plrHandle unsafe.Pointer) {
-	plr := newPlayer(plrHandle, getComponent())
-
 	event.Dispatch(eventDispatcher, event.TypePlayerConnect, &playerConnectEvent{
-		Player: plr,
+		Player: newPlayer(plrHandle, getComponent()),
+	})
+}
+
+//export onPlayerDisconnect
+func onPlayerDisconnect(plrHandle unsafe.Pointer, reason int) {
+	event.Dispatch(eventDispatcher, event.TypePlayerDisconnect, &playerDisconnectEvent{
+		Player: newPlayer(plrHandle, getComponent()),
+		Reason: DisconnectReason(reason),
+	})
+}
+
+//export onPlayerClientInit
+func onPlayerClientInit(plrHandle unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, event.TypePlayerClientInit, &playerClientInitEvent{
+		Player: newPlayer(plrHandle, getComponent()),
 	})
 }
 
