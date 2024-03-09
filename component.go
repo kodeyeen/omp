@@ -1,12 +1,13 @@
 package main
 
 // #include <stdlib.h>
-// #include "api.h"
+// #include "component.h"
 import "C"
 import "unsafe"
 
 var comp *component
 
+// provides Go interface for open.mp component
 type component struct {
 	handle unsafe.Pointer
 }
