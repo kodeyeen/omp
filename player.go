@@ -1,8 +1,5 @@
 package main
 
-// #include <stdlib.h>
-// #include "api.h"
-import "C"
 import (
 	"unsafe"
 )
