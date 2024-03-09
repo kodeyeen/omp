@@ -1,19 +1,14 @@
 package main
 
+// #include <stdlib.h>
+// #include "component.h"
+import "C"
 import (
 	"unsafe"
 )
 
 type Player struct {
 	handle unsafe.Pointer
-	comp   *component
-}
-
-func newPlayer(handle unsafe.Pointer, comp *component) *Player {
-	return &Player{
-		handle: handle,
-		comp:   comp,
-	}
 }
 
 func (p *Player) ID() int {
@@ -22,9 +17,14 @@ func (p *Player) ID() int {
 }
 
 func (p *Player) Name() string {
-	return p.comp.player_getName(p.handle)
+	cname := C.player_getName(p.handle)
+
+	return C.GoString(cname)
 }
 
 func (p *Player) SendMessage(color int, msg string) {
-	p.comp.player_sendClientMessage(p.handle, color, msg)
+	cmsg := C.CString(msg)
+	defer C.free(unsafe.Pointer(cmsg))
+
+	C.player_sendClientMessage(p.handle, C.int(color), cmsg)
 }

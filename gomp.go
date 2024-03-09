@@ -1,5 +1,6 @@
 package main
 
+// #include "component.h"
 import "C"
 import (
 	"fmt"
@@ -23,6 +24,8 @@ func init() {
 			0x00FF0000,
 			fmt.Sprintf("Hello %s", plr.Name()),
 		)
+
+		NewVehicle(602, Position{2161.8389, -1143.7473, 24.6501}, 266.9070)
 	})
 }
 
@@ -30,8 +33,12 @@ func main() {}
 
 //export onGameModeInit
 func onGameModeInit() {
-	comp = getComponent()
-	comp.init("./components/Gomp.dll")
+	clibpath := C.CString("./components/Gomp.dll")
+	defer C.free(unsafe.Pointer(clibpath))
+
+	handle := C.loadLib(clibpath)
+
+	C.initFuncs(handle)
 
 	gm := &GameMode{}
 
@@ -45,7 +52,7 @@ func onGameModeInit() {
 //export onIncomingConnection
 func onIncomingConnection(plrHandle unsafe.Pointer, ipAddress *C.char, port C.ushort) {
 	event.Dispatch(eventDispatcher, event.TypeIncomingConnection, &incomingConnectionEvent{
-		Player:    newPlayer(plrHandle, getComponent()),
+		Player:    &Player{plrHandle},
 		IPAddress: C.GoString(ipAddress),
 		Port:      int(port),
 	})
@@ -54,14 +61,14 @@ func onIncomingConnection(plrHandle unsafe.Pointer, ipAddress *C.char, port C.us
 //export onPlayerConnect
 func onPlayerConnect(plrHandle unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, event.TypePlayerConnect, &playerConnectEvent{
-		Player: newPlayer(plrHandle, getComponent()),
+		Player: &Player{plrHandle},
 	})
 }
 
 //export onPlayerDisconnect
 func onPlayerDisconnect(plrHandle unsafe.Pointer, reason int) {
 	event.Dispatch(eventDispatcher, event.TypePlayerDisconnect, &playerDisconnectEvent{
-		Player: newPlayer(plrHandle, getComponent()),
+		Player: &Player{plrHandle},
 		Reason: DisconnectReason(reason),
 	})
 }
@@ -69,7 +76,7 @@ func onPlayerDisconnect(plrHandle unsafe.Pointer, reason int) {
 //export onPlayerClientInit
 func onPlayerClientInit(plrHandle unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, event.TypePlayerClientInit, &playerClientInitEvent{
-		Player: newPlayer(plrHandle, getComponent()),
+		Player: &Player{plrHandle},
 	})
 }
 
