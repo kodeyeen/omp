@@ -245,7 +245,7 @@ func onPlayerClickPlayer(player unsafe.Pointer, clicked unsafe.Pointer, source C
 	})
 }
 
-// Player client check event
+// Client check event
 
 //export onClientCheckResponse
 func onClientCheckResponse(player unsafe.Pointer, actionType, address, results C.int) {
@@ -267,7 +267,7 @@ func onPlayerUpdate(player unsafe.Pointer, now C.int) {
 	})
 }
 
-// Player dialog events
+// Player dialog event
 
 //export onDialogResponse
 func onDialogResponse(player unsafe.Pointer, dialogID C.int, response C.int, listItem C.int, inputText *C.char) {
