@@ -48,4 +48,35 @@ const (
 	TypePlayerGiveDamageActor Type = "playerGiveDamageActor"
 	TypeActorStreamIn         Type = "actorStreamIn"
 	TypeActorStreamOut        Type = "actorStreamOut"
+
+	// Vehicle events
+	TypeVehicleStreamIn           Type = "vehicleStreamIn"
+	TypeVehicleStreamOut          Type = "vehicleStreamOut"
+	TypeVehicleDeath              Type = "vehicleDeath"
+	TypePlayerEnterVehicle        Type = "playerEnterVehicle"
+	TypePlayerExitVehicle         Type = "playerExitVehicle"
+	TypeVehicleDamageStatusUpdate Type = "vehicleDamageStatusUpdate"
+	TypeVehiclePaintJob           Type = "vehiclePaintJob"
+	TypeVehicleMod                Type = "vehicleMod"
+	TypeVehicleRespray            Type = "vehicleRespray"
+	TypeEnterExitModShop          Type = "enterExitModShop"
+	TypeVehicleSpawn              Type = "vehicleSpawn"
+	TypeUnoccupiedVehicleUpdate   Type = "unoccupiedVehicleUpdate"
+	TypeTrailerUpdate             Type = "trailerUpdate"
+	TypeVehicleSirenStateChange   Type = "vehicleSirenStateChange"
+
+	// Object events
+	TypeObjectMoved                Type = "objectMoved"
+	TypePlayerObjectMoved          Type = "playerObjectMoved"
+	TypeObjectSelected             Type = "objectSelected"
+	TypePlayerObjectSelected       Type = "playerObjectSelected"
+	TypeObjectEdited               Type = "objectEdited"
+	TypePlayerObjectEdited         Type = "playerObjectEdited"
+	TypePlayerAttachedObjectEdited Type = "playerAttachedObjectEdited"
+
+	// Checkpoint events
+	TypePlayerEnterCheckpoint     Type = "playerEnterCheckpoint"
+	TypePlayerLeaveCheckpoint     Type = "playerLeaveCheckpoint"
+	TypePlayerEnterRaceCheckpoint Type = "playerEnterRaceCheckpoint"
+	TypePlayerLeaveRaceCheckpoint Type = "playerLeaveRaceCheckpoint"
 )

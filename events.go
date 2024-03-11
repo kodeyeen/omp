@@ -6,6 +6,7 @@ type PlayerState int
 type BodyPart int
 type PlayerClickSource int
 type PlayerBulletHitType int
+type ObjectEditResponse int
 
 const (
 	DisconnectReasonTimeout DisconnectReason = iota
@@ -53,6 +54,12 @@ const (
 	PlayerBulletHitTypeVehicle
 	PlayerBulletHitTypeObject
 	PlayerBulletHitTypePlayerObject
+)
+
+const (
+	ObjectEditResponseCancel = iota
+	ObjectEditResponseFinal
+	ObjectEditResponseUpdate
 )
 
 type GameModeInitEvent struct {
@@ -205,4 +212,147 @@ type ActorStreamInEvent struct {
 type ActorStreamOutEvent struct {
 	Actor     *Player
 	ForPlayer *Player
+}
+
+type VehicleStreamInEvent struct {
+	Vehicle   *Vehicle
+	ForPlayer *Player
+}
+
+type VehicleStreamOutEvent struct {
+	Vehicle   *Vehicle
+	ForPlayer *Player
+}
+
+type VehicleDeathEvent struct {
+	Vehicle *Vehicle
+	Killer  *Player
+}
+
+type PlayerEnterVehicleEvent struct {
+	Player      *Player
+	Vehicle     *Vehicle
+	IsPassenger bool
+}
+
+type PlayerExitVehicleEvent struct {
+	Player  *Player
+	Vehicle *Vehicle
+}
+
+type VehicleDamageStatusUpdateEvent struct {
+	Player  *Player
+	Vehicle *Vehicle
+}
+
+type VehiclePaintJobEvent struct {
+	Player   *Player
+	Vehicle  *Vehicle
+	PaintJob int
+}
+
+type VehicleModEvent struct {
+	Player    *Player
+	Vehicle   *Vehicle
+	Component int
+}
+
+type VehicleResprayEvent struct {
+	Player  *Player
+	Vehicle *Vehicle
+	Color   VehicleColor
+}
+
+type EnterExitModShopEvent struct {
+	Player     *Player
+	EnterExit  bool
+	InteriorID int
+}
+
+type VehicleSpawnEvent struct {
+	Vehicle *Vehicle
+}
+
+type UnoccupiedVehicleUpdateEvent struct {
+	Vehicle  *Vehicle
+	Seat     int
+	Position Vector3
+	Velocity Vector3
+}
+
+type TrailerUpdateEvent struct {
+	Player  *Player
+	Vehicle *Vehicle
+}
+
+type VehicleSirenStateChangeEvent struct {
+	Player     *Player
+	Vehicle    *Vehicle
+	SirenState int
+}
+
+type ObjectMovedEvent struct {
+	Object *Object
+}
+
+type PlayerObjectMovedEvent struct {
+	Player *Player
+	Object *Object
+}
+
+type ObjectSelectedEvent struct {
+	Player   *Player
+	Object   *Object
+	Model    int
+	Position Vector3
+}
+
+type PlayerObjectSelectedEvent struct {
+	Player   *Player
+	Object   *Object
+	Model    int
+	Position Vector3
+}
+
+type ObjectEditedEvent struct {
+	Player   *Player
+	Object   *Object
+	Response ObjectEditResponse
+	Offset   Vector3
+	Rotation Vector3
+}
+
+type PlayerObjectEditedEvent struct {
+	Player   *Player
+	Object   *Object
+	Response ObjectEditResponse
+	Offset   Vector3
+	Rotation Vector3
+}
+
+type PlayerAttachedObjectEditedEvent struct {
+	Player   *Player
+	Index    int
+	Saved    int
+	Model    int
+	Bone     int
+	Offset   Vector3
+	Rotation Vector3
+	Scale    Vector3
+}
+
+type PlayerEnterCheckpointEvent struct {
+	Player *Player
+}
+
+type PlayerLeaveCheckpointEvent struct {
+	Player *Player
+}
+
+type PlayerEnterRaceCheckpointEvent struct {
+	Player *Player
+}
+
+type PlayerLeaveRaceCheckpointEvent struct {
+	Player *Player
 }
