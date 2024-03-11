@@ -275,6 +275,7 @@ type VehicleSpawnEvent struct {
 
 type UnoccupiedVehicleUpdateEvent struct {
 	Vehicle  *Vehicle
+	Player   *Player
 	Seat     int
 	Position Vector3
 	Velocity Vector3

@@ -407,6 +407,7 @@ func onVehicleSpawn(vehicle unsafe.Pointer) {
 func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, seat C.uchar, posX, posY, posZ, velX, velY, velZ C.float) {
 	event.Dispatch(eventDispatcher, event.TypeUnoccupiedVehicleUpdate, &UnoccupiedVehicleUpdateEvent{
 		Vehicle:  &Vehicle{vehicle},
+		Player:   &Player{player},
 		Seat:     int(seat),
 		Position: Vector3{float32(posX), float32(posY), float32(posZ)},
 		Velocity: Vector3{float32(velX), float32(velY), float32(velZ)},
