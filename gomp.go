@@ -436,7 +436,7 @@ func onVehicleSirenStateChange(player, vehicle unsafe.Pointer, sirenState C.ucha
 //export onObjectMoved
 func onObjectMoved(object unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeObjectMoved, &ObjectMovedEvent{
-		Object: &Object{object},
+		Object: &Object{object, nil},
 	})
 }
 
@@ -444,7 +444,7 @@ func onObjectMoved(object unsafe.Pointer) {
 func onPlayerObjectMoved(player, object unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerObjectMoved, &PlayerObjectMovedEvent{
 		Player: &Player{player},
-		Object: &Object{object},
+		Object: &Object{object, player},
 	})
 }
 
@@ -452,7 +452,7 @@ func onPlayerObjectMoved(player, object unsafe.Pointer) {
 func onObjectSelected(player, object unsafe.Pointer, model C.int, posX, posY, posZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypeObjectSelected, &ObjectSelectedEvent{
 		Player:   &Player{player},
-		Object:   &Object{object},
+		Object:   &Object{object, player},
 		Model:    int(model),
 		Position: Vector3{float32(posX), float32(posY), float32(posZ)},
 	})
@@ -462,7 +462,7 @@ func onObjectSelected(player, object unsafe.Pointer, model C.int, posX, posY, po
 func onPlayerObjectSelected(player, object unsafe.Pointer, model C.int, posX, posY, posZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypePlayerObjectSelected, &PlayerObjectSelectedEvent{
 		Player:   &Player{player},
-		Object:   &Object{object},
+		Object:   &Object{object, player},
 		Model:    int(model),
 		Position: Vector3{float32(posX), float32(posY), float32(posZ)},
 	})
@@ -472,7 +472,7 @@ func onPlayerObjectSelected(player, object unsafe.Pointer, model C.int, posX, po
 func onObjectEdited(player, object unsafe.Pointer, response C.int, offsetX, offsetY, offsetZ, rotX, rotY, rotZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypeObjectEdited, &ObjectEditedEvent{
 		Player:   &Player{player},
-		Object:   &Object{object},
+		Object:   &Object{object, player},
 		Response: ObjectEditResponse(response),
 		Offset:   Vector3{float32(offsetX), float32(offsetY), float32(offsetZ)},
 		Rotation: Vector3{float32(rotX), float32(rotY), float32(rotZ)},
@@ -483,7 +483,7 @@ func onObjectEdited(player, object unsafe.Pointer, response C.int, offsetX, offs
 func onPlayerObjectEdited(player, object unsafe.Pointer, response C.int, offsetX, offsetY, offsetZ, rotX, rotY, rotZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypePlayerObjectEdited, &PlayerObjectEditedEvent{
 		Player:   &Player{player},
-		Object:   &Object{object},
+		Object:   &Object{object, player},
 		Response: ObjectEditResponse(response),
 		Offset:   Vector3{float32(offsetX), float32(offsetY), float32(offsetZ)},
 		Rotation: Vector3{float32(rotX), float32(rotY), float32(rotZ)},
