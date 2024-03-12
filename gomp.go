@@ -534,4 +534,132 @@ func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) {
 	})
 }
 
+//export onPlayerClickTextDraw
+func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerClickTextDraw, &PlayerClickTextDrawEvent{
+		Player:   &Player{player},
+		TextDraw: &TextDraw{textdraw, nil},
+	})
+}
+
+//export onPlayerClickPlayerTextDraw
+func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerClickPlayerTextDraw, &PlayerClickPlayerTextDrawEvent{
+		Player:   &Player{player},
+		TextDraw: &TextDraw{textdraw, nil},
+	})
+}
+
+//export onPlayerCancelTextDrawSelection
+func onPlayerCancelTextDrawSelection(player unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerCancelTextDrawSelection, &PlayerCancelTextDrawSelectionEvent{
+		Player: &Player{player},
+	})
+}
+
+//export onPlayerCancelPlayerTextDrawSelection
+func onPlayerCancelPlayerTextDrawSelection(player unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerCancelPlayerTextDrawSelection, &PlayerCancelPlayerTextDrawSelectionEvent{
+		Player: &Player{player},
+	})
+}
+
+// Player model events
+
+//export onPlayerFinishedDownloading
+func onPlayerFinishedDownloading(player unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerFinishedDownloading, &PlayerFinishedDownloadingEvent{
+		Player: &Player{player},
+	})
+}
+
+//export onPlayerRequestDownload
+func onPlayerRequestDownload(player unsafe.Pointer, _type C.int, checksum C.uint) {
+	event.Dispatch(eventDispatcher, EventTypePlayerRequestDownload, &PlayerRequestDownloadEvent{
+		Player:   &Player{player},
+		Type:     int(_type),
+		Checksum: uint(checksum),
+	})
+}
+
+// Console events. TODO
+
+//export onConsoleText
+func onConsoleText(command *C.char, parameters *C.char) {
+	event.Dispatch(eventDispatcher, EventTypeConsoleText, &ConsoleTextEvent{
+		Command:    C.GoString(command),
+		Parameters: C.GoString(parameters),
+	})
+}
+
+//export onRconLoginAttempt
+func onRconLoginAttempt(player unsafe.Pointer, password *C.char, success C.int) {
+	event.Dispatch(eventDispatcher, EventTypeRconLoginAttempt, &RconLoginAttemptEvent{
+		Player:   &Player{player},
+		Password: C.GoString(password),
+		Success:  int(success) != 0,
+	})
+}
+
+// Pickup events
+
+//export onPlayerPickUpPickup
+func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerPickUpPickup, &PlayerPickUpPickupEvent{
+		Player: &Player{player},
+		Pickup: &Pickup{pickup, nil},
+	})
+}
+
+// GangZone events
+
+//export onPlayerEnterGangZone
+func onPlayerEnterGangZone(player, gangZone unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerEnterGangZone, &PlayerEnterGangZoneEvent{
+		Player:   &Player{player},
+		GangZone: &GangZone{gangZone},
+	})
+}
+
+//export onPlayerLeaveGangZone
+func onPlayerLeaveGangZone(player, gangZone unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerLeaveGangZone, &PlayerLeaveGangZoneEvent{
+		Player:   &Player{player},
+		GangZone: &GangZone{gangZone},
+	})
+}
+
+//export onPlayerClickGangZone
+func onPlayerClickGangZone(player, gangZone unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerClickGangZone, &PlayerClickGangZoneEvent{
+		Player:   &Player{player},
+		GangZone: &GangZone{gangZone},
+	})
+}
+
+// Menu events
+
+//export onPlayerSelectedMenuRow
+func onPlayerSelectedMenuRow(player unsafe.Pointer, menuRow C.uchar) {
+	event.Dispatch(eventDispatcher, EventTypePlayerSelectedMenuRow, &PlayerSelectedMenuRowEvent{
+		Player:  &Player{player},
+		MenuRow: uint8(menuRow),
+	})
+}
+
+//export onPlayerExitedMenu
+func onPlayerExitedMenu(player unsafe.Pointer) {
+	event.Dispatch(eventDispatcher, EventTypePlayerExitedMenu, &PlayerExitedMenuEvent{
+		Player: &Player{player},
+	})
+}
+
+//export onPlayerRequestClass
+func onPlayerRequestClass(player unsafe.Pointer, classID C.uint) {
+	event.Dispatch(eventDispatcher, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
+		Player:  &Player{player},
+		ClassID: uint(classID),
+	})
+}
+
 // go build -o test.dll -buildmode=c-shared

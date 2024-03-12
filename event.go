@@ -141,6 +141,35 @@ const (
 	EventTypePlayerLeaveCheckpoint     event.Type = "playerLeaveCheckpoint"
 	EventTypePlayerEnterRaceCheckpoint event.Type = "playerEnterRaceCheckpoint"
 	EventTypePlayerLeaveRaceCheckpoint event.Type = "playerLeaveRaceCheckpoint"
+
+	// TextDraw events
+	EventTypePlayerClickTextDraw                 event.Type = "playerClickTextDraw"
+	EventTypePlayerClickPlayerTextDraw           event.Type = "playerClickPlayerTextDraw"
+	EventTypePlayerCancelTextDrawSelection       event.Type = "playerCancelTextDrawSelection"
+	EventTypePlayerCancelPlayerTextDrawSelection event.Type = "playerCancelPlayerTextDrawSelection"
+
+	// Player model events
+	EventTypePlayerFinishedDownloading event.Type = "playerFinishedDownloading"
+	EventTypePlayerRequestDownload     event.Type = "playerRequestDownload"
+
+	// Console events
+	EventTypeConsoleText      event.Type = "consoleText"
+	EventTypeRconLoginAttempt event.Type = "rconLoginAttempt"
+
+	// Pickup events
+	EventTypePlayerPickUpPickup event.Type = "playerPickUpPickup"
+
+	// GangZone events
+	EventTypePlayerEnterGangZone event.Type = "playerEnterGangZone"
+	EventTypePlayerLeaveGangZone event.Type = "playerLeaveGangZone"
+	EventTypePlayerClickGangZone event.Type = "playerClickGangZone"
+
+	// Menu events
+	EventTypePlayerSelectedMenuRow event.Type = "playerSelectedMenuRow"
+	EventTypePlayerExitedMenu      event.Type = "playerExitedMenu"
+
+	// Class events
+	EventTypePlayerRequestClass event.Type = "playerRequestClass"
 )
 
 type GameModeInitEvent struct {
@@ -437,4 +466,77 @@ type PlayerEnterRaceCheckpointEvent struct {
 
 type PlayerLeaveRaceCheckpointEvent struct {
 	Player *Player
+}
+
+type PlayerClickTextDrawEvent struct {
+	Player   *Player
+	TextDraw *TextDraw
+}
+
+type PlayerClickPlayerTextDrawEvent struct {
+	Player   *Player
+	TextDraw *TextDraw
+}
+
+type PlayerCancelTextDrawSelectionEvent struct {
+	Player *Player
+}
+
+type PlayerCancelPlayerTextDrawSelectionEvent struct {
+	Player *Player
+}
+
+type PlayerFinishedDownloadingEvent struct {
+	Player *Player
+}
+
+type PlayerRequestDownloadEvent struct {
+	Player   *Player
+	Type     int
+	Checksum uint
+}
+
+type ConsoleTextEvent struct {
+	Command    string
+	Parameters string
+}
+
+type RconLoginAttemptEvent struct {
+	Player   *Player
+	Password string
+	Success  bool
+}
+
+type PlayerPickUpPickupEvent struct {
+	Player *Player
+	Pickup *Pickup
+}
+
+type PlayerEnterGangZoneEvent struct {
+	Player   *Player
+	GangZone *GangZone
+}
+
+type PlayerLeaveGangZoneEvent struct {
+	Player   *Player
+	GangZone *GangZone
+}
+
+type PlayerClickGangZoneEvent struct {
+	Player   *Player
+	GangZone *GangZone
+}
+
+type PlayerSelectedMenuRowEvent struct {
+	Player  *Player
+	MenuRow uint8
+}
+
+type PlayerExitedMenuEvent struct {
+	Player *Player
+}
+
+type PlayerRequestClassEvent struct {
+	Player  *Player
+	ClassID uint
 }
