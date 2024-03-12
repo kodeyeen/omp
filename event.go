@@ -1,7 +1,9 @@
 package main
 
+import "github.com/kodeyeen/gomp/event"
+
 type DisconnectReason int
-type DialogResponse int
+type DialogButton int
 type PlayerState int
 type BodyPart int
 type PlayerClickSource int
@@ -17,7 +19,7 @@ const (
 )
 
 const (
-	DialogResponseRight DialogResponse = iota
+	DialogResponseRight DialogButton = iota
 	DialogResponseLeft
 )
 
@@ -60,6 +62,85 @@ const (
 	ObjectEditResponseCancel = iota
 	ObjectEditResponseFinal
 	ObjectEditResponseUpdate
+)
+
+const (
+	EventTypeGameModeInit event.Type = "gameModeInit"
+
+	// Player connect events
+	EventTypeIncomingConnection event.Type = "incomingConnection"
+	EventTypePlayerConnect      event.Type = "playerConnect"
+	EventTypePlayerDisconnect   event.Type = "playerDisconnect"
+	EventTypePlayerClientInit   event.Type = "playerClientInit"
+
+	// Player stream events
+	EventTypePlayerStreamIn  event.Type = "playerStreamIn"
+	EventTypePlayerStreamOut event.Type = "playerStreamOut"
+
+	// Player text events
+	EventTypePlayerText        event.Type = "playerText"
+	EventTypePlayerCommandText event.Type = "playerCommandText"
+
+	// Player change events
+	EventTypePlayerScoreChange    event.Type = "playerScoreChange"
+	EventTypePlayerNameChange     event.Type = "playerNameChange"
+	EventTypePlayerInteriorChange event.Type = "playerInteriorChange"
+	EventTypePlayerStateChange    event.Type = "playerStateChange"
+	EventTypePlayerKeyStateChange event.Type = "playerKeyStateChange"
+
+	// Player death and damage events
+	EventTypePlayerDeath      event.Type = "playerDeath"
+	EventTypePlayerTakeDamage event.Type = "playerTakeDamage"
+	EventTypePlayerGiveDamage event.Type = "playerGiveDamage"
+
+	// Player click events
+	EventTypePlayerClickMap    event.Type = "playerClickMap"
+	EventTypePlayerClickPlayer event.Type = "playerClickPlayer"
+
+	// Client check event
+	EventTypeClientCheckResponse event.Type = "clientCheckResponse"
+
+	// Player updat event
+	EventTypePlayerUpdate event.Type = "playerUpdate"
+
+	// Player dialog event
+	EventTypeDialogResponse event.Type = "dialogResponse"
+
+	// Actor events
+	EventTypePlayerGiveDamageActor event.Type = "playerGiveDamageActor"
+	EventTypeActorStreamIn         event.Type = "actorStreamIn"
+	EventTypeActorStreamOut        event.Type = "actorStreamOut"
+
+	// Vehicle events
+	EventTypeVehicleStreamIn           event.Type = "vehicleStreamIn"
+	EventTypeVehicleStreamOut          event.Type = "vehicleStreamOut"
+	EventTypeVehicleDeath              event.Type = "vehicleDeath"
+	EventTypePlayerEnterVehicle        event.Type = "playerEnterVehicle"
+	EventTypePlayerExitVehicle         event.Type = "playerExitVehicle"
+	EventTypeVehicleDamageStatusUpdate event.Type = "vehicleDamageStatusUpdate"
+	EventTypeVehiclePaintJob           event.Type = "vehiclePaintJob"
+	EventTypeVehicleMod                event.Type = "vehicleMod"
+	EventTypeVehicleRespray            event.Type = "vehicleRespray"
+	EventTypeEnterExitModShop          event.Type = "enterExitModShop"
+	EventTypeVehicleSpawn              event.Type = "vehicleSpawn"
+	EventTypeUnoccupiedVehicleUpdate   event.Type = "unoccupiedVehicleUpdate"
+	EventTypeTrailerUpdate             event.Type = "trailerUpdate"
+	EventTypeVehicleSirenStateChange   event.Type = "vehicleSirenStateChange"
+
+	// Object events
+	EventTypeObjectMoved                event.Type = "objectMoved"
+	EventTypePlayerObjectMoved          event.Type = "playerObjectMoved"
+	EventTypeObjectSelected             event.Type = "objectSelected"
+	EventTypePlayerObjectSelected       event.Type = "playerObjectSelected"
+	EventTypeObjectEdited               event.Type = "objectEdited"
+	EventTypePlayerObjectEdited         event.Type = "playerObjectEdited"
+	EventTypePlayerAttachedObjectEdited event.Type = "playerAttachedObjectEdited"
+
+	// Checkpoint events
+	EventTypePlayerEnterCheckpoint     event.Type = "playerEnterCheckpoint"
+	EventTypePlayerLeaveCheckpoint     event.Type = "playerLeaveCheckpoint"
+	EventTypePlayerEnterRaceCheckpoint event.Type = "playerEnterRaceCheckpoint"
+	EventTypePlayerLeaveRaceCheckpoint event.Type = "playerLeaveRaceCheckpoint"
 )
 
 type GameModeInitEvent struct {
@@ -191,7 +272,7 @@ type PlayerUpdateEvent struct {
 type DialogResponseEvent struct {
 	Player    *Player
 	DialogID  int
-	Response  DialogResponse
+	Response  DialogButton
 	ListItem  int
 	InputText string
 }
