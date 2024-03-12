@@ -3,7 +3,7 @@ package main
 import "github.com/kodeyeen/gomp/event"
 
 type DisconnectReason int
-type DialogButton int
+type DialogResponse int
 type PlayerState int
 type BodyPart int
 type PlayerClickSource int
@@ -19,7 +19,7 @@ const (
 )
 
 const (
-	DialogResponseRight DialogButton = iota
+	DialogResponseRight DialogResponse = iota
 	DialogResponseLeft
 )
 
@@ -272,7 +272,7 @@ type PlayerUpdateEvent struct {
 type DialogResponseEvent struct {
 	Player    *Player
 	DialogID  int
-	Response  DialogButton
+	Response  DialogResponse
 	ListItem  int
 	InputText string
 }
