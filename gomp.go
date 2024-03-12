@@ -167,7 +167,7 @@ func onPlayerNameChange(player unsafe.Pointer, oldName *C.char) {
 }
 
 //export onPlayerInteriorChange
-func onPlayerInteriorChange(player unsafe.Pointer, newInterior C.uint, oldInterior C.uint) {
+func onPlayerInteriorChange(player unsafe.Pointer, newInterior, oldInterior C.uint) {
 	event.Dispatch(eventDispatcher, EventTypePlayerInteriorChange, &PlayerInteriorChangeEvent{
 		Player:      &Player{player},
 		NewInterior: uint(newInterior),
@@ -176,7 +176,7 @@ func onPlayerInteriorChange(player unsafe.Pointer, newInterior C.uint, oldInteri
 }
 
 //export onPlayerStateChange
-func onPlayerStateChange(player unsafe.Pointer, newState C.int, oldState C.int) {
+func onPlayerStateChange(player unsafe.Pointer, newState, oldState C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerStateChange, &PlayerStateChangeEvent{
 		Player:   &Player{player},
 		NewState: PlayerState(newState),
@@ -185,7 +185,7 @@ func onPlayerStateChange(player unsafe.Pointer, newState C.int, oldState C.int) 
 }
 
 //export onPlayerKeyStateChange
-func onPlayerKeyStateChange(player unsafe.Pointer, newKeys C.uint, oldKeys C.uint) {
+func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys C.uint) {
 	event.Dispatch(eventDispatcher, EventTypePlayerKeyStateChange, &PlayerKeyStateChangeEvent{
 		Player:  &Player{player},
 		NewKeys: uint(newKeys),
@@ -270,11 +270,11 @@ func onPlayerUpdate(player unsafe.Pointer, now C.int) {
 // Player dialog event
 
 //export onDialogResponse
-func onDialogResponse(player unsafe.Pointer, dialogID C.int, response C.int, listItem C.int, inputText *C.char) {
+func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem C.int, inputText *C.char) {
 	event.Dispatch(eventDispatcher, EventTypeDialogResponse, &DialogResponseEvent{
 		Player:    &Player{player},
 		DialogID:  int(dialogID),
-		Response:  DialogButton(response),
+		Response:  DialogResponse(response),
 		ListItem:  int(listItem),
 		InputText: C.GoString(inputText),
 	})
