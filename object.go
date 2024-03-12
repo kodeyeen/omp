@@ -11,6 +11,6 @@ func NewObject() *Object {
 	return &Object{}
 }
 
-func NewPlayerObject() *Object {
+func NewPlayerObject(player *Player) *Object {
 	return &Object{}
 }
