@@ -6,76 +6,76 @@ import (
 )
 
 type dispatcher struct {
-	handlers map[Type][]handler
+	listeners map[Type][]listener
 }
 
 func NewDispatcher() *dispatcher {
 	return &dispatcher{
-		handlers: make(map[Type][]handler),
+		listeners: make(map[Type][]listener),
 	}
 }
 
 func Dispatch[T any](d *dispatcher, evtType Type, evt T) {
-	hlrs, ok := d.handlers[evtType]
+	lstrs, ok := d.listeners[evtType]
 	if !ok {
 		return
 	}
 
-	for _, hlr := range hlrs {
-		fn, ok := hlr.handle.(func(T))
+	for _, lstr := range lstrs {
+		handler, ok := lstr.handler.(func(T))
 		if !ok {
 			continue
 		}
 
-		fn(evt)
+		handler(evt)
 
-		if hlr.once {
-			d.Off(evtType, hlr.handle)
+		if lstr.once {
+			d.Off(evtType, lstr.handler)
 		}
 	}
 }
 
-func (d *dispatcher) On(evtType Type, callback any) {
-	_, ok := d.handlers[evtType]
+func (d *dispatcher) On(evtType Type, handler any) {
+	_, ok := d.listeners[evtType]
 	if !ok {
-		d.handlers[evtType] = make([]handler, 0)
+		d.listeners[evtType] = make([]listener, 0)
 	}
 
-	hlrs := d.handlers[evtType]
-	hlrs = append(hlrs, handler{
-		handle: callback,
-		once:   false,
+	lstrs := d.listeners[evtType]
+	lstrs = append(lstrs, listener{
+		handler: handler,
+		once:    false,
 	})
 
-	d.handlers[evtType] = hlrs
+	d.listeners[evtType] = lstrs
 }
 
-func (d *dispatcher) Once(evtType Type, callback any) {
-	_, ok := d.handlers[evtType]
+func (d *dispatcher) Once(evtType Type, handler any) {
+	_, ok := d.listeners[evtType]
 	if !ok {
-		d.handlers[evtType] = make([]handler, 0)
+		d.listeners[evtType] = make([]listener, 0)
 	}
 
-	hlrs := d.handlers[evtType]
-	hlrs = append(hlrs, handler{
-		handle: callback,
-		once:   true,
+	lstrs := d.listeners[evtType]
+	lstrs = append(lstrs, listener{
+		handler: handler,
+		once:    true,
 	})
 
-	d.handlers[evtType] = hlrs
+	d.listeners[evtType] = lstrs
 }
 
-func (d *dispatcher) Off(evtType Type, callback any) {
-	hlrs, ok := d.handlers[evtType]
+func (d *dispatcher) Off(evtType Type, handler any) {
+	lstrs, ok := d.listeners[evtType]
 	if !ok {
 		return
 	}
 
-	idx := slices.IndexFunc(hlrs, func(hlr handler) bool {
-		return reflect.ValueOf(hlr.handle).Pointer() == reflect.ValueOf(callback).Pointer()
+	idx := slices.IndexFunc(lstrs, func(lstr listener) bool {
+		return reflect.ValueOf(lstr.handler).Pointer() == reflect.ValueOf(handler).Pointer()
 	})
 
-	hlrs = append(hlrs[:idx], hlrs[idx+1:]...)
+	lstrs = append(lstrs[:idx], lstrs[idx+1:]...)
 
-	d.handlers[evtType] = hlrs
+	d.listeners[evtType] = lstrs
 }
