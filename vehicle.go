@@ -56,7 +56,7 @@ type Vehicle struct {
 
 func NewVehicle(modelID int, pos Position, angle float32) (*Vehicle, error) {
 	// TODO: error handling (invalid modelID and trains)
-	handle := C.vehicle_create(0, C.int(modelID), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), C.int(0), C.int(0), C.int(-1), 0)
+	handle := C.vehicle_create(0, C.int(modelID), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), C.int(0), C.int(0), C.int(-1), C.int(0))
 
 	veh := &Vehicle{
 		handle: handle,
