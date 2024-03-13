@@ -3,34 +3,25 @@ package main
 // #include "component.h"
 import "C"
 import (
-	"fmt"
-	"log"
 	"unsafe"
 
 	"github.com/kodeyeen/gomp/event"
 )
 
+// go build -o test.dll -buildmode=c-shared
+
 var eventDispatcher = event.NewDispatcher()
 
-func init() {
-	eventDispatcher.On(EventTypeGameModeInit, func(evt *GameModeInitEvent) {
-		log.Println("GAME MODE INITIALIZED")
-	})
-
-	eventDispatcher.On(EventTypePlayerConnect, func(evt *PlayerConnectEvent) {
-		plr := evt.Player
-
-		plr.SendMessage(
-			0x00FF0000,
-			fmt.Sprintf("Hello %s", plr.Name()),
-		)
-
-		NewVehicle(602, Position{2161.8389, -1143.7473, 24.6501}, 266.9070)
-	})
+func On(evtType event.Type, handler any) {
+	eventDispatcher.On(evtType, handler)
 }
 
-func On(evtType event.Type, callback any) {
-	eventDispatcher.On(evtType, callback)
+func Once(evtType event.Type, handler any) {
+	eventDispatcher.Once(evtType, handler)
+}
+
+func Off(evtType event.Type, handler any) {
+	eventDispatcher.Off(evtType, handler)
 }
 
 func main() {}
@@ -661,5 +652,3 @@ func onPlayerRequestClass(player unsafe.Pointer, classID C.uint) {
 		ClassID: uint(classID),
 	})
 }
-
-// go build -o test.dll -buildmode=c-shared
