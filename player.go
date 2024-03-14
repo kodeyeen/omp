@@ -1,4 +1,4 @@
-package main
+package gomp
 
 // #include <stdlib.h>
 // #include "component.h"

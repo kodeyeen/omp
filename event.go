@@ -1,4 +1,4 @@
-package main
+package gomp
 
 import "github.com/kodeyeen/gomp/event"
 

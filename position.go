@@ -1,4 +1,4 @@
-package main
+package gomp
 
 type Vector3 struct {
 	X float32
