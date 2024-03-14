@@ -33,3 +33,55 @@ func NewPlayerPickup(player *Player, modelID int, _type PickupType, position Vec
 
 	return pick
 }
+
+func DestroyPickup(pickup *Pickup) {
+
+}
+
+func (p *Pickup) ModelID() int {
+	return 0
+}
+
+func (p *Pickup) SetModelID(modelID int) {
+
+}
+
+func (p *Pickup) Position() *Vector3 {
+	return nil
+}
+
+func (p *Pickup) SetPosition(position *Vector3) {
+
+}
+
+func (p *Pickup) Type() int {
+	return 0
+}
+
+func (p *Pickup) SetType(_type int) {
+
+}
+
+func (p *Pickup) VirtualWorld() int {
+	return 0
+}
+
+func (p *Pickup) SetVirtualWorld(virtualWorld int) {
+
+}
+
+func (p *Pickup) IsStreamedIn(player *Player) bool {
+	return false
+}
+
+func (p *Pickup) HideForPlayer(player *Player) {
+
+}
+
+func (p *Pickup) ShowForPlayer(player *Player) {
+
+}
+
+func (p *Pickup) IsHiddenForPlayer(player *Player) bool {
+	return false
+}
