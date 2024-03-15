@@ -24,8 +24,6 @@ func Off(evtType event.Type, handler any) {
 	eventDispatcher.Off(evtType, handler)
 }
 
-func main() {}
-
 //export onGameModeInit
 func onGameModeInit() {
 	clibpath := C.CString("./components/Gomp.dll")
