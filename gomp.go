@@ -1,5 +1,6 @@
 package gomp
 
+// #include <stdlib.h>
 // #include "component.h"
 import "C"
 import (
@@ -29,7 +30,7 @@ func onGameModeInit() {
 	clibpath := C.CString("./components/Gomp.dll")
 	defer C.free(unsafe.Pointer(clibpath))
 
-	handle := C.loadLib(clibpath)
+	handle := C.openLib(clibpath)
 
 	C.initFuncs(handle)
 
