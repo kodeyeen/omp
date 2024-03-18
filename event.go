@@ -222,7 +222,7 @@ type PlayerTextEvent struct {
 
 type PlayerCommandTextEvent struct {
 	Player  *Player
-	Message string
+	Command string
 }
 
 type PlayerScoreChangeEvent struct {
