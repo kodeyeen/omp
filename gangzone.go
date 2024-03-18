@@ -20,25 +20,25 @@ func NewPlayerGangZone() *GangZone {
 }
 
 func DestroyGangZone(gangZone *GangZone) {
-
+	panic("not implemented")
 }
 
 func (gz *GangZone) Flash(color int) {
-
+	panic("not implemented")
 }
 
 func (gz *GangZone) FlashForPlayer(player *Player, color int) {
-
+	panic("not implemented")
 }
 
 func (gz *GangZone) ColorForPlayer(player *Player) int {
-	return 0
+	panic("not implemented")
 }
 
 func (gz *GangZone) FlashColorForPlayer(player *Player) int {
-	return 0
+	panic("not implemented")
 }
 
 func (gz *GangZone) Position() *GangZonePosition {
-	return nil
+	panic("not implemented")
 }
