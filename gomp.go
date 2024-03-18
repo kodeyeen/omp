@@ -122,7 +122,7 @@ func onPlayerText(player unsafe.Pointer, message *C.char) {
 func onPlayerCommandText(player unsafe.Pointer, message *C.char) {
 	event.Dispatch(eventDispatcher, EventTypePlayerCommandText, &PlayerCommandTextEvent{
 		Player:  &Player{player},
-		Message: C.GoString(message),
+		Command: C.GoString(message),
 	})
 }
 
