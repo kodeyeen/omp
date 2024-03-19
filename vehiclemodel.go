@@ -1,9 +1,9 @@
 package gomp
 
 const (
-	Landstalker VehicleModel = iota + 400
-	Bravura
-	Buffalo
+	VehicleModelLandstalker VehicleModel = iota + 400
+	VehicleModelBravura
+	VehicleModelBuffalo
 	// TODO
 )
 
