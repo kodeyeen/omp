@@ -1,7 +1,7 @@
 package gomp
 
 // #include <stdlib.h>
-// #include "gomp.h"
+// #include "include/gomp.h"
 import "C"
 import (
 	"unsafe"

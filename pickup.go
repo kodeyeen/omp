@@ -1,6 +1,6 @@
 package gomp
 
-// #include "pickup.h"
+// #include "include/pickup.h"
 import "C"
 import (
 	"unsafe"

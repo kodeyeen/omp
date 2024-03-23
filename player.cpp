@@ -1,5 +1,5 @@
-#include "gomp.h"
-#include "player.h"
+#include "include/gomp.h"
+#include "include/player.h"
 
 #ifdef __cplusplus
 extern "C"

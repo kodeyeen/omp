@@ -1,4 +1,4 @@
-#include "gomp.h"
+#include "include/gomp.h"
 
 #ifdef __cplusplus
 extern "C"

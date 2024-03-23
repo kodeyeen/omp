@@ -1,5 +1,5 @@
-#include "gomp.h"
-#include "vehicle.h"
+#include "include/gomp.h"
+#include "include/vehicle.h"
 
 #ifdef __cplusplus
 extern "C"
