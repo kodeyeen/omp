@@ -1,6 +1,6 @@
 package gomp
 
-// #include "component.h"
+// #include "vehicle.h"
 import "C"
 import (
 	"time"

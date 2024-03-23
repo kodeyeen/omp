@@ -1,6 +1,6 @@
 package gomp
 
-// #include "component.h"
+// #include "gamemode.h"
 import "C"
 
 type GameMode struct {
