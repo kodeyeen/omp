@@ -1,6 +1,7 @@
 package gomp
 
 // #include <stdlib.h>
+// #include <string.h>
 // #include "component.h"
 import "C"
 import (
@@ -201,9 +202,9 @@ func (p *Player) Money(target *Player) int {
 }
 
 func (p *Player) Name() string {
-	cname := C.player_getName(p.handle)
+	name := C.player_getName(p.handle)
 
-	return C.GoString(cname)
+	return C.GoStringN(name.buf, C.int(name.length))
 }
 
 func (p *Player) NetworkStats() {
@@ -224,14 +225,22 @@ func (p *Player) SetName(name string) PlayerNameStatus {
 	cname := C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
 
-	return PlayerNameStatus(C.player_setName(p.handle, cname))
+	status := C.player_setName(p.handle, C.String{
+		buf:    cname,
+		length: C.strlen(cname),
+	})
+
+	return PlayerNameStatus(status)
 }
 
 func (p *Player) SendMessage(color int, msg string) {
 	cmsg := C.CString(msg)
 	defer C.free(unsafe.Pointer(cmsg))
 
-	C.player_sendClientMessage(p.handle, C.int(color), cmsg)
+	C.player_sendClientMessage(p.handle, C.int(color), C.String{
+		buf:    cmsg,
+		length: C.strlen(cmsg),
+	})
 }
 
 func (p *Player) Vehicle() (*Vehicle, error) {
