@@ -3,7 +3,6 @@ package gomp
 // #include "component.h"
 import "C"
 import (
-	"log"
 	"time"
 	"unsafe"
 )
@@ -210,7 +209,6 @@ func (v *Vehicle) SetWindowsState(state *VehicleWindowsState) {
 
 func (v *Vehicle) StartEngine() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("StartEngine PARAMS: ", params)
 	params.engine = C.schar(1)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -218,7 +216,6 @@ func (v *Vehicle) StartEngine() {
 
 func (v *Vehicle) StopEngine() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("StopEngine PARAMS: ", params)
 	params.engine = C.schar(0)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -226,14 +223,12 @@ func (v *Vehicle) StopEngine() {
 
 func (v *Vehicle) IsEngineStarted() bool {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("IsEngineStarted PARAMS: ", params)
 
 	return params.engine == C.schar(1)
 }
 
 func (v *Vehicle) TurnOnLights() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("TurnOnLights PARAMS: ", params)
 	params.lights = C.schar(1)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -241,7 +236,6 @@ func (v *Vehicle) TurnOnLights() {
 
 func (v *Vehicle) TurnOffLights() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("TurnOffLights PARAMS: ", params)
 	params.lights = C.schar(0)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -249,14 +243,12 @@ func (v *Vehicle) TurnOffLights() {
 
 func (v *Vehicle) AreLightsTurnedOn() bool {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("AreLightsTurnedOn PARAMS: ", params)
 
 	return params.lights == C.schar(1)
 }
 
 func (v *Vehicle) TurnOnAlarm() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("TurnOnAlarm PARAMS: ", params)
 	params.alarm = C.schar(1)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -264,7 +256,6 @@ func (v *Vehicle) TurnOnAlarm() {
 
 func (v *Vehicle) TurnOffAlarm() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("TurnOffAlarm PARAMS: ", params)
 	params.alarm = C.schar(0)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -272,14 +263,12 @@ func (v *Vehicle) TurnOffAlarm() {
 
 func (v *Vehicle) IsAlarmTurnedOn() bool {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("IsAlarmTurnedOn PARAMS: ", params)
 
 	return params.alarm == C.schar(1)
 }
 
 func (v *Vehicle) LockDoors() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("LockDoors PARAMS: ", params)
 	params.doors = C.schar(1)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -287,7 +276,6 @@ func (v *Vehicle) LockDoors() {
 
 func (v *Vehicle) UnlockDoors() {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("UnlockDoors PARAMS: ", params)
 	params.doors = C.schar(0)
 
 	C.vehicle_setParams(v.handle, &params)
@@ -295,7 +283,6 @@ func (v *Vehicle) UnlockDoors() {
 
 func (v *Vehicle) AreDoorsLocked() bool {
 	params := C.vehicle_getParams(v.handle)
-	log.Println("AreDoorsLocked PARAMS: ", params)
 
 	return params.doors == C.schar(1)
 }
@@ -350,12 +337,30 @@ func (v *Vehicle) SetSirenState(state int) {
 	panic("not implemented")
 }
 
+func (v *Vehicle) Passengers() []*Player {
+	cpassengerArr := C.vehicle_getPassengers(v.handle)
+	defer C.freeArray(cpassengerArr)
+
+	passengerHandles := unsafe.Slice(cpassengerArr.buf, int(cpassengerArr.length))
+	passengers := make([]*Player, 0, len(passengerHandles))
+
+	for _, handle := range passengerHandles {
+		passengers = append(passengers, &Player{handle})
+	}
+
+	return passengers
+}
+
 func (v *Vehicle) Position() *Position {
 	panic("not implemented")
 }
 
+func (v *Vehicle) PutPlayer(plr *Player, seatID int) {
+	panic("not implemented")
+}
+
 // Set a vehicle's position.
-func (v *Vehicle) SetPosition(position *Position) {
+func (v *Vehicle) SetPosition(pos *Position) {
 	panic("not implemented")
 }
 
@@ -418,7 +423,12 @@ func (v *Vehicle) SetZAngle(zAngle float32) {
 	panic("not implemented")
 }
 
-// Check if a vehicle is occupied.
+// Check if the vehicle was occupied since last spawn.
+func (v *Vehicle) HasBeenOccupied() bool {
+	panic("not implemented")
+}
+
+// Check if vehicle is occupied.
 func (v *Vehicle) IsOccupied() bool {
 	panic("not implemented")
 }
