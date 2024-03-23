@@ -16,6 +16,16 @@ extern "C"
         return call<int>("vehicle_isStreamedInForPlayer", vehicle, player);
     }
 
+    void vehicle_setColour(void* vehicle, int col1, int col2)
+    {
+        return call<void>("vehicle_setColour", col1, col2);
+    }
+
+    VehicleColour vehicle_getColour(void* vehicle)
+    {
+        return call<VehicleColour>("vehicle_getColour", vehicle);
+    }
+
     void vehicle_setHealth(void* vehicle, float health)
     {
         return call<void>("vehicle_setHealth", vehicle, health);
@@ -66,14 +76,34 @@ extern "C"
         return call<int>("vehicle_getPaintjob", vehicle);
     }
 
-    void vehicle_setColour(void* vehicle, int col1, int col2)
+    void vehicle_addComponent(void* vehicle, int component)
     {
-        return call<void>("vehicle_setColour", col1, col2);
+        return call<void>("vehicle_addComponent", vehicle, component);
     }
 
-    VehicleColour vehicle_getColour(void* vehicle)
+    int vehicle_getComponentInSlot(void* vehicle, int slot)
     {
-        return call<VehicleColour>("vehicle_getColour", vehicle);
+        return call<int>("vehicle_getComponentInSlot", vehicle, slot);
+    }
+
+    void vehicle_removeComponent(void* vehicle, int component)
+    {
+        return call<void>("vehicle_removeComponent", vehicle, component);
+    }
+
+    void vehicle_putPlayer(void* vehicle, void* player, int seatID)
+    {
+        return call<void>("vehicle_putPlayer", vehicle, player, seatID);
+    }
+
+    void vehicle_setZAngle(void* vehicle, float angle)
+    {
+        return call<void>("vehicle_setZAngle", vehicle, angle);
+    }
+
+    float vehicle_getZAngle(void* vehicle)
+    {
+        return call<float>("vehicle_getZAngle", vehicle);
     }
 
     void vehicle_setParams(void* vehicle, VehicleParams* params)
@@ -81,9 +111,139 @@ extern "C"
         return call<void>("vehicle_setParams", vehicle, params);
     }
 
+    void vehicle_setParamsForPlayer(void* vehicle, void* player, VehicleParams* params)
+    {
+        return call<void>("vehicle_setParamsForPlayer", vehicle, player, params);
+    }
+
     VehicleParams vehicle_getParams(void* vehicle)
     {
         return call<VehicleParams>("vehicle_getParams", vehicle);
+    }
+
+    int vehicle_isDead(void* vehicle)
+    {
+        return call<int>("vehicle_isDead", vehicle);
+    }
+
+    void vehicle_respawn(void* vehicle)
+    {
+        return call<void>("vehicle_respawn", vehicle);
+    }
+
+    long long vehicle_getRespawnDelay(void* vehicle)
+    {
+        return call<long long>("vehicle_getRespawnDelay", vehicle);
+    }
+
+    void vehicle_setRespawnDelay(void* vehicle, int delay)
+    {
+        return call<void>("vehicle_setRespawnDelay", vehicle, delay);
+    }
+    
+    int vehicle_isRespawning(void* vehicle)
+    {
+        return call<int>("vehicle_isRespawning", vehicle);
+    }
+
+    void vehicle_setInterior(void* vehicle, int interiorID)
+    {
+        return call<void>("vehicle_setInterior", vehicle, interiorID);
+    }
+
+    int vehicle_getInterior(void* vehicle)
+    {
+        return call<int>("vehicle_getInterior", vehicle);
+    }
+
+    void vehicle_attachTrailer(void* vehicle, void* trailer)
+    {
+        return call<void>("vehicle_attachTrailer", vehicle, trailer);
+    }
+
+    void vehicle_detachTrailer(void* vehicle)
+    {
+        return call<void>("vehicle_detachTrailer", vehicle);
+    }
+
+    int vehicle_isTrailer(void* vehicle)
+    {
+        return call<int>("vehicle_isTrailer", vehicle);
+    }
+
+    void* vehicle_getTrailer(void* vehicle)
+    {
+        return call<void*>("vehicle_getTrailer", vehicle);
+    }
+
+    void* vehicle_getCab(void* vehicle)
+    {
+        return call<void*>("vehicle_getCab", vehicle);
+    }
+
+    void vehicle_repair(void* vehicle)
+    {
+        return call<void>("vehicle_repair", vehicle);
+    }
+
+    void vehicle_setVelocity(void* vehicle, float x, float y, float z)
+    {
+        return call<void>("vehicle_setVelocity", vehicle, x, y, z);
+    }
+
+    Vector3 vehicle_getVelocity(void* vehicle)
+    {
+        return call<Vector3>("vehicle_getVelocity", vehicle);
+    }
+
+    void vehicle_setAngularVelocity(void* vehicle, float x, float y, float z)
+    {
+        return call<void>("vehicle_setAngularVelocity", vehicle, x, y, z);
+    }
+
+    Vector3 vehicle_getAngularVelocity(void* vehicle)
+    {
+        return call<Vector3>("vector_getAngularVelocity", vehicle);
+    }
+
+    int vehicle_getModel(void* vehicle)
+    {
+        return call<int>("vehicle_getModel", vehicle);
+    }
+
+    uint8_t vehicle_getLandingGearState(void* vehicle)
+    {
+        return call<uint8_t>("vehicle_getLandingGearState", vehicle);
+    }
+
+    int vehicle_hasBeenOccupied(void* vehicle)
+    {
+        return call<int>("vehicle_hasBeenOccupied", vehicle);
+    }
+
+    int vehicle_isOccupied(void* vehicle)
+    {
+        return call<int>("vehicle_isOccupied", vehicle);
+    }
+
+    void vehicle_setSiren(void* vehicle, int status)
+    {
+        return call<void>("vehicle_setSiren", vehicle, status);
+    }
+
+    uint8_t vehicle_getSirenState(void* vehicle)
+    {
+        return call<uint8_t>("vehicle_getSirenState", vehicle);
+    }
+
+    uint32_t vehicle_getHydraThrustAngle(void* vehicle)
+    {
+        return call<uint32_t>("vehicle_getHydraThrustAngle", vehicle);
+    }
+
+    float vehicle_getTrainSpeed(void* vehicle)
+    {
+        return call<float>("vehicle_getTrainSpeed", vehicle);
     }
 
 #ifdef __cplusplus
