@@ -351,7 +351,7 @@ func (v *Vehicle) Passengers() []*Player {
 	return passengers
 }
 
-func (v *Vehicle) Position() *Position {
+func (v *Vehicle) Position() Vector3 {
 	panic("not implemented")
 }
 
@@ -360,7 +360,7 @@ func (v *Vehicle) PutPlayer(plr *Player, seatID int) {
 }
 
 // Set a vehicle's position.
-func (v *Vehicle) SetPosition(pos *Position) {
+func (v *Vehicle) SetPosition(pos Vector3) {
 	panic("not implemented")
 }
 
@@ -394,12 +394,12 @@ func (v *Vehicle) TrainSpeed() int {
 }
 
 // Get the velocity of a vehicle on the X, Y and Z axes.
-func (v *Vehicle) Velocity() *Position {
+func (v *Vehicle) Velocity() Vector3 {
 	panic("not implemented")
 }
 
 // Sets the X, Y and Z velocity of a vehicle.
-func (v *Vehicle) SetVelocity(velocity *Position) {
+func (v *Vehicle) SetVelocity(velocity Vector3) {
 	panic("not implemented")
 }
 
@@ -484,7 +484,7 @@ func (v *Vehicle) Repair() {
 }
 
 // Sets the angular X, Y and Z velocity of a vehicle.
-func (v *Vehicle) SetAngularVelocity(velocity *Position) {
+func (v *Vehicle) SetAngularVelocity(velocity Vector3) {
 	panic("not implemented")
 }
 
