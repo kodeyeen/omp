@@ -11,6 +11,24 @@ import (
 
 // go build -o test.dll -buildmode=c-shared
 
+type Vector4 struct {
+	X float32
+	Y float32
+	Z float32
+	W float32
+}
+
+type Vector3 struct {
+	X float32
+	Y float32
+	Z float32
+}
+
+type Vector2 struct {
+	X float32
+	Y float32
+}
+
 var eventDispatcher = event.NewDispatcher()
 
 func On(evtType event.Type, handler any) {
