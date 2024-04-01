@@ -41,9 +41,9 @@ type Vehicle struct {
 	handle unsafe.Pointer
 }
 
-func CreateVehicle(model VehicleModel, x, y, z, angle float32) (*Vehicle, error) {
+func NewVehicle(model VehicleModel, pos Vector3, angle float32) (*Vehicle, error) {
 	// TODO: error handling (invalid modelID and trains)
-	handle := C.vehicle_create(C.int(0), C.int(model), C.float(x), C.float(y), C.float(z), C.float(angle), C.int(0), C.int(0), C.int(-1), C.int(0))
+	handle := C.vehicle_create(C.int(0), C.int(model), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), C.int(0), C.int(0), C.int(-1), C.int(0))
 
 	veh := &Vehicle{
 		handle: handle,
