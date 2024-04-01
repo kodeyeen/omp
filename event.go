@@ -272,7 +272,7 @@ type PlayerGiveDamageEvent struct {
 
 type PlayerClickMapEvent struct {
 	Player   *Player
-	Position *Position
+	Position Vector3
 }
 
 type PlayerClickPlayerEvent struct {
