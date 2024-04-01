@@ -64,28 +64,28 @@ const (
 
 type Weapon int
 
-func (w Weapon) SlotType() WeaponSlotType {
+func (w Weapon) SlotIndex() WeaponSlotIndex {
 	panic("not implemented")
 }
 
 const (
-	WeaponSlotTypeUnknown WeaponSlotType = iota - 1
-	WeaponSlotTypeUnarmed
-	WeaponSlotTypeMelee
-	WeaponSlotTypePistol
-	WeaponSlotTypeShotgun
-	WeaponSlotTypeMachineGun
-	WeaponSlotTypeAssaultRifle
-	WeaponSlotTypeLongRifle
-	WeaponSlotTypeArtillery
-	WeaponSlotTypeExplosives
-	WeaponSlotTypeEquipment
-	WeaponSlotTypeGift
-	WeaponSlotTypeGadget
-	WeaponSlotTypeDetonator
+	WeaponSlotIndexUnknown WeaponSlotIndex = iota - 1
+	WeaponSlotIndexUnarmed
+	WeaponSlotIndexMelee
+	WeaponSlotIndexPistol
+	WeaponSlotIndexShotgun
+	WeaponSlotIndexMachineGun
+	WeaponSlotIndexAssaultRifle
+	WeaponSlotIndexLongRifle
+	WeaponSlotIndexArtillery
+	WeaponSlotIndexExplosives
+	WeaponSlotIndexEquipment
+	WeaponSlotIndexGift
+	WeaponSlotIndexGadget
+	WeaponSlotIndexDetonator
 )
 
-type WeaponSlotType int
+type WeaponSlotIndex int
 
 type WeaponSlot struct {
 	Weapon Weapon
