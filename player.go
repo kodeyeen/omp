@@ -284,8 +284,8 @@ func (p *Player) WeaponSlots() []*WeaponSlot {
 	panic("not implemented")
 }
 
-func (p *Player) WeaponSlot(_type WeaponSlotType) (WeaponSlot, error) {
-	if _type < WeaponSlotTypeUnknown || _type > WeaponSlotTypeDetonator {
+func (p *Player) WeaponSlot(_type WeaponSlotIndex) (WeaponSlot, error) {
+	if _type < WeaponSlotIndexUnknown || _type > WeaponSlotIndexDetonator {
 		return WeaponSlot{}, errors.New("invalid slot type")
 	}
 
