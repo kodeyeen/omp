@@ -3,12 +3,6 @@ package gomp
 import "github.com/kodeyeen/gomp/event"
 
 type DisconnectReason int
-type DialogResponse int
-type PlayerState int
-type BodyPart int
-type PlayerClickSource int
-type PlayerBulletHitType int
-type ObjectEditResponse int
 
 const (
 	DisconnectReasonTimeout DisconnectReason = iota
@@ -18,23 +12,14 @@ const (
 	DisconnectReasonModeEnd
 )
 
+type DialogResponse int
+
 const (
 	DialogResponseRight DialogResponse = iota
 	DialogResponseLeft
 )
 
-const (
-	PlayerStateNone PlayerState = iota
-	PlayerStateOnFoot
-	PlayerStateDriver
-	PlayerStatePassenger
-	PlayerStateExitVehicle
-	PlayerStateEnterVehicleDriver
-	PlayerStateEnterVehiclePassenger
-	PlayerStateWasted
-	PlayerStateSpawned
-	PlayerStateSpectating
-)
+type BodyPart int
 
 const (
 	BodyPartTorso BodyPart = iota + 3
@@ -46,9 +31,13 @@ const (
 	BodyPartHead
 )
 
+type PlayerClickSource int
+
 const (
 	PlayerClickSourceScoreboard = iota
 )
+
+type PlayerBulletHitType int
 
 const (
 	PlayerBulletHitTypeNone PlayerBulletHitType = iota
@@ -58,6 +47,8 @@ const (
 	PlayerBulletHitTypePlayerObject
 )
 
+type ObjectEditResponse int
+
 const (
 	ObjectEditResponseCancel = iota
 	ObjectEditResponseFinal
@@ -66,6 +57,10 @@ const (
 
 const (
 	EventTypeGameModeInit event.Type = "gameModeInit"
+
+	// Player spawn events
+	EventTypePlayerRequesSpawn event.Type = "playerRequestSpawn"
+	EventTypePlayerSpawn       event.Type = "playerSpawn"
 
 	// Player connect events
 	EventTypeIncomingConnection event.Type = "incomingConnection"
