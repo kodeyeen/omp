@@ -52,7 +52,7 @@ func NewVehicle(model VehicleModel, pos Vector3, angle float32) (*Vehicle, error
 	return veh, nil
 }
 
-func DestroyVehicle(veh *Vehicle) error {
+func FreeVehicle(veh *Vehicle) error {
 	panic("not implemented")
 }
 
