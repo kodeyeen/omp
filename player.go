@@ -165,7 +165,7 @@ func (p *Player) Ban(reason string) {
 }
 
 func (p *Player) IsBot() bool {
-	return C.player_isBot(p.handle) != C.int(0)
+	return C.player_isBot(p.handle) != 0
 }
 
 func (p *Player) Ping() int {
@@ -177,7 +177,7 @@ func (p *Player) Spawn() {
 }
 
 func (p *Player) IsSpawned() bool {
-	return C.player_isSpawned(p.handle) != C.int(0)
+	return C.player_isSpawned(p.handle) != 0
 }
 
 func (p *Player) ClientVersion() int {
@@ -353,7 +353,7 @@ func (p *Player) SetOtherColor(other *Player, color int) {
 // Get the colour of a player's nametag and radar blip for another player.
 func (p *Player) OtherColor(other *Player) (int, error) {
 	var ccolor C.uint
-	hasSpecificColor := C.player_getOtherColour(p.handle, other.handle, &ccolor) != C.int(0)
+	hasSpecificColor := C.player_getOtherColour(p.handle, other.handle, &ccolor) != 0
 
 	if !hasSpecificColor {
 		return 0, errors.New("player has no specific color")
@@ -371,7 +371,7 @@ func (p *Player) Unfreeze() {
 }
 
 func (p *Player) IsFrozen() bool {
-	return C.player_getControllable(p.handle) != C.int(0)
+	return C.player_getControllable(p.handle) != 0
 }
 
 func (p *Player) ToggleSpectating(enable bool) {
@@ -512,7 +512,7 @@ func (p *Player) HideClock() {
 }
 
 func (p *Player) IsClockShown() bool {
-	return C.player_hasClock(p.handle) != C.int(0)
+	return C.player_hasClock(p.handle) != 0
 }
 
 func (p *Player) EnableWidescreen() {
@@ -524,7 +524,7 @@ func (p *Player) DisableWidescreen() {
 }
 
 func (p *Player) IsWidescreenEnabled() bool {
-	return C.player_hasWidescreen(p.handle) != C.int(0)
+	return C.player_hasWidescreen(p.handle) != 0
 }
 
 func (p *Player) SetHealth(health float32) {
@@ -587,7 +587,7 @@ func (p *Player) AnimationFlags() int {
 }
 
 func (p *Player) IsStreamedInFor(other *Player) bool {
-	return C.player_isStreamedInForPlayer(p.handle, other.handle) != C.int(0)
+	return C.player_isStreamedInForPlayer(p.handle, other.handle) != 0
 }
 
 func (p *Player) State(other *Player) PlayerState {
@@ -807,7 +807,7 @@ func (p *Player) DisableCameraTargetting() {
 }
 
 func (p *Player) IsCameraTargettingEnabled() bool {
-	return C.player_hasCameraTargetting(p.handle) != C.int(0)
+	return C.player_hasCameraTargetting(p.handle) != 0
 }
 
 func (p *Player) RemoveFromVehicle(force bool) {
@@ -894,7 +894,7 @@ func (p *Player) DisableGhostMode() {
 }
 
 func (p *Player) IsGhostModeEnabled() bool {
-	return C.player_isGhostModeEnabled(p.handle) != C.int(0)
+	return C.player_isGhostModeEnabled(p.handle) != 0
 }
 
 func (p *Player) RemovedBuildingCount() int {
@@ -910,7 +910,7 @@ func (p *Player) DisallowWeapons() {
 }
 
 func (p *Player) AreWeaponsAllowed() bool {
-	return C.player_areWeaponsAllowed(p.handle) != C.int(0)
+	return C.player_areWeaponsAllowed(p.handle) != 0
 }
 
 func (p *Player) AllowTeleport() {
@@ -922,11 +922,11 @@ func (p *Player) DisallowTeleport() {
 }
 
 func (p *Player) IsTeleportAllowed() bool {
-	return C.player_isTeleportAllowed(p.handle) != C.int(0)
+	return C.player_isTeleportAllowed(p.handle) != 0
 }
 
 func (p *Player) IsUsingOfficialClient() bool {
-	return C.player_isUsingOfficialClient(p.handle) != C.int(0)
+	return C.player_isUsingOfficialClient(p.handle) != 0
 }
 
 // entity
@@ -972,7 +972,7 @@ func (p *Player) UnmakeAdmin() {
 }
 
 func (p *Player) IsAdmin() bool {
-	return C.player_hasConsoleAccess(p.handle) != C.int(0)
+	return C.player_hasConsoleAccess(p.handle) != 0
 }
 
 // custom models data
@@ -1010,11 +1010,11 @@ func (p *Player) VehicleSeat() int {
 }
 
 func (p *Player) IsInDriveByMode() bool {
-	return C.player_isInDriveByMode(p.handle) != C.int(0)
+	return C.player_isInDriveByMode(p.handle) != 0
 }
 
 func (p *Player) IsCuffed() bool {
-	return C.player_isCuffed(p.handle) != C.int(0)
+	return C.player_isCuffed(p.handle) != 0
 }
 
 // misc
@@ -1043,7 +1043,7 @@ func (p *Player) RotationQuat() Vector4 {
 }
 
 func (p *Player) IsInRangeOfPoint(_range float32, point Vector3) bool {
-	return C.player_isInRangeOfPoint(p.handle, C.float(_range), C.float(point.X), C.float(point.Y), C.float(point.Z)) != C.int(0)
+	return C.player_isInRangeOfPoint(p.handle, C.float(_range), C.float(point.X), C.float(point.Y), C.float(point.Z)) != 0
 }
 
 func (p *Player) CheckPoint() {

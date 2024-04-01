@@ -224,7 +224,7 @@ func (v *Vehicle) StopEngine() {
 func (v *Vehicle) IsEngineStarted() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.engine == C.schar(1)
+	return params.engine != 0
 }
 
 func (v *Vehicle) TurnOnLights() {
@@ -244,7 +244,7 @@ func (v *Vehicle) TurnOffLights() {
 func (v *Vehicle) AreLightsTurnedOn() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.lights == C.schar(1)
+	return params.lights != 0
 }
 
 func (v *Vehicle) TurnOnAlarm() {
@@ -264,7 +264,7 @@ func (v *Vehicle) TurnOffAlarm() {
 func (v *Vehicle) IsAlarmTurnedOn() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.alarm == C.schar(1)
+	return params.alarm != 0
 }
 
 func (v *Vehicle) LockDoors() {
@@ -284,7 +284,7 @@ func (v *Vehicle) UnlockDoors() {
 func (v *Vehicle) AreDoorsLocked() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.doors == C.schar(1)
+	return params.doors != 0
 }
 
 func (v *Vehicle) OpenHood() {
@@ -304,7 +304,7 @@ func (v *Vehicle) CloseHood() {
 func (v *Vehicle) IsHoodOpen() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.bonnet == C.schar(1)
+	return params.bonnet != 0
 }
 
 func (v *Vehicle) OpenTrunk() {
@@ -324,7 +324,7 @@ func (v *Vehicle) CloseTrunk() {
 func (v *Vehicle) IsTrunkOpen() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.boot == C.schar(1)
+	return params.boot != 0
 }
 
 // Returns a vehicle's siren state (on/off).
