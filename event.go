@@ -172,129 +172,129 @@ type GameModeInitEvent struct {
 }
 
 type PlayerRequestSpawnEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerSpawnEvent struct {
-	Player *Player
+	Player Player
 }
 
 // Player connect events
 
 type IncomingConnectionEvent struct {
-	Player    *Player
+	Player    Player
 	IPAddress string
 	Port      int
 }
 
 type PlayerConnectEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerDisconnectEvent struct {
-	Player *Player
+	Player Player
 	Reason DisconnectReason
 }
 
 type PlayerClientInitEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerStreamInEvent struct {
-	Player    *Player
-	ForPlayer *Player
+	Player    Player
+	ForPlayer Player
 }
 
 type PlayerStreamOutEvent struct {
-	Player    *Player
-	ForPlayer *Player
+	Player    Player
+	ForPlayer Player
 }
 
 type PlayerTextEvent struct {
-	Player  *Player
+	Player  Player
 	Message string
 }
 
 type PlayerCommandTextEvent struct {
-	Player  *Player
+	Player  Player
 	Command string
 }
 
 type PlayerScoreChangeEvent struct {
-	Player *Player
+	Player Player
 	Score  int
 }
 
 type PlayerNameChangeEvent struct {
-	Player  *Player
+	Player  Player
 	OldName string
 }
 
 type PlayerInteriorChangeEvent struct {
-	Player      *Player
+	Player      Player
 	NewInterior uint
 	OldInterior uint
 }
 
 type PlayerStateChangeEvent struct {
-	Player   *Player
+	Player   Player
 	NewState PlayerState
 	OldState PlayerState
 }
 
 type PlayerKeyStateChangeEvent struct {
-	Player  *Player
+	Player  Player
 	NewKeys uint
 	OldKeys uint
 }
 
 type PlayerDeathEvent struct {
-	Player *Player
-	Killer *Player
+	Player Player
+	Killer Player
 	Reason int
 }
 
 type PlayerTakeDamageEvent struct {
-	Player *Player
-	From   *Player
+	Player Player
+	From   Player
 	Amount float32
 	Weapon uint
 	Part   BodyPart
 }
 
 type PlayerGiveDamageEvent struct {
-	Player *Player
-	To     *Player
+	Player Player
+	To     Player
 	Amount float32
 	Weapon uint
 	Part   BodyPart
 }
 
 type PlayerClickMapEvent struct {
-	Player   *Player
+	Player   Player
 	Position Vector3
 }
 
 type PlayerClickPlayerEvent struct {
-	Player  *Player
-	Clicked *Player
+	Player  Player
+	Clicked Player
 	Source  PlayerClickSource
 }
 
 type ClientCheckResponseEvent struct {
-	Player     *Player
+	Player     Player
 	ActionType int
 	Address    int
 	Results    int
 }
 
 type PlayerUpdateEvent struct {
-	Player *Player
+	Player Player
 	Now    int
 }
 
 type DialogResponseEvent struct {
-	Player    *Player
+	Player    Player
 	DialogID  int
 	Response  DialogResponse
 	ListItem  int
@@ -302,142 +302,142 @@ type DialogResponseEvent struct {
 }
 
 type PlayerGiveDamageActorEvent struct {
-	Player *Player
-	Actor  *Player
+	Player Player
+	Actor  Player
 	Amount float32
 	Weapon uint
 	Part   BodyPart
 }
 
 type ActorStreamInEvent struct {
-	Actor     *Player
-	ForPlayer *Player
+	Actor     Player
+	ForPlayer Player
 }
 
 type ActorStreamOutEvent struct {
-	Actor     *Player
-	ForPlayer *Player
+	Actor     Player
+	ForPlayer Player
 }
 
 type VehicleStreamInEvent struct {
-	Vehicle   *Vehicle
-	ForPlayer *Player
+	Vehicle   Vehicle
+	ForPlayer Player
 }
 
 type VehicleStreamOutEvent struct {
-	Vehicle   *Vehicle
-	ForPlayer *Player
+	Vehicle   Vehicle
+	ForPlayer Player
 }
 
 type VehicleDeathEvent struct {
-	Vehicle *Vehicle
-	Killer  *Player
+	Vehicle Vehicle
+	Killer  Player
 }
 
 type PlayerEnterVehicleEvent struct {
-	Player      *Player
-	Vehicle     *Vehicle
+	Player      Player
+	Vehicle     Vehicle
 	IsPassenger bool
 }
 
 type PlayerExitVehicleEvent struct {
-	Player  *Player
-	Vehicle *Vehicle
+	Player  Player
+	Vehicle Vehicle
 }
 
 type VehicleDamageStatusUpdateEvent struct {
-	Player  *Player
-	Vehicle *Vehicle
+	Player  Player
+	Vehicle Vehicle
 }
 
 type VehiclePaintJobEvent struct {
-	Player   *Player
-	Vehicle  *Vehicle
+	Player   Player
+	Vehicle  Vehicle
 	PaintJob int
 }
 
 type VehicleModEvent struct {
-	Player    *Player
-	Vehicle   *Vehicle
+	Player    Player
+	Vehicle   Vehicle
 	Component int
 }
 
 type VehicleResprayEvent struct {
-	Player  *Player
-	Vehicle *Vehicle
+	Player  Player
+	Vehicle Vehicle
 	Color   VehicleColor
 }
 
 type EnterExitModShopEvent struct {
-	Player     *Player
+	Player     Player
 	EnterExit  bool
 	InteriorID int
 }
 
 type VehicleSpawnEvent struct {
-	Vehicle *Vehicle
+	Vehicle Vehicle
 }
 
 type UnoccupiedVehicleUpdateEvent struct {
-	Vehicle  *Vehicle
-	Player   *Player
+	Vehicle  Vehicle
+	Player   Player
 	Seat     int
 	Position Vector3
 	Velocity Vector3
 }
 
 type TrailerUpdateEvent struct {
-	Player  *Player
-	Vehicle *Vehicle
+	Player  Player
+	Vehicle Vehicle
 }
 
 type VehicleSirenStateChangeEvent struct {
-	Player     *Player
-	Vehicle    *Vehicle
+	Player     Player
+	Vehicle    Vehicle
 	SirenState int
 }
 
 type ObjectMovedEvent struct {
-	Object *Object
+	Object Object
 }
 
 type PlayerObjectMovedEvent struct {
-	Player *Player
-	Object *Object
+	Player Player
+	Object Object
 }
 
 type ObjectSelectedEvent struct {
-	Player   *Player
-	Object   *Object
+	Player   Player
+	Object   Object
 	Model    int
 	Position Vector3
 }
 
 type PlayerObjectSelectedEvent struct {
-	Player   *Player
-	Object   *Object
+	Player   Player
+	Object   Object
 	Model    int
 	Position Vector3
 }
 
 type ObjectEditedEvent struct {
-	Player   *Player
-	Object   *Object
+	Player   Player
+	Object   Object
 	Response ObjectEditResponse
 	Offset   Vector3
 	Rotation Vector3
 }
 
 type PlayerObjectEditedEvent struct {
-	Player   *Player
-	Object   *Object
+	Player   Player
+	Object   Object
 	Response ObjectEditResponse
 	Offset   Vector3
 	Rotation Vector3
 }
 
 type PlayerAttachedObjectEditedEvent struct {
-	Player   *Player
+	Player   Player
 	Index    int
 	Saved    int
 	Model    int
@@ -448,45 +448,45 @@ type PlayerAttachedObjectEditedEvent struct {
 }
 
 type PlayerEnterCheckpointEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerLeaveCheckpointEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerEnterRaceCheckpointEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerLeaveRaceCheckpointEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerClickTextDrawEvent struct {
-	Player   *Player
-	TextDraw *TextDraw
+	Player   Player
+	TextDraw TextDraw
 }
 
 type PlayerClickPlayerTextDrawEvent struct {
-	Player   *Player
-	TextDraw *TextDraw
+	Player   Player
+	TextDraw TextDraw
 }
 
 type PlayerCancelTextDrawSelectionEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerCancelPlayerTextDrawSelectionEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerFinishedDownloadingEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerRequestDownloadEvent struct {
-	Player   *Player
+	Player   Player
 	Type     int
 	Checksum uint
 }
@@ -497,41 +497,41 @@ type ConsoleTextEvent struct {
 }
 
 type RconLoginAttemptEvent struct {
-	Player   *Player
+	Player   Player
 	Password string
 	Success  bool
 }
 
 type PlayerPickUpPickupEvent struct {
-	Player *Player
-	Pickup *Pickup
+	Player Player
+	Pickup Pickup
 }
 
 type PlayerEnterGangZoneEvent struct {
-	Player   *Player
-	GangZone *GangZone
+	Player   Player
+	GangZone GangZone
 }
 
 type PlayerLeaveGangZoneEvent struct {
-	Player   *Player
-	GangZone *GangZone
+	Player   Player
+	GangZone GangZone
 }
 
 type PlayerClickGangZoneEvent struct {
-	Player   *Player
-	GangZone *GangZone
+	Player   Player
+	GangZone GangZone
 }
 
 type PlayerSelectedMenuRowEvent struct {
-	Player  *Player
+	Player  Player
 	MenuRow uint8
 }
 
 type PlayerExitedMenuEvent struct {
-	Player *Player
+	Player Player
 }
 
 type PlayerRequestClassEvent struct {
-	Player  *Player
+	Player  Player
 	ClassID uint
 }
