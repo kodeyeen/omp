@@ -27,6 +27,8 @@ extern "C"
 
         funcs.emplace("useManualEngineAndLights", findFunc(handle, "useManualEngineAndLights"));
 
+        // Player
+        funcs.emplace("player_getByID", findFunc(handle, "player_getByID"));
         funcs.emplace("player_getID", findFunc(handle, "player_getID"));
         funcs.emplace("player_kick", findFunc(handle, "player_kick"));
         funcs.emplace("player_ban", findFunc(handle, "player_ban"));
@@ -160,8 +162,10 @@ extern "C"
         funcs.emplace("player_allowTeleport", findFunc(handle, "player_allowTeleport"));
         funcs.emplace("player_isTeleportAllowed", findFunc(handle, "player_isTeleportAllowed"));
         funcs.emplace("player_isUsingOfficialClient", findFunc(handle, "player_isUsingOfficialClient"));
+
         funcs.emplace("player_setPosition", findFunc(handle, "player_setPosition"));
         funcs.emplace("player_getPosition", findFunc(handle, "player_getPosition"));
+        funcs.emplace("player_getRotation", findFunc(handle, "player_getRotation"));
         funcs.emplace("player_setVirtualWorld", findFunc(handle, "player_setVirtualWorld"));
         funcs.emplace("player_getVirtualWorld", findFunc(handle, "player_getVirtualWorld"));
 
@@ -169,21 +173,24 @@ extern "C"
 
         funcs.emplace("player_setConsoleAccessibility", findFunc(handle, "player_setConsoleAccessibility"));
         funcs.emplace("player_hasConsoleAccess", findFunc(handle, "player_hasConsoleAccess"));
+
         funcs.emplace("player_getCustomSkin", findFunc(handle, "player_getCustomSkin"));
+
         funcs.emplace("player_getIp", findFunc(handle, "player_getIp"));
         funcs.emplace("player_getRawIp", findFunc(handle, "player_getRawIp"));
+
         funcs.emplace("player_getVehicle", findFunc(handle, "player_getVehicle"));
         funcs.emplace("player_getSeat", findFunc(handle, "player_getSeat"));
         funcs.emplace("player_isInModShop", findFunc(handle, "player_isInModShop"));
-        funcs.emplace("player_isInDriveByMode", findFunc(handle, "player_isInDriveByMode"));
-        funcs.emplace("player_isCuffed", findFunc(handle, "player_isCuffed"));
+
         funcs.emplace("player_getDistanceFromPoint", findFunc(handle, "player_getDistanceFromPoint"));
+        funcs.emplace("player_isInRangeOfPoint", findFunc(handle, "player_isInRangeOfPoint"));
         funcs.emplace("player_setFacingAngle", findFunc(handle, "player_setFacingAngle"));
         funcs.emplace("player_getFacingAngle", findFunc(handle, "player_getFacingAngle"));
-        funcs.emplace("player_getRotationQuat", findFunc(handle, "player_getRotationQuat"));
-        funcs.emplace("player_isInRangeOfPoint", findFunc(handle, "player_isInRangeOfPoint"));
 
+        // Vehicle
         funcs.emplace("vehicle_create", findFunc(handle, "vehicle_create"));
+        funcs.emplace("vehicle_release", findFunc(handle, "vehicle_release"));
         funcs.emplace("vehicle_isStreamedInForPlayer", findFunc(handle, "vehicle_isStreamedInForPlayer"));
         funcs.emplace("vehicle_setColour", findFunc(handle, "vehicle_setColour"));
         funcs.emplace("vehicle_getColour", findFunc(handle, "vehicle_getColour"));
@@ -208,8 +215,8 @@ extern "C"
         funcs.emplace("vehicle_getParams", findFunc(handle, "vehicle_getParams"));
         funcs.emplace("vehicle_isDead", findFunc(handle, "vehicle_isDead"));
         funcs.emplace("vehicle_respawn", findFunc(handle, "vehicle_respawn"));
-        funcs.emplace("vehicle_getRespawnDelay", findFunc(handle, "vehicle_getRespawnDelay"));
         funcs.emplace("vehicle_setRespawnDelay", findFunc(handle, "vehicle_setRespawnDelay"));
+        funcs.emplace("vehicle_getRespawnDelay", findFunc(handle, "vehicle_getRespawnDelay"));
         funcs.emplace("vehicle_isRespawning", findFunc(handle, "vehicle_isRespawning"));
         funcs.emplace("vehicle_setInterior", findFunc(handle, "vehicle_setInterior"));
         funcs.emplace("vehicle_getInterior", findFunc(handle, "vehicle_getInterior"));
@@ -226,11 +233,21 @@ extern "C"
         funcs.emplace("vehicle_getModel", findFunc(handle, "vehicle_getModel"));
         funcs.emplace("vehicle_getLandingGearState", findFunc(handle, "vehicle_getLandingGearState"));
         funcs.emplace("vehicle_hasBeenOccupied", findFunc(handle, "vehicle_hasBeenOccupied"));
+        funcs.emplace("vehicle_getLastOccupiedTime", findFunc(handle, "vehicle_getLastOccupiedTime"));
+        funcs.emplace("vehicle_getLastSpawnTime", findFunc(handle, "vehicle_getLastSpawnTime"));
         funcs.emplace("vehicle_isOccupied", findFunc(handle, "vehicle_isOccupied"));
         funcs.emplace("vehicle_setSiren", findFunc(handle, "vehicle_setSiren"));
         funcs.emplace("vehicle_getSirenState", findFunc(handle, "vehicle_getSirenState"));
         funcs.emplace("vehicle_getHydraThrustAngle", findFunc(handle, "vehicle_getHydraThrustAngle"));
         funcs.emplace("vehicle_getTrainSpeed", findFunc(handle, "vehicle_getTrainSpeed"));
+        funcs.emplace("vehicle_getLastDriverPoolID", findFunc(handle, "vehicle_getLastDriverPoolID"));
+
+        funcs.emplace("vehicle_setPosition", findFunc(handle, "vehicle_setPosition"));
+        funcs.emplace("vehicle_getPosition", findFunc(handle, "vehicle_getPosition"));
+        funcs.emplace("vehicle_getRotation", findFunc(handle, "vehicle_getRotation"));
+
+        funcs.emplace("vehicle_getDistanceFromPoint", findFunc(handle, "vehicle_getDistanceFromPoint"));
+        funcs.emplace("vehicle_isInRangeOfPoint", findFunc(handle, "vehicle_isInRangeOfPoint"));
 
         funcs.emplace("pickup_create", findFunc(handle, "pickup_create"));
     }
