@@ -622,7 +622,7 @@ func (p *Player) SetChatBubble(text string, color int, drawDist float32, expire 
 	C.player_setChatBubble(p.handle, cstr, C.uint(color), C.float(drawDist), C.int(expire.Milliseconds()))
 }
 
-func (p *Player) SendMessage(color int, msg string) {
+func (p *Player) SendMessage(msg string, color int) {
 	cmsg := C.CString(msg)
 	defer C.free(unsafe.Pointer(cmsg))
 
@@ -676,8 +676,8 @@ func (p *Player) GameText(style int) *PlayerGameText {
 	}
 }
 
-func (p *Player) SetWeather(weatherID int) {
-	C.player_setWeather(p.handle, C.int(weatherID))
+func (p *Player) SetWeather(weather int) {
+	C.player_setWeather(p.handle, C.int(weather))
 }
 
 func (p *Player) Weather() int {
@@ -945,6 +945,17 @@ func (p *Player) Position() Vector3 {
 	}
 }
 
+func (p *Player) Rotation() Vector4 {
+	rquat := C.player_getRotation(p.handle)
+
+	return Vector4{
+		X: float32(rquat.x),
+		Y: float32(rquat.y),
+		Z: float32(rquat.z),
+		W: float32(rquat.w),
+	}
+}
+
 func (p *Player) SetVirtualWorld(vw int) {
 	C.player_setVirtualWorld(p.handle, C.int(vw))
 }
@@ -1009,18 +1020,14 @@ func (p *Player) VehicleSeat() int {
 	return int(C.player_getSeat(p.handle))
 }
 
-func (p *Player) IsInDriveByMode() bool {
-	return C.player_isInDriveByMode(p.handle) != 0
-}
-
-func (p *Player) IsCuffed() bool {
-	return C.player_isCuffed(p.handle) != 0
-}
-
 // misc
 
-func (p *Player) DistanceFromPoint(point Vector3) float32 {
+func (p *Player) DistanceFrom(point Vector3) float32 {
 	return float32(C.player_getDistanceFromPoint(p.handle, C.float(point.X), C.float(point.Y), C.float(point.Z)))
+}
+
+func (p *Player) IsInRangeOf(point Vector3, _range float32) bool {
+	return C.player_isInRangeOfPoint(p.handle, C.float(_range), C.float(point.X), C.float(point.Y), C.float(point.Z)) != 0
 }
 
 func (p *Player) SetFacingAngle(angle float32) {
@@ -1029,21 +1036,6 @@ func (p *Player) SetFacingAngle(angle float32) {
 
 func (p *Player) FacingAngle() float32 {
 	return float32(C.player_getFacingAngle(p.handle))
-}
-
-func (p *Player) RotationQuat() Vector4 {
-	rquat := C.player_getRotationQuat(p.handle)
-
-	return Vector4{
-		X: float32(rquat.x),
-		Y: float32(rquat.y),
-		Z: float32(rquat.z),
-		W: float32(rquat.w),
-	}
-}
-
-func (p *Player) IsInRangeOfPoint(_range float32, point Vector3) bool {
-	return C.player_isInRangeOfPoint(p.handle, C.float(_range), C.float(point.X), C.float(point.Y), C.float(point.Z)) != 0
 }
 
 func (p *Player) CheckPoint() {

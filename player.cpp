@@ -6,6 +6,11 @@ extern "C"
 {
 #endif
 
+    void* player_getByID(int id)
+    {
+        return call<void*>("player_getByID", id);
+    }
+
     int player_getID(void* player)
     {
         return call<int>("player_getID", player);
@@ -678,6 +683,11 @@ extern "C"
         return call<Vector3>("player_getPosition", player);
     }
 
+    Vector4 player_getRotation(void* player)
+    {
+        return call<Vector4>("player_getRotation", player);
+    }
+
     void player_setVirtualWorld(void* player, int vw)
     {
         return call<void>("player_setVirtualWorld", player, vw);
@@ -740,16 +750,6 @@ extern "C"
         return call<int>("player_isInModShop", player);
     }
 
-    int player_isInDriveByMode(void* player)
-    {
-        return call<int>("player_isInDriveByMode", player);
-    }
-
-    int player_isCuffed(void* player)
-    {
-        return call<int>("player_isCuffed", player);
-    }
-
     // misc
 
     float player_getDistanceFromPoint(void* player, float pX, float pY, float pZ)
@@ -765,11 +765,6 @@ extern "C"
     float player_getFacingAngle(void* player)
     {
         return call<float>("player_getFacingAngle", player);
-    }
-
-    Vector4 player_getRotationQuat(void* player)
-    {
-        return call<Vector4>("player_getRotationQuat", player);
     }
 
     int player_isInRangeOfPoint(void* player, float range, float pX, float pY, float pZ)

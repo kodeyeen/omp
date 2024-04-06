@@ -5,6 +5,7 @@ extern "C"
 {
 #endif
 
+    void* player_getByID(int id);
     int player_getID(void* player);
 
     void player_kick(void* player);
@@ -142,6 +143,7 @@ extern "C"
     // entity
     void player_setPosition(void* player, float posX, float posY, float posZ);
     Vector3 player_getPosition(void* player);
+    Vector4 player_getRotation(void* player);
     void player_setVirtualWorld(void* player, int vw);
     int player_getVirtualWorld(void* player);
 
@@ -163,15 +165,12 @@ extern "C"
     void* player_getVehicle(void* player);
     int player_getSeat(void* player);
     int player_isInModShop(void* player);
-    int player_isInDriveByMode(void* player);
-    int player_isCuffed(void* player);
 
     // misc
 
     float player_getDistanceFromPoint(void* player, float pX, float pY, float pZ);
     void player_setFacingAngle(void* player, float angle);
     float player_getFacingAngle(void* player);
-    Vector4 player_getRotationQuat(void* player);
     int player_isInRangeOfPoint(void* player, float range, float pX, float pY, float pZ);
 
 #ifdef __cplusplus
