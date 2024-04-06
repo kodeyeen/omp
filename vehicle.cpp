@@ -11,6 +11,11 @@ extern "C"
         return call<void*>("vehicle_create", isStatic, modelId, x, y, z, angle, colour1, colour2, respawnDelay, addSiren);
     }
 
+    void vehicle_release(void* vehicle)
+    {
+        return call<void>("vehicle_release", vehicle);
+    }
+
     int vehicle_isStreamedInForPlayer(void* vehicle, void* player)
     {
         return call<int>("vehicle_isStreamedInForPlayer", vehicle, player);
@@ -221,6 +226,16 @@ extern "C"
         return call<int>("vehicle_hasBeenOccupied", vehicle);
     }
 
+    long vehicle_getLastOccupiedTime(void* vehicle)
+    {
+        return call<long>("vehicle_getLastOccupiedTime", vehicle);
+    }
+
+    long vehicle_getLastSpawnTime(void* vehicle)
+    {
+        return call<long>("vehicle_getLastSpawnTime", vehicle);
+    }
+
     int vehicle_isOccupied(void* vehicle)
     {
         return call<int>("vehicle_isOccupied", vehicle);
@@ -244,6 +259,48 @@ extern "C"
     float vehicle_getTrainSpeed(void* vehicle)
     {
         return call<float>("vehicle_getTrainSpeed", vehicle);
+    }
+
+    int vehicle_getLastDriverPoolID(void* vehicle)
+    {
+        return call<int>("vehicle_getLastDriverPoolID", vehicle);
+    }
+
+    // entity
+
+    Vector3 vehicle_getPosition(void* vehicle)
+    {
+        return call<Vector3>("vehicle_getPosition", vehicle);
+    }
+
+    void vehicle_setPosition(void* vehicle, float x, float y, float z)
+    {
+        return call<void>("vehicle_setPosition", vehicle, x, y, z);
+    }
+
+    Vector4 vehicle_getRotation(void* vehicle)
+    {
+        return call<Vector4>("vehicle_getRotation", vehicle);
+    }
+
+    void vehicle_setVirtualWorld(void* vehicle, int vw)
+    {
+        return call<void>("vehicle_setVirtualWorld", vehicle, vw);
+    }
+
+    int vehicle_getVirtualWorld(void* vehicle)
+    {
+        return call<int>("vehicle_getVirtualWorld", vehicle);
+    }
+
+    float vehicle_getDistanceFromPoint(void* vehicle, float pX, float pY, float pZ)
+    {
+        return call<float>("vehicle_getDistanceFromPoint", vehicle, pX, pY, pZ);
+    }
+
+    int vehicle_isInRangeOfPoint(void* vehicle, float range, float pX, float pY, float pZ)
+    {
+        return call<int>("vehicle_isInRangeOfPoint", vehicle, range, pX, pY, pZ);
     }
 
 #ifdef __cplusplus

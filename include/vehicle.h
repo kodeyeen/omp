@@ -6,6 +6,7 @@ extern "C"
 #endif
 
     void* vehicle_create(int isStatic, int modelId, float x, float y, float z, float angle, int colour1, int colour2, int respawnDelay, int addSiren);
+    void vehicle_release(void* vehicle);
     int vehicle_isStreamedInForPlayer(void* vehicle, void* player);
     void vehicle_setColour(void* vehicle, int col1, int col2);
     VehicleColour vehicle_getColour(void* vehicle);
@@ -30,8 +31,8 @@ extern "C"
     VehicleParams vehicle_getParams(void* vehicle);
     int vehicle_isDead(void* vehicle);
     void vehicle_respawn(void* vehicle);
-    long long vehicle_getRespawnDelay(void* vehicle);
     void vehicle_setRespawnDelay(void* vehicle, int delay);
+    long long vehicle_getRespawnDelay(void* vehicle);
     int vehicle_isRespawning(void* vehicle);
     void vehicle_setInterior(void* vehicle, int interiorID);
     int vehicle_getInterior(void* vehicle);
@@ -48,12 +49,23 @@ extern "C"
     int vehicle_getModel(void* vehicle);
     uint8_t vehicle_getLandingGearState(void* vehicle);
     int vehicle_hasBeenOccupied(void* vehicle);
+    long vehicle_getLastOccupiedTime(void* vehicle);
+    long vehicle_getLastSpawnTime(void* vehicle);
     int vehicle_isOccupied(void* vehicle);
     void vehicle_setSiren(void* vehicle, int status);
     uint8_t vehicle_getSirenState(void* vehicle);
     uint32_t vehicle_getHydraThrustAngle(void* vehicle);
     float vehicle_getTrainSpeed(void* vehicle);
+    int vehicle_getLastDriverPoolID(void* vehicle);
 
+    Vector3 vehicle_getPosition(void* vehicle);
+    void vehicle_setPosition(void* vehicle, float x, float y, float z);
+    Vector4 vehicle_getRotation(void* vehicle);
+    void vehicle_setVirtualWorld(void* vehicle, int vw);
+    int vehicle_getVirtualWorld(void* vehicle);
+
+    float vehicle_getDistanceFromPoint(void* vehicle, float pX, float pY, float pZ);
+    int vehicle_isInRangeOfPoint(void* vehicle, float range, float pX, float pY, float pZ);
 
 #ifdef __cplusplus
 }
