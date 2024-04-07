@@ -465,12 +465,12 @@ type PlayerLeaveRaceCheckpointEvent struct {
 
 type PlayerClickTextDrawEvent struct {
 	Player   *Player
-	TextDraw *TextDraw
+	TextDraw *GlobalTextDraw
 }
 
 type PlayerClickPlayerTextDrawEvent struct {
 	Player   *Player
-	TextDraw *TextDraw
+	TextDraw *PlayerTextDraw
 }
 
 type PlayerCancelTextDrawSelectionEvent struct {

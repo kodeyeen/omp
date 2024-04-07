@@ -250,6 +250,93 @@ extern "C"
         funcs.emplace("vehicle_isInRangeOfPoint", findFunc(handle, "vehicle_isInRangeOfPoint"));
 
         funcs.emplace("pickup_create", findFunc(handle, "pickup_create"));
+
+        // TextDraw
+        funcs.emplace("textDraw_create", findFunc(handle, "textDraw_create"));
+        funcs.emplace("textDraw_release", findFunc(handle, "textDraw_release"));
+        funcs.emplace("textDraw_setPosition", findFunc(handle, "textDraw_setPosition"));
+        funcs.emplace("textDraw_getPosition", findFunc(handle, "textDraw_getPosition"));
+        funcs.emplace("textDraw_setText", findFunc(handle, "textDraw_setText"));
+        funcs.emplace("textDraw_getText", findFunc(handle, "textDraw_getText"));
+        funcs.emplace("textDraw_setLetterSize", findFunc(handle, "textDraw_setLetterSize"));
+        funcs.emplace("textDraw_getLetterSize", findFunc(handle, "textDraw_getLetterSize"));
+        funcs.emplace("textDraw_setTextSize", findFunc(handle, "textDraw_setTextSize"));
+        funcs.emplace("textDraw_getTextSize", findFunc(handle, "textDraw_getTextSize"));
+        funcs.emplace("textDraw_setAlignment", findFunc(handle, "textDraw_setAlignment"));
+        funcs.emplace("textDraw_getAlignment", findFunc(handle, "textDraw_getAlignment"));
+        funcs.emplace("textDraw_setColour", findFunc(handle, "textDraw_setColour"));
+        funcs.emplace("textDraw_getLetterColour", findFunc(handle, "textDraw_getLetterColour"));
+        funcs.emplace("textDraw_useBox", findFunc(handle, "textDraw_useBox"));
+        funcs.emplace("textDraw_hasBox", findFunc(handle, "textDraw_hasBox"));
+        funcs.emplace("textDraw_setBoxColour", findFunc(handle, "textDraw_setBoxColour"));
+        funcs.emplace("textDraw_getBoxColour", findFunc(handle, "textDraw_getBoxColour"));
+        funcs.emplace("textDraw_setShadow", findFunc(handle, "textDraw_setShadow"));
+        funcs.emplace("textDraw_getShadow", findFunc(handle, "textDraw_getShadow"));
+        funcs.emplace("textDraw_setOutline", findFunc(handle, "textDraw_setOutline"));
+        funcs.emplace("textDraw_getOutline", findFunc(handle, "textDraw_getOutline"));
+        funcs.emplace("textDraw_setBackgroundColour", findFunc(handle, "textDraw_setBackgroundColour"));
+        funcs.emplace("textDraw_getBackgroundColour", findFunc(handle, "textDraw_getBackgroundColour"));
+        funcs.emplace("textDraw_setStyle", findFunc(handle, "textDraw_setStyle"));
+        funcs.emplace("textDraw_getStyle", findFunc(handle, "textDraw_getStyle"));
+        funcs.emplace("textDraw_setProportional", findFunc(handle, "textDraw_setProportional"));
+        funcs.emplace("textDraw_isProportional", findFunc(handle, "textDraw_isProportional"));
+        funcs.emplace("textDraw_setSelectable", findFunc(handle, "textDraw_setSelectable"));
+        funcs.emplace("textDraw_isSelectable", findFunc(handle, "textDraw_isSelectable"));
+        funcs.emplace("textDraw_setPreviewModel", findFunc(handle, "textDraw_setPreviewModel"));
+        funcs.emplace("textDraw_getPreviewModel", findFunc(handle, "textDraw_getPreviewModel"));
+        funcs.emplace("textDraw_setPreviewRotation", findFunc(handle, "textDraw_setPreviewRotation"));
+        funcs.emplace("textDraw_getPreviewRotation", findFunc(handle, "textDraw_getPreviewRotation"));
+        funcs.emplace("textDraw_setPreviewVehicleColour", findFunc(handle, "textDraw_setPreviewVehicleColour"));
+        funcs.emplace("textDraw_getPreviewVehicleColour", findFunc(handle, "textDraw_getPreviewVehicleColour"));
+        funcs.emplace("textDraw_setPreviewZoom", findFunc(handle, "textDraw_setPreviewZoom"));
+        funcs.emplace("textDraw_getPreviewZoom", findFunc(handle, "textDraw_getPreviewZoom"));
+        funcs.emplace("textDraw_showForPlayer", findFunc(handle, "textDraw_showForPlayer"));
+        funcs.emplace("textDraw_hideForPlayer", findFunc(handle, "textDraw_hideForPlayer"));
+        funcs.emplace("textDraw_isShownForPlayer", findFunc(handle, "textDraw_isShownForPlayer"));
+        funcs.emplace("textDraw_setTextForPlayer", findFunc(handle, "textDraw_setTextForPlayer"));
+
+        // PlayeTextDraw
+        funcs.emplace("playerTextDraw_create", findFunc(handle, "playerTextDraw_create"));
+        funcs.emplace("playerTextDraw_release", findFunc(handle, "playerTextDraw_release"));
+        funcs.emplace("playerTextDraw_setPosition", findFunc(handle, "playerTextDraw_setPosition"));
+        funcs.emplace("playerTextDraw_getPosition", findFunc(handle, "playerTextDraw_getPosition"));
+        funcs.emplace("playerTextDraw_setText", findFunc(handle, "playerTextDraw_setText"));
+        funcs.emplace("playerTextDraw_getText", findFunc(handle, "playerTextDraw_getText"));
+        funcs.emplace("playerTextDraw_setLetterSize", findFunc(handle, "playerTextDraw_setLetterSize"));
+        funcs.emplace("playerTextDraw_getLetterSize", findFunc(handle, "playerTextDraw_getLetterSize"));
+        funcs.emplace("playerTextDraw_setTextSize", findFunc(handle, "playerTextDraw_setTextSize"));
+        funcs.emplace("playerTextDraw_getTextSize", findFunc(handle, "playerTextDraw_getTextSize"));
+        funcs.emplace("playerTextDraw_setAlignment", findFunc(handle, "playerTextDraw_setAlignment"));
+        funcs.emplace("playerTextDraw_getAlignment", findFunc(handle, "playerTextDraw_getAlignment"));
+        funcs.emplace("playerTextDraw_setColour", findFunc(handle, "playerTextDraw_setColour"));
+        funcs.emplace("playerTextDraw_getLetterColour", findFunc(handle, "playerTextDraw_getLetterColour"));
+        funcs.emplace("playerTextDraw_useBox", findFunc(handle, "playerTextDraw_useBox"));
+        funcs.emplace("playerTextDraw_hasBox", findFunc(handle, "playerTextDraw_hasBox"));
+        funcs.emplace("playerTextDraw_setBoxColour", findFunc(handle, "playerTextDraw_setBoxColour"));
+        funcs.emplace("playerTextDraw_getBoxColour", findFunc(handle, "playerTextDraw_getBoxColour"));
+        funcs.emplace("playerTextDraw_setShadow", findFunc(handle, "playerTextDraw_setShadow"));
+        funcs.emplace("playerTextDraw_getShadow", findFunc(handle, "playerTextDraw_getShadow"));
+        funcs.emplace("playerTextDraw_setOutline", findFunc(handle, "playerTextDraw_setOutline"));
+        funcs.emplace("playerTextDraw_getOutline", findFunc(handle, "playerTextDraw_getOutline"));
+        funcs.emplace("playerTextDraw_setBackgroundColour", findFunc(handle, "playerTextDraw_setBackgroundColour"));
+        funcs.emplace("playerTextDraw_getBackgroundColour", findFunc(handle, "playerTextDraw_getBackgroundColour"));
+        funcs.emplace("playerTextDraw_setStyle", findFunc(handle, "playerTextDraw_setStyle"));
+        funcs.emplace("playerTextDraw_getStyle", findFunc(handle, "playerTextDraw_getStyle"));
+        funcs.emplace("playerTextDraw_setProportional", findFunc(handle, "playerTextDraw_setProportional"));
+        funcs.emplace("playerTextDraw_isProportional", findFunc(handle, "playerTextDraw_isProportional"));
+        funcs.emplace("playerTextDraw_setSelectable", findFunc(handle, "playerTextDraw_setSelectable"));
+        funcs.emplace("playerTextDraw_isSelectable", findFunc(handle, "playerTextDraw_isSelectable"));
+        funcs.emplace("playerTextDraw_setPreviewModel", findFunc(handle, "playerTextDraw_setPreviewModel"));
+        funcs.emplace("playerTextDraw_getPreviewModel", findFunc(handle, "playerTextDraw_getPreviewModel"));
+        funcs.emplace("playerTextDraw_setPreviewRotation", findFunc(handle, "playerTextDraw_setPreviewRotation"));
+        funcs.emplace("playerTextDraw_getPreviewRotation", findFunc(handle, "playerTextDraw_getPreviewRotation"));
+        funcs.emplace("playerTextDraw_setPreviewVehicleColour", findFunc(handle, "playerTextDraw_setPreviewVehicleColour"));
+        funcs.emplace("playerTextDraw_getPreviewVehicleColour", findFunc(handle, "playerTextDraw_getPreviewVehicleColour"));
+        funcs.emplace("playerTextDraw_setPreviewZoom", findFunc(handle, "playerTextDraw_setPreviewZoom"));
+        funcs.emplace("playerTextDraw_getPreviewZoom", findFunc(handle, "playerTextDraw_getPreviewZoom"));
+        funcs.emplace("playerTextDraw_show", findFunc(handle, "playerTextDraw_show"));
+        funcs.emplace("playerTextDraw_hide", findFunc(handle, "playerTextDraw_hide"));
+        funcs.emplace("playerTextDraw_isShown", findFunc(handle, "playerTextDraw_isShown"));
     }
 
     void freeArray(Array* arr)

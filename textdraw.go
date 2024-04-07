@@ -1,11 +1,27 @@
 package gomp
 
-import "unsafe"
+type TextDrawAlignment int
 
-type TextDraw struct {
-	handle unsafe.Pointer
-}
+const (
+	TextDrawAlignmentDefault TextDrawAlignment = iota
+	TextDrawAlignmentLeft
+	TextDrawAlignmentCenter
+	TextDrawAlignmentRight
+)
 
-func NewTextDraw() *TextDraw {
-	return &TextDraw{}
-}
+type TextDrawStyle int
+
+const (
+	TextDrawStyle0 TextDrawStyle = iota
+	TextDrawStyle1
+	TextDrawStyle2
+	TextDrawStyle3
+	TextDrawStyle4
+	TextDrawStyle5
+	TextDrawStyleFontBeckettRegular
+	TextDrawStyleFontAharoniBold
+	TextDrawStyleFontBankGothic
+	TextDrawStylePricedown
+	TextDrawStyleSprite
+	TextDrawStylePreview
+)

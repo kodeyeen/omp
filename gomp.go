@@ -43,6 +43,10 @@ func Off(evtType event.Type, handler any) {
 	eventDispatcher.Off(evtType, handler)
 }
 
+func Dispatch[T any](evtType event.Type, evt T) {
+	event.Dispatch(eventDispatcher, evtType, evt)
+}
+
 //export onGameModeInit
 func onGameModeInit() {
 	clibpath := C.CString("./components/Gomp.dll")
@@ -546,7 +550,7 @@ func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) {
 func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickTextDraw, &PlayerClickTextDrawEvent{
 		Player:   &Player{handle: player},
-		TextDraw: &TextDraw{handle: textdraw},
+		TextDraw: &GlobalTextDraw{handle: textdraw},
 	})
 }
 
@@ -554,7 +558,7 @@ func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
 func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickPlayerTextDraw, &PlayerClickPlayerTextDrawEvent{
 		Player:   &Player{handle: player},
-		TextDraw: &TextDraw{handle: textdraw},
+		TextDraw: &PlayerTextDraw{handle: textdraw},
 	})
 }
 
