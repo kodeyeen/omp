@@ -1,6 +1,11 @@
 package gomp
 
-type Object interface {
-	SetPosition(pos Vector3)
-	Position() Vector3
+import "unsafe"
+
+type Object struct {
+	handle unsafe.Pointer
+}
+
+func NewObject() *Object {
+	return &Object{}
 }

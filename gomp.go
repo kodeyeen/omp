@@ -64,14 +64,14 @@ func onGameModeInit() {
 //export onPlayerRequestSpawn
 func onPlayerRequestSpawn(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerRequesSpawn, &PlayerRequestSpawnEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerSpawn
 func onPlayerSpawn(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeIncomingConnection, &PlayerSpawnEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
@@ -80,7 +80,7 @@ func onPlayerSpawn(player unsafe.Pointer) {
 //export onIncomingConnection
 func onIncomingConnection(player unsafe.Pointer, ipAddress *C.char, port C.ushort) {
 	event.Dispatch(eventDispatcher, EventTypeIncomingConnection, &IncomingConnectionEvent{
-		Player:    &DefaultPlayer{handle: player},
+		Player:    &Player{handle: player},
 		IPAddress: C.GoString(ipAddress),
 		Port:      int(port),
 	})
@@ -89,14 +89,14 @@ func onIncomingConnection(player unsafe.Pointer, ipAddress *C.char, port C.ushor
 //export onPlayerConnect
 func onPlayerConnect(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerConnect, &PlayerConnectEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerDisconnect
 func onPlayerDisconnect(player unsafe.Pointer, reason int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerDisconnect, &PlayerDisconnectEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 		Reason: DisconnectReason(reason),
 	})
 }
@@ -104,7 +104,7 @@ func onPlayerDisconnect(player unsafe.Pointer, reason int) {
 //export onPlayerClientInit
 func onPlayerClientInit(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClientInit, &PlayerClientInitEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
@@ -113,16 +113,16 @@ func onPlayerClientInit(player unsafe.Pointer) {
 //export onPlayerStreamIn
 func onPlayerStreamIn(player, forPlayer unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerStreamIn, &PlayerStreamInEvent{
-		Player:    &DefaultPlayer{handle: player},
-		ForPlayer: &DefaultPlayer{handle: forPlayer},
+		Player:    &Player{handle: player},
+		ForPlayer: &Player{handle: forPlayer},
 	})
 }
 
 //export onPlayerStreamOut
 func onPlayerStreamOut(player, forPlayer unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerStreamOut, &PlayerStreamOutEvent{
-		Player:    &DefaultPlayer{handle: player},
-		ForPlayer: &DefaultPlayer{handle: forPlayer},
+		Player:    &Player{handle: player},
+		ForPlayer: &Player{handle: forPlayer},
 	})
 }
 
@@ -131,7 +131,7 @@ func onPlayerStreamOut(player, forPlayer unsafe.Pointer) {
 //export onPlayerText
 func onPlayerText(player unsafe.Pointer, message *C.char) {
 	event.Dispatch(eventDispatcher, EventTypePlayerText, &PlayerTextEvent{
-		Player:  &DefaultPlayer{handle: player},
+		Player:  &Player{handle: player},
 		Message: C.GoString(message),
 	})
 }
@@ -139,7 +139,7 @@ func onPlayerText(player unsafe.Pointer, message *C.char) {
 //export onPlayerCommandText
 func onPlayerCommandText(player unsafe.Pointer, message *C.char) {
 	event.Dispatch(eventDispatcher, EventTypePlayerCommandText, &PlayerCommandTextEvent{
-		Player:  &DefaultPlayer{handle: player},
+		Player:  &Player{handle: player},
 		Command: C.GoString(message),
 	})
 }
@@ -151,7 +151,7 @@ func onPlayerCommandText(player unsafe.Pointer, message *C.char) {
 ////export onPlayerWeaponShot
 // func onPlayerWeaponShot(player unsafe.Pointer, weapon C.uchar, hitType C.int, hitID C.ushort) {
 // 	event.Dispatch(eventDispatcher, EventTypePlayerCommandText, &PlayerCommandTextEvent{
-// 		Player:  &DefaultPlayer{handle: player},
+// 		Player:  &Player{handle: player},
 // 		Message: C.GoString(message),
 // 	})
 // }
@@ -161,7 +161,7 @@ func onPlayerCommandText(player unsafe.Pointer, message *C.char) {
 //export onPlayerScoreChange
 func onPlayerScoreChange(player unsafe.Pointer, score C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerScoreChange, &PlayerScoreChangeEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 		Score:  int(score),
 	})
 }
@@ -169,7 +169,7 @@ func onPlayerScoreChange(player unsafe.Pointer, score C.int) {
 //export onPlayerNameChange
 func onPlayerNameChange(player unsafe.Pointer, oldName *C.char) {
 	event.Dispatch(eventDispatcher, EventTypePlayerNameChange, &PlayerNameChangeEvent{
-		Player:  &DefaultPlayer{handle: player},
+		Player:  &Player{handle: player},
 		OldName: C.GoString(oldName),
 	})
 }
@@ -177,7 +177,7 @@ func onPlayerNameChange(player unsafe.Pointer, oldName *C.char) {
 //export onPlayerInteriorChange
 func onPlayerInteriorChange(player unsafe.Pointer, newInterior, oldInterior C.uint) {
 	event.Dispatch(eventDispatcher, EventTypePlayerInteriorChange, &PlayerInteriorChangeEvent{
-		Player:      &DefaultPlayer{handle: player},
+		Player:      &Player{handle: player},
 		NewInterior: uint(newInterior),
 		OldInterior: uint(oldInterior),
 	})
@@ -186,7 +186,7 @@ func onPlayerInteriorChange(player unsafe.Pointer, newInterior, oldInterior C.ui
 //export onPlayerStateChange
 func onPlayerStateChange(player unsafe.Pointer, newState, oldState C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerStateChange, &PlayerStateChangeEvent{
-		Player:   &DefaultPlayer{handle: player},
+		Player:   &Player{handle: player},
 		NewState: PlayerState(newState),
 		OldState: PlayerState(oldState),
 	})
@@ -195,7 +195,7 @@ func onPlayerStateChange(player unsafe.Pointer, newState, oldState C.int) {
 //export onPlayerKeyStateChange
 func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys C.uint) {
 	event.Dispatch(eventDispatcher, EventTypePlayerKeyStateChange, &PlayerKeyStateChangeEvent{
-		Player:  &DefaultPlayer{handle: player},
+		Player:  &Player{handle: player},
 		NewKeys: uint(newKeys),
 		OldKeys: uint(oldKeys),
 	})
@@ -206,8 +206,8 @@ func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys C.uint) {
 //export onPlayerDeath
 func onPlayerDeath(player, killer unsafe.Pointer, reason C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerDeath, &PlayerDeathEvent{
-		Player: &DefaultPlayer{handle: player},
-		Killer: &DefaultPlayer{handle: killer},
+		Player: &Player{handle: player},
+		Killer: &Player{handle: killer},
 		Reason: int(reason),
 	})
 }
@@ -215,8 +215,8 @@ func onPlayerDeath(player, killer unsafe.Pointer, reason C.int) {
 //export onPlayerTakeDamage
 func onPlayerTakeDamage(player, from unsafe.Pointer, amount C.float, weapon C.uint, part C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerTakeDamage, &PlayerTakeDamageEvent{
-		Player: &DefaultPlayer{handle: player},
-		From:   &DefaultPlayer{handle: from},
+		Player: &Player{handle: player},
+		From:   &Player{handle: from},
 		Amount: float32(amount),
 		Weapon: uint(weapon),
 		Part:   BodyPart(part),
@@ -226,8 +226,8 @@ func onPlayerTakeDamage(player, from unsafe.Pointer, amount C.float, weapon C.ui
 //export onPlayerGiveDamage
 func onPlayerGiveDamage(player, to unsafe.Pointer, amount C.float, weapon C.uint, part C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerGiveDamage, &PlayerGiveDamageEvent{
-		Player: &DefaultPlayer{handle: player},
-		To:     &DefaultPlayer{handle: to},
+		Player: &Player{handle: player},
+		To:     &Player{handle: to},
 		Amount: float32(amount),
 		Weapon: uint(weapon),
 		Part:   BodyPart(part),
@@ -239,7 +239,7 @@ func onPlayerGiveDamage(player, to unsafe.Pointer, amount C.float, weapon C.uint
 //export onPlayerClickMap
 func onPlayerClickMap(player unsafe.Pointer, x, y, z C.float) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickMap, &PlayerClickMapEvent{
-		Player:   &DefaultPlayer{handle: player},
+		Player:   &Player{handle: player},
 		Position: Vector3{X: float32(x), Y: float32(y), Z: float32(z)},
 	})
 }
@@ -247,8 +247,8 @@ func onPlayerClickMap(player unsafe.Pointer, x, y, z C.float) {
 //export onPlayerClickPlayer
 func onPlayerClickPlayer(player, clicked unsafe.Pointer, source C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickPlayer, &PlayerClickPlayerEvent{
-		Player:  &DefaultPlayer{handle: player},
-		Clicked: &DefaultPlayer{handle: clicked},
+		Player:  &Player{handle: player},
+		Clicked: &Player{handle: clicked},
 		Source:  PlayerClickSource(source),
 	})
 }
@@ -258,7 +258,7 @@ func onPlayerClickPlayer(player, clicked unsafe.Pointer, source C.int) {
 //export onClientCheckResponse
 func onClientCheckResponse(player unsafe.Pointer, actionType, address, results C.int) {
 	event.Dispatch(eventDispatcher, EventTypeClientCheckResponse, &ClientCheckResponseEvent{
-		Player:     &DefaultPlayer{handle: player},
+		Player:     &Player{handle: player},
 		ActionType: int(actionType),
 		Address:    int(address),
 		Results:    int(results),
@@ -270,7 +270,7 @@ func onClientCheckResponse(player unsafe.Pointer, actionType, address, results C
 //export onPlayerUpdate
 func onPlayerUpdate(player unsafe.Pointer, now C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerUpdate, &PlayerUpdateEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 		Now:    int(now),
 	})
 }
@@ -280,7 +280,7 @@ func onPlayerUpdate(player unsafe.Pointer, now C.int) {
 //export onDialogResponse
 func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem C.int, inputText *C.char) {
 	event.Dispatch(eventDispatcher, EventTypeDialogResponse, &DialogResponseEvent{
-		Player:    &DefaultPlayer{handle: player},
+		Player:    &Player{handle: player},
 		DialogID:  int(dialogID),
 		Response:  DialogResponse(response),
 		ListItem:  int(listItem),
@@ -293,8 +293,8 @@ func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem C.int,
 //export onPlayerGiveDamageActor
 func onPlayerGiveDamageActor(player, actor unsafe.Pointer, amount C.float, weapon C.uint, part C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerGiveDamageActor, &PlayerGiveDamageActorEvent{
-		Player: &DefaultPlayer{handle: player},
-		Actor:  &DefaultPlayer{handle: actor},
+		Player: &Player{handle: player},
+		Actor:  &Player{handle: actor},
 		Amount: float32(amount),
 		Weapon: uint(weapon),
 		Part:   BodyPart(part),
@@ -304,16 +304,16 @@ func onPlayerGiveDamageActor(player, actor unsafe.Pointer, amount C.float, weapo
 //export onActorStreamIn
 func onActorStreamIn(actor, player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeActorStreamIn, &ActorStreamInEvent{
-		Actor:     &DefaultPlayer{handle: actor},
-		ForPlayer: &DefaultPlayer{handle: player},
+		Actor:     &Player{handle: actor},
+		ForPlayer: &Player{handle: player},
 	})
 }
 
 //export onActorStreamOut
 func onActorStreamOut(actor, player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeActorStreamOut, &ActorStreamOutEvent{
-		Actor:     &DefaultPlayer{handle: actor},
-		ForPlayer: &DefaultPlayer{handle: player},
+		Actor:     &Player{handle: actor},
+		ForPlayer: &Player{handle: player},
 	})
 }
 
@@ -322,32 +322,32 @@ func onActorStreamOut(actor, player unsafe.Pointer) {
 //export onVehicleStreamIn
 func onVehicleStreamIn(vehicle, player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleStreamIn, &VehicleStreamInEvent{
-		Vehicle:   &DefaultVehicle{handle: vehicle},
-		ForPlayer: &DefaultPlayer{handle: player},
+		Vehicle:   &Vehicle{handle: vehicle},
+		ForPlayer: &Player{handle: player},
 	})
 }
 
 //export onVehicleStreamOut
 func onVehicleStreamOut(vehicle, player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleStreamOut, &VehicleStreamOutEvent{
-		Vehicle:   &DefaultVehicle{handle: vehicle},
-		ForPlayer: &DefaultPlayer{handle: player},
+		Vehicle:   &Vehicle{handle: vehicle},
+		ForPlayer: &Player{handle: player},
 	})
 }
 
 //export onVehicleDeath
 func onVehicleDeath(vehicle, killer unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleDeath, &VehicleDeathEvent{
-		Vehicle: &DefaultVehicle{handle: vehicle},
-		Killer:  &DefaultPlayer{handle: killer},
+		Vehicle: &Vehicle{handle: vehicle},
+		Killer:  &Player{handle: killer},
 	})
 }
 
 //export onPlayerEnterVehicle
 func onPlayerEnterVehicle(player, vehicle unsafe.Pointer, isPassenger C.int) {
 	event.Dispatch(eventDispatcher, EventTypePlayerEnterVehicle, &PlayerEnterVehicleEvent{
-		Player:      &DefaultPlayer{handle: player},
-		Vehicle:     &DefaultVehicle{handle: vehicle},
+		Player:      &Player{handle: player},
+		Vehicle:     &Vehicle{handle: vehicle},
 		IsPassenger: int(isPassenger) != 0,
 	})
 }
@@ -355,24 +355,24 @@ func onPlayerEnterVehicle(player, vehicle unsafe.Pointer, isPassenger C.int) {
 //export onPlayerExitVehicle
 func onPlayerExitVehicle(player, vehicle unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerExitVehicle, &PlayerExitVehicleEvent{
-		Player:  &DefaultPlayer{handle: player},
-		Vehicle: &DefaultVehicle{handle: vehicle},
+		Player:  &Player{handle: player},
+		Vehicle: &Vehicle{handle: vehicle},
 	})
 }
 
 //export onVehicleDamageStatusUpdate
 func onVehicleDamageStatusUpdate(vehicle, player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleDamageStatusUpdate, &VehicleDamageStatusUpdateEvent{
-		Vehicle: &DefaultVehicle{handle: vehicle},
-		Player:  &DefaultPlayer{handle: player},
+		Vehicle: &Vehicle{handle: vehicle},
+		Player:  &Player{handle: player},
 	})
 }
 
 //export onVehiclePaintJob
 func onVehiclePaintJob(player, vehicle unsafe.Pointer, paintJob C.int) {
 	event.Dispatch(eventDispatcher, EventTypeVehiclePaintJob, &VehiclePaintJobEvent{
-		Player:   &DefaultPlayer{handle: player},
-		Vehicle:  &DefaultVehicle{handle: vehicle},
+		Player:   &Player{handle: player},
+		Vehicle:  &Vehicle{handle: vehicle},
 		PaintJob: int(paintJob),
 	})
 }
@@ -380,8 +380,8 @@ func onVehiclePaintJob(player, vehicle unsafe.Pointer, paintJob C.int) {
 //export onVehicleMod
 func onVehicleMod(player, vehicle unsafe.Pointer, component C.int) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleMod, &VehicleModEvent{
-		Player:    &DefaultPlayer{handle: player},
-		Vehicle:   &DefaultVehicle{handle: vehicle},
+		Player:    &Player{handle: player},
+		Vehicle:   &Vehicle{handle: vehicle},
 		Component: int(component),
 	})
 }
@@ -389,8 +389,8 @@ func onVehicleMod(player, vehicle unsafe.Pointer, component C.int) {
 //export onVehicleRespray
 func onVehicleRespray(player, vehicle unsafe.Pointer, color1, color2 C.int) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleRespray, &VehicleResprayEvent{
-		Player:  &DefaultPlayer{handle: player},
-		Vehicle: &DefaultVehicle{handle: vehicle},
+		Player:  &Player{handle: player},
+		Vehicle: &Vehicle{handle: vehicle},
 		Color:   VehicleColor{Primary: int(color1), Secondary: int(color2)},
 	})
 }
@@ -398,7 +398,7 @@ func onVehicleRespray(player, vehicle unsafe.Pointer, color1, color2 C.int) {
 //export onEnterExitModShop
 func onEnterExitModShop(player unsafe.Pointer, enterexit, interiorID C.int) {
 	event.Dispatch(eventDispatcher, EventTypeEnterExitModShop, &EnterExitModShopEvent{
-		Player:     &DefaultPlayer{handle: player},
+		Player:     &Player{handle: player},
 		EnterExit:  int(enterexit) != 0,
 		InteriorID: int(interiorID),
 	})
@@ -407,15 +407,15 @@ func onEnterExitModShop(player unsafe.Pointer, enterexit, interiorID C.int) {
 //export onVehicleSpawn
 func onVehicleSpawn(vehicle unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleSpawn, &VehicleSpawnEvent{
-		Vehicle: &DefaultVehicle{handle: vehicle},
+		Vehicle: &Vehicle{handle: vehicle},
 	})
 }
 
 //export onUnoccupiedVehicleUpdate
 func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, seat C.uchar, posX, posY, posZ, velX, velY, velZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypeUnoccupiedVehicleUpdate, &UnoccupiedVehicleUpdateEvent{
-		Vehicle:  &DefaultVehicle{handle: vehicle},
-		Player:   &DefaultPlayer{handle: player},
+		Vehicle:  &Vehicle{handle: vehicle},
+		Player:   &Player{handle: player},
 		Seat:     int(seat),
 		Position: Vector3{X: float32(posX), Y: float32(posY), Z: float32(posZ)},
 		Velocity: Vector3{X: float32(velX), Y: float32(velY), Z: float32(velZ)},
@@ -425,16 +425,16 @@ func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, seat C.uchar, pos
 //export onTrailerUpdate
 func onTrailerUpdate(player, vehicle unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeTrailerUpdate, &TrailerUpdateEvent{
-		Player:  &DefaultPlayer{handle: player},
-		Vehicle: &DefaultVehicle{handle: vehicle},
+		Player:  &Player{handle: player},
+		Vehicle: &Vehicle{handle: vehicle},
 	})
 }
 
 //export onVehicleSirenStateChange
 func onVehicleSirenStateChange(player, vehicle unsafe.Pointer, sirenState C.uchar) {
 	event.Dispatch(eventDispatcher, EventTypeVehicleSirenStateChange, &VehicleSirenStateChangeEvent{
-		Player:     &DefaultPlayer{handle: player},
-		Vehicle:    &DefaultVehicle{handle: vehicle},
+		Player:     &Player{handle: player},
+		Vehicle:    &Vehicle{handle: vehicle},
 		SirenState: int(sirenState),
 	})
 }
@@ -444,23 +444,23 @@ func onVehicleSirenStateChange(player, vehicle unsafe.Pointer, sirenState C.ucha
 //export onObjectMoved
 func onObjectMoved(object unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypeObjectMoved, &ObjectMovedEvent{
-		Object: &GlobalObject{handle: object},
+		Object: &Object{handle: object},
 	})
 }
 
 //export onPlayerObjectMoved
 func onPlayerObjectMoved(player, object unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerObjectMoved, &PlayerObjectMovedEvent{
-		Player: &DefaultPlayer{handle: player},
-		Object: &GlobalObject{handle: object},
+		Player: &Player{handle: player},
+		Object: &Object{handle: object},
 	})
 }
 
 //export onObjectSelected
 func onObjectSelected(player, object unsafe.Pointer, model C.int, posX, posY, posZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypeObjectSelected, &ObjectSelectedEvent{
-		Player:   &DefaultPlayer{handle: player},
-		Object:   &GlobalObject{handle: object},
+		Player:   &Player{handle: player},
+		Object:   &Object{handle: object},
 		Model:    int(model),
 		Position: Vector3{X: float32(posX), Y: float32(posY), Z: float32(posZ)},
 	})
@@ -469,8 +469,8 @@ func onObjectSelected(player, object unsafe.Pointer, model C.int, posX, posY, po
 //export onPlayerObjectSelected
 func onPlayerObjectSelected(player, object unsafe.Pointer, model C.int, posX, posY, posZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypePlayerObjectSelected, &PlayerObjectSelectedEvent{
-		Player:   &DefaultPlayer{handle: player},
-		Object:   &PlayerObject{handle: object},
+		Player:   &Player{handle: player},
+		Object:   &Object{handle: object},
 		Model:    int(model),
 		Position: Vector3{X: float32(posX), Y: float32(posY), Z: float32(posZ)},
 	})
@@ -479,8 +479,8 @@ func onPlayerObjectSelected(player, object unsafe.Pointer, model C.int, posX, po
 //export onObjectEdited
 func onObjectEdited(player, object unsafe.Pointer, response C.int, offsetX, offsetY, offsetZ, rotX, rotY, rotZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypeObjectEdited, &ObjectEditedEvent{
-		Player:   &DefaultPlayer{handle: player},
-		Object:   &GlobalObject{handle: object},
+		Player:   &Player{handle: player},
+		Object:   &Object{handle: object},
 		Response: ObjectEditResponse(response),
 		Offset:   Vector3{X: float32(offsetX), Y: float32(offsetY), Z: float32(offsetZ)},
 		Rotation: Vector3{X: float32(rotX), Y: float32(rotY), Z: float32(rotZ)},
@@ -490,8 +490,8 @@ func onObjectEdited(player, object unsafe.Pointer, response C.int, offsetX, offs
 //export onPlayerObjectEdited
 func onPlayerObjectEdited(player, object unsafe.Pointer, response C.int, offsetX, offsetY, offsetZ, rotX, rotY, rotZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypePlayerObjectEdited, &PlayerObjectEditedEvent{
-		Player:   &DefaultPlayer{handle: player},
-		Object:   &PlayerObject{handle: object},
+		Player:   &Player{handle: player},
+		Object:   &Object{handle: object},
 		Response: ObjectEditResponse(response),
 		Offset:   Vector3{X: float32(offsetX), Y: float32(offsetY), Z: float32(offsetZ)},
 		Rotation: Vector3{X: float32(rotX), Y: float32(rotY), Z: float32(rotZ)},
@@ -501,7 +501,7 @@ func onPlayerObjectEdited(player, object unsafe.Pointer, response C.int, offsetX
 //export onPlayerAttachedObjectEdited
 func onPlayerAttachedObjectEdited(player unsafe.Pointer, index, saved, model, bone C.int, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, scaleX, scaleY, scaleZ C.float) {
 	event.Dispatch(eventDispatcher, EventTypePlayerAttachedObjectEdited, &PlayerAttachedObjectEditedEvent{
-		Player:   &DefaultPlayer{handle: player},
+		Player:   &Player{handle: player},
 		Index:    int(index),
 		Saved:    int(saved),
 		Model:    int(model),
@@ -517,58 +517,58 @@ func onPlayerAttachedObjectEdited(player unsafe.Pointer, index, saved, model, bo
 //export onPlayerEnterCheckpoint
 func onPlayerEnterCheckpoint(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerEnterCheckpoint, &PlayerEnterCheckpointEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerLeaveCheckpoint
 func onPlayerLeaveCheckpoint(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerLeaveCheckpoint, &PlayerLeaveCheckpointEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerEnterRaceCheckpoint
 func onPlayerEnterRaceCheckpoint(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerEnterRaceCheckpoint, &PlayerEnterRaceCheckpointEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerLeaveRaceCheckpoint
 func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerLeaveRaceCheckpoint, &PlayerLeaveRaceCheckpointEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerClickTextDraw
 func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickTextDraw, &PlayerClickTextDrawEvent{
-		Player:   &DefaultPlayer{handle: player},
-		TextDraw: &GlobalTextDraw{handle: textdraw},
+		Player:   &Player{handle: player},
+		TextDraw: &TextDraw{handle: textdraw},
 	})
 }
 
 //export onPlayerClickPlayerTextDraw
 func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickPlayerTextDraw, &PlayerClickPlayerTextDrawEvent{
-		Player:   &DefaultPlayer{handle: player},
-		TextDraw: &GlobalTextDraw{handle: textdraw},
+		Player:   &Player{handle: player},
+		TextDraw: &TextDraw{handle: textdraw},
 	})
 }
 
 //export onPlayerCancelTextDrawSelection
 func onPlayerCancelTextDrawSelection(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerCancelTextDrawSelection, &PlayerCancelTextDrawSelectionEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerCancelPlayerTextDrawSelection
 func onPlayerCancelPlayerTextDrawSelection(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerCancelPlayerTextDrawSelection, &PlayerCancelPlayerTextDrawSelectionEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
@@ -577,14 +577,14 @@ func onPlayerCancelPlayerTextDrawSelection(player unsafe.Pointer) {
 //export onPlayerFinishedDownloading
 func onPlayerFinishedDownloading(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerFinishedDownloading, &PlayerFinishedDownloadingEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerRequestDownload
 func onPlayerRequestDownload(player unsafe.Pointer, _type C.int, checksum C.uint) {
 	event.Dispatch(eventDispatcher, EventTypePlayerRequestDownload, &PlayerRequestDownloadEvent{
-		Player:   &DefaultPlayer{handle: player},
+		Player:   &Player{handle: player},
 		Type:     int(_type),
 		Checksum: uint(checksum),
 	})
@@ -603,7 +603,7 @@ func onConsoleText(command *C.char, parameters *C.char) {
 //export onRconLoginAttempt
 func onRconLoginAttempt(player unsafe.Pointer, password *C.char, success C.int) {
 	event.Dispatch(eventDispatcher, EventTypeRconLoginAttempt, &RconLoginAttemptEvent{
-		Player:   &DefaultPlayer{handle: player},
+		Player:   &Player{handle: player},
 		Password: C.GoString(password),
 		Success:  int(success) != 0,
 	})
@@ -614,8 +614,8 @@ func onRconLoginAttempt(player unsafe.Pointer, password *C.char, success C.int) 
 //export onPlayerPickUpPickup
 func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerPickUpPickup, &PlayerPickUpPickupEvent{
-		Player: &DefaultPlayer{handle: player},
-		Pickup: &DefaultPickup{handle: pickup},
+		Player: &Player{handle: player},
+		Pickup: &Pickup{handle: pickup},
 	})
 }
 
@@ -624,24 +624,24 @@ func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
 //export onPlayerEnterGangZone
 func onPlayerEnterGangZone(player, gangZone unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerEnterGangZone, &PlayerEnterGangZoneEvent{
-		Player:   &DefaultPlayer{handle: player},
-		GangZone: &GlobalGangZone{handle: gangZone},
+		Player:   &Player{handle: player},
+		GangZone: &GangZone{handle: gangZone},
 	})
 }
 
 //export onPlayerLeaveGangZone
 func onPlayerLeaveGangZone(player, gangZone unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerLeaveGangZone, &PlayerLeaveGangZoneEvent{
-		Player:   &DefaultPlayer{handle: player},
-		GangZone: &GlobalGangZone{handle: gangZone},
+		Player:   &Player{handle: player},
+		GangZone: &GangZone{handle: gangZone},
 	})
 }
 
 //export onPlayerClickGangZone
 func onPlayerClickGangZone(player, gangZone unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickGangZone, &PlayerClickGangZoneEvent{
-		Player:   &DefaultPlayer{handle: player},
-		GangZone: &GlobalGangZone{handle: gangZone},
+		Player:   &Player{handle: player},
+		GangZone: &GangZone{handle: gangZone},
 	})
 }
 
@@ -650,7 +650,7 @@ func onPlayerClickGangZone(player, gangZone unsafe.Pointer) {
 //export onPlayerSelectedMenuRow
 func onPlayerSelectedMenuRow(player unsafe.Pointer, menuRow C.uchar) {
 	event.Dispatch(eventDispatcher, EventTypePlayerSelectedMenuRow, &PlayerSelectedMenuRowEvent{
-		Player:  &DefaultPlayer{handle: player},
+		Player:  &Player{handle: player},
 		MenuRow: uint8(menuRow),
 	})
 }
@@ -658,14 +658,14 @@ func onPlayerSelectedMenuRow(player unsafe.Pointer, menuRow C.uchar) {
 //export onPlayerExitedMenu
 func onPlayerExitedMenu(player unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerExitedMenu, &PlayerExitedMenuEvent{
-		Player: &DefaultPlayer{handle: player},
+		Player: &Player{handle: player},
 	})
 }
 
 //export onPlayerRequestClass
 func onPlayerRequestClass(player unsafe.Pointer, classID C.uint) {
 	event.Dispatch(eventDispatcher, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
-		Player:  &DefaultPlayer{handle: player},
+		Player:  &Player{handle: player},
 		ClassID: uint(classID),
 	})
 }

@@ -32,12 +32,6 @@ typedef struct
 
 typedef struct
 {
-    float x;
-    float y;
-} Vector2;
-
-typedef struct
-{
     int8_t engine;
 	int8_t lights;
 	int8_t alarm;
