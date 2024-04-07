@@ -550,7 +550,7 @@ func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) {
 func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickTextDraw, &PlayerClickTextDrawEvent{
 		Player:   &Player{handle: player},
-		TextDraw: &GlobalTextDraw{handle: textdraw},
+		Textdraw: &Textdraw{handle: textdraw},
 	})
 }
 
@@ -558,7 +558,7 @@ func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
 func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerClickPlayerTextDraw, &PlayerClickPlayerTextDrawEvent{
 		Player:   &Player{handle: player},
-		TextDraw: &PlayerTextDraw{handle: textdraw},
+		Textdraw: &Textdraw{handle: textdraw},
 	})
 }
 
