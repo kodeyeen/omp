@@ -23,7 +23,7 @@ extern "C"
 
     void vehicle_setColour(void* vehicle, int col1, int col2)
     {
-        return call<void>("vehicle_setColour", col1, col2);
+        return call<void>("vehicle_setColour", vehicle, col1, col2);
     }
 
     VehicleColour vehicle_getColour(void* vehicle)

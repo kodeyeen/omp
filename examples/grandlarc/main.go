@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kodeyeen/gomp"
+	"github.com/yeeckfy/gomp"
 )
 
 const (
@@ -24,6 +24,13 @@ const (
 	CitySanFierro
 	CityLasVenturas
 )
+
+type Character struct {
+	*gomp.Player
+	citySelection      City
+	hasCitySelected    bool
+	lastCitySelectedAt time.Time
+}
 
 var chars = make(map[int]*Character, 1000)
 
@@ -39,215 +46,211 @@ var vehFiles = []string{
 	"tierra.txt", "trains_platform.txt", "trains.txt", "whetstone.txt",
 }
 
-func main() {}
+func onGameModeInit(evt *gomp.GameModeInitEvent) {
+	gomp.SetGameModeText("Grand Larceny")
+	gomp.SetPlayerMarkerMode(gomp.PlayerMarkerModeGlobal)
+	gomp.EnableNametags()
+	gomp.SetNametagDrawRadius(40.0)
+	gomp.EnableStuntBonuses()
+	gomp.DisableEntryExitMarkers()
+	gomp.SetWeather(2)
+	gomp.SetWorldTime(11)
 
-func init() {
-	gomp.On(gomp.EventTypeGameModeInit, func(evt *gomp.GameModeInitEvent) {
-		gomp.SetGameModeText("Grand Larceny")
-		gomp.SetPlayerMarkerMode(gomp.PlayerMarkerModeGlobal)
-		gomp.EnableNametags()
-		gomp.SetNametagDrawRadius(40.0)
-		gomp.EnableStuntBonuses()
-		gomp.DisableEntryExitMarkers()
-		gomp.SetWeather(2)
-		gomp.SetWorldTime(11)
+	lsTd, _ = NewCityNameTextdraw("Los Santos")
+	sfTd, _ = NewCityNameTextdraw("San Fierro")
+	lvTd, _ = NewCityNameTextdraw("Las Venturas")
 
-		lsTd, _ = NewCityNameTextdraw("Los Santos")
-		sfTd, _ = NewCityNameTextdraw("San Fierro")
-		lvTd, _ = NewCityNameTextdraw("Las Venturas")
+	classSelHelperTd, _ = gomp.NewTextdraw(gomp.Vector2{X: 10.0, Y: 415.0}, "Press ~b~~k~~GO_LEFT~ ~w~or ~b~~k~~GO_RIGHT~ ~w~to switch cities.~n~ Press ~r~~k~~PED_FIREWEAPON~ ~w~to select.", nil)
+	classSelHelperTd.EnableBox()
+	classSelHelperTd.SetBoxColor(0x222222BB)
+	classSelHelperTd.SetLetterSize(gomp.Vector2{X: 0.3, Y: 1.0})
+	classSelHelperTd.SetTextSize(gomp.Vector2{X: 400.0, Y: 40.0})
+	classSelHelperTd.SetStyle(gomp.TextdrawStyle2)
+	classSelHelperTd.SetShadow(0)
+	classSelHelperTd.SetOutline(1)
+	classSelHelperTd.SetBackgroundColor(0x000000FF)
+	classSelHelperTd.SetColor(0xFFFFFFFF)
 
-		classSelHelperTd, _ = gomp.NewTextdraw(gomp.Vector2{X: 10.0, Y: 415.0}, "Press ~b~~k~~GO_LEFT~ ~w~or ~b~~k~~GO_RIGHT~ ~w~to switch cities.~n~ Press ~r~~k~~PED_FIREWEAPON~ ~w~to select.", nil)
-		classSelHelperTd.EnableBox()
-		classSelHelperTd.SetBoxColor(0x222222BB)
-		classSelHelperTd.SetLetterSize(gomp.Vector2{X: 0.3, Y: 1.0})
-		classSelHelperTd.SetTextSize(gomp.Vector2{X: 400.0, Y: 40.0})
-		classSelHelperTd.SetStyle(gomp.TextdrawStyle2)
-		classSelHelperTd.SetShadow(0)
-		classSelHelperTd.SetOutline(1)
-		classSelHelperTd.SetBackgroundColor(0x000000FF)
-		classSelHelperTd.SetColor(0xFFFFFFFF)
+	gomp.NewClass(0, 298, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 298, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 299, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 300, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 301, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 302, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 303, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 304, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 305, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 280, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 281, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 282, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 283, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 284, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 285, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 286, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 287, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 288, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 289, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 265, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 266, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 267, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 268, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 269, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 270, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 1, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 2, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 3, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 4, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 5, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 6, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 8, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 42, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 65, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	//gomp.NewClass(0, 74, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 86, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 119, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 149, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 208, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 273, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 289, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
 
-		gomp.NewClass(0, 298, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 298, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 299, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 300, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 301, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 302, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 303, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 304, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 305, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 280, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 281, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 282, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 283, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 284, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 285, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 286, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 287, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 288, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 289, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 265, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 266, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 267, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 268, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 269, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 270, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 1, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 2, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 3, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 4, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 5, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 6, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 8, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 42, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 65, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		//gomp.NewClass(0, 74, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 86, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 119, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 149, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 208, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 273, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 289, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 47, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 48, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 49, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 50, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 51, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 52, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 53, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 54, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 55, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 56, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 57, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 58, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 68, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 69, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 70, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 71, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 72, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 73, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 75, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 76, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 78, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 79, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 80, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 81, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 82, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 83, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 84, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 85, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 87, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 88, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 89, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 91, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 92, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 93, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 95, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 96, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 97, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 98, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	gomp.NewClass(0, 99, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
 
-		gomp.NewClass(0, 47, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 48, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 49, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 50, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 51, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 52, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 53, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 54, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 55, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 56, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 57, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 58, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 68, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 69, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 70, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 71, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 72, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 73, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 75, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 76, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 78, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 79, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 80, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 81, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 82, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 83, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 84, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 85, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 87, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 88, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 89, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 91, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 92, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 93, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 95, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 96, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 97, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 98, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
-		gomp.NewClass(0, 99, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
+	var vehCnt int
+	for _, vehFile := range vehFiles {
+		filename := filepath.Join("scriptfiles/vehicles", vehFile)
 
-		var vehCnt int
-		for _, vehFile := range vehFiles {
-			filename := filepath.Join("scriptfiles/vehicles", vehFile)
-
-			cnt, err := LoadStaticVehiclesFromFile(filename)
-			if err != nil {
-				fmt.Printf("Failed to load vehicles from %s: %v\n", filename, err)
-			}
-
-			vehCnt += cnt
+		cnt, err := LoadStaticVehiclesFromFile(filename)
+		if err != nil {
+			fmt.Printf("Failed to load vehicles from %s: %v\n", filename, err)
 		}
 
-		fmt.Printf("Total vehicles from files: %d\n", vehCnt)
-	})
+		vehCnt += cnt
+	}
 
-	gomp.On(gomp.EventTypePlayerConnect, func(evt *gomp.PlayerConnectEvent) {
-		char := &Character{
-			Player:             evt.Player,
-			citySelection:      -1,
-			hasCitySelected:    false,
-			lastCitySelectedAt: time.Now(),
-		}
+	fmt.Printf("Total vehicles from files: %d\n", vehCnt)
+}
 
-		chars[char.ID()] = char
+func onPlayerConnect(evt *gomp.PlayerConnectEvent) {
+	char := &Character{
+		Player:             evt.Player,
+		citySelection:      -1,
+		hasCitySelected:    false,
+		lastCitySelectedAt: time.Now(),
+	}
 
-		char.ShowGameText("~w~Grand Larceny", 3*time.Second, 4)
-		char.SendMessage("Welcome to {88AA88}G{FFFFFF}rand {88AA88}L{FFFFFF}arceny", ColorWhite)
-	})
+	chars[char.ID()] = char
 
-	gomp.On(gomp.EventTypePlayerSpawn, func(evt *gomp.PlayerSpawnEvent) {
-		char := chars[evt.Player.ID()]
+	char.ShowGameText("~w~Grand Larceny", 3*time.Second, 4)
+	char.SendMessage("Welcome to {88AA88}G{FFFFFF}rand {88AA88}L{FFFFFF}arceny", ColorWhite)
+}
 
-		if char.IsBot() {
-			return
-		}
+func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) {
+	char := chars[evt.Player.ID()]
 
-		char.SetInterior(0)
-		char.ShowClock()
+	if char.IsBot() {
+		return
+	}
+
+	char.SetInterior(0)
+	char.ShowClock()
+	char.ResetMoney()
+	char.GiveMoney(30000)
+}
+
+func onPlayerRequestClass(evt *gomp.PlayerRequestClassEvent) {
+	char := chars[evt.Player.ID()]
+
+	if char.IsBot() {
+		return
+	}
+
+	if char.hasCitySelected {
+		setupCharSelection(char)
+		return
+	}
+
+	if char.State() != gomp.PlayerStateSpectating {
+		char.EnableSpectating()
+		classSelHelperTd.ShowFor(char.Player)
+		char.citySelection = -1
+	}
+}
+
+func onPlayerUpdate(evt *gomp.PlayerUpdateEvent) {
+	char := chars[evt.Player.ID()]
+
+	if char.IsBot() {
+		return
+	}
+
+	if !char.hasCitySelected && char.State() == gomp.PlayerStateSpectating {
+		handleCitySelection(char)
+		return
+	}
+
+	if char.ArmedWeapon() == gomp.WeaponMinigun {
+		char.Kick()
+		return
+	}
+}
+
+func onPlayerDeath(evt *gomp.PlayerDeathEvent) {
+	char := chars[evt.Player.ID()]
+
+	char.hasCitySelected = false
+
+	var killer *Character
+	if evt.Killer != nil {
+		killer = chars[evt.Killer.ID()]
+	}
+
+	if killer == nil {
 		char.ResetMoney()
-		char.GiveMoney(30000)
-	})
+		return
+	}
 
-	gomp.On(gomp.EventTypePlayerRequestClass, func(evt *gomp.PlayerRequestClassEvent) {
-		char := chars[evt.Player.ID()]
-
-		if char.IsBot() {
-			return
-		}
-
-		if char.hasCitySelected {
-			setupCharSelection(char)
-			return
-		}
-
-		if char.State() != gomp.PlayerStateSpectating {
-			char.EnableSpectating()
-			classSelHelperTd.ShowFor(char.Player)
-			char.citySelection = -1
-		}
-	})
-
-	gomp.On(gomp.EventTypePlayerUpdate, func(evt *gomp.PlayerUpdateEvent) {
-		char := chars[evt.Player.ID()]
-
-		if char.IsBot() {
-			return
-		}
-
-		if !char.hasCitySelected && char.State() == gomp.PlayerStateSpectating {
-			handleCitySelection(char)
-			return
-		}
-
-		if char.ArmedWeapon() == gomp.WeaponMinigun {
-			char.Kick()
-			return
-		}
-	})
-
-	gomp.On(gomp.EventTypePlayerDeath, func(evt *gomp.PlayerDeathEvent) {
-		char := chars[evt.Player.ID()]
-
-		char.hasCitySelected = false
-
-		var killer *Character
-		if evt.Killer != nil {
-			killer = chars[evt.Killer.ID()]
-		}
-
-		if killer == nil {
-			char.ResetMoney()
-			return
-		}
-
-		if char.Money() > 0 {
-			killer.GiveMoney(char.Money())
-			char.ResetMoney()
-		}
-	})
+	if char.Money() > 0 {
+		killer.GiveMoney(char.Money())
+		char.ResetMoney()
+	}
 }
 
 func NewCityNameTextdraw(cityName string) (*gomp.Textdraw, error) {
@@ -333,15 +336,15 @@ func LoadStaticVehiclesFromFile(filename string) (int, error) {
 		}
 		_ = secondaryColor
 
-		_, err = gomp.NewStaticVehicle(gomp.VehicleModel(model), gomp.Vector3{X: float32(spawnX), Y: float32(spawnY), Z: float32(spawnZ)}, float32(rot))
+		veh, err := gomp.NewStaticVehicle(gomp.VehicleModel(model), gomp.Vector3{X: float32(spawnX), Y: float32(spawnY), Z: float32(spawnZ)}, float32(rot))
 		if err != nil {
 			continue
 		}
 
-		// veh.SetColor(gomp.VehicleColor{
-		// 	Primary:   int(primaryColor),
-		// 	Secondary: int(secondaryColor),
-		// })
+		veh.SetColor(gomp.VehicleColor{
+			Primary:   int(primaryColor),
+			Secondary: int(secondaryColor),
+		})
 
 		cnt++
 	}
@@ -349,13 +352,6 @@ func LoadStaticVehiclesFromFile(filename string) (int, error) {
 	fmt.Printf("Loaded %d vehicles from: %s\n", cnt, filename)
 
 	return cnt, nil
-}
-
-type Character struct {
-	*gomp.Player
-	citySelection      City
-	hasCitySelected    bool
-	lastCitySelectedAt time.Time
 }
 
 func handleCitySelection(char *Character) {
@@ -460,4 +456,15 @@ func setupCharSelection(char *Character) {
 		char.SetCameraPosition(gomp.Vector3{X: 352.9164, Y: 194.5702, Z: 1014.1875})
 		char.SetCameraLookAt(gomp.Vector3{X: 349.0453, Y: 193.2271, Z: 1014.1797}, gomp.PlayerCameraCutTypeCut)
 	}
+}
+
+func main() {}
+
+func init() {
+	gomp.On(gomp.EventTypeGameModeInit, onGameModeInit)
+	gomp.On(gomp.EventTypePlayerConnect, onPlayerConnect)
+	gomp.On(gomp.EventTypePlayerSpawn, onPlayerSpawn)
+	gomp.On(gomp.EventTypePlayerRequestClass, onPlayerRequestClass)
+	gomp.On(gomp.EventTypePlayerUpdate, onPlayerUpdate)
+	gomp.On(gomp.EventTypePlayerDeath, onPlayerDeath)
 }

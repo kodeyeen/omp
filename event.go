@@ -1,6 +1,6 @@
 package gomp
 
-import "github.com/kodeyeen/gomp/event"
+import "github.com/yeeckfy/gomp/event"
 
 type DisconnectReason int
 
