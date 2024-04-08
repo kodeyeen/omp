@@ -370,7 +370,7 @@ func handleCitySelection(char *Character) {
 
 	keyData := char.KeyData()
 
-	if keyData.Keys&int(gomp.PlayerKeyFire) != 0 {
+	if keyData.Keys&gomp.PlayerKeyFire != 0 {
 		char.hasCitySelected = true
 		lsTd.HideFor(char.Player)
 		sfTd.HideFor(char.Player)

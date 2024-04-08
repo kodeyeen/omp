@@ -116,33 +116,31 @@ type PlayerKeyData struct {
 	LeftRight int
 }
 
-type PlayerKey int
-
 const (
-	PlayerKeyAction          PlayerKey = 1
-	PlayerKeyCrouch          PlayerKey = 2
-	PlayerKeyFire            PlayerKey = 4
-	PlayerKeySprint          PlayerKey = 8
-	PlayerKeySecondaryAttack PlayerKey = 16
-	PlayerKeyJump            PlayerKey = 32
-	PlayerKeyLookRight       PlayerKey = 64
-	PlayerKeyHandbrake       PlayerKey = 128
-	PlayerKeyAim             PlayerKey = 128
-	PlayerKeyLookLeft        PlayerKey = 256
-	PlayerKeyLookBehind      PlayerKey = 512
-	PlayerKeySubmission      PlayerKey = 512
-	PlayerKeyWalk            PlayerKey = 1024
-	PlayerKeyAnalogUp        PlayerKey = 2048
-	PlayerKeyAnalogDown      PlayerKey = 4096
-	PlayerKeyAnalogLeft      PlayerKey = 8192
-	PlayerKeyAnalogRight     PlayerKey = 16384
-	PlayerKeyYes             PlayerKey = 65536
-	PlayerKeyNo              PlayerKey = 131072
-	PlayerKeyCtrlBack        PlayerKey = 262144
-	PlayerKeyUp              PlayerKey = -128
-	PlayerKeyDown            PlayerKey = 128
-	PlayerKeyLeft            PlayerKey = -128
-	PlayerKeyRight           PlayerKey = 128
+	PlayerKeyAction          = 1
+	PlayerKeyCrouch          = 2
+	PlayerKeyFire            = 4
+	PlayerKeySprint          = 8
+	PlayerKeySecondaryAttack = 16
+	PlayerKeyJump            = 32
+	PlayerKeyLookRight       = 64
+	PlayerKeyHandbrake       = 128
+	PlayerKeyAim             = 128
+	PlayerKeyLookLeft        = 256
+	PlayerKeyLookBehind      = 512
+	PlayerKeySubmission      = 512
+	PlayerKeyWalk            = 1024
+	PlayerKeyAnalogUp        = 2048
+	PlayerKeyAnalogDown      = 4096
+	PlayerKeyAnalogLeft      = 8192
+	PlayerKeyAnalogRight     = 16384
+	PlayerKeyYes             = 65536
+	PlayerKeyNo              = 131072
+	PlayerKeyCtrlBack        = 262144
+	PlayerKeyUp              = -128
+	PlayerKeyDown            = 128
+	PlayerKeyLeft            = -128
+	PlayerKeyRight           = 128
 )
 
 type PlayerWeaponState int
