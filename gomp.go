@@ -4,6 +4,7 @@ package gomp
 // #include "include/gomp.h"
 import "C"
 import (
+	"time"
 	"unsafe"
 
 	"github.com/yeeckfy/gomp/event"
@@ -270,10 +271,10 @@ func onClientCheckResponse(player unsafe.Pointer, actionType, address, results C
 // Player update event
 
 //export onPlayerUpdate
-func onPlayerUpdate(player unsafe.Pointer, now C.int) {
+func onPlayerUpdate(player unsafe.Pointer, now C.long) {
 	event.Dispatch(eventDispatcher, EventTypePlayerUpdate, &PlayerUpdateEvent{
 		Player: &Player{handle: player},
-		Now:    int(now),
+		Now:    time.Unix(0, int64(now)*int64(time.Millisecond)),
 	})
 }
 
@@ -665,9 +666,9 @@ func onPlayerExitedMenu(player unsafe.Pointer) {
 }
 
 //export onPlayerRequestClass
-func onPlayerRequestClass(player, class unsafe.Pointer) {
+func onPlayerRequestClass(player unsafe.Pointer, classID C.uint) {
 	event.Dispatch(eventDispatcher, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
-		Player: &Player{handle: player},
-		Class:  &Class{handle: class},
+		Player:  &Player{handle: player},
+		ClassID: int(classID),
 	})
 }

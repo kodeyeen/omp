@@ -1,6 +1,10 @@
 package gomp
 
-import "github.com/yeeckfy/gomp/event"
+import (
+	"time"
+
+	"github.com/yeeckfy/gomp/event"
+)
 
 type DisconnectReason int
 
@@ -289,7 +293,7 @@ type ClientCheckResponseEvent struct {
 
 type PlayerUpdateEvent struct {
 	Player *Player
-	Now    int
+	Now    time.Time
 }
 
 type DialogResponseEvent struct {
@@ -531,6 +535,6 @@ type PlayerExitedMenuEvent struct {
 }
 
 type PlayerRequestClassEvent struct {
-	Player *Player
-	Class  *Class
+	Player  *Player
+	ClassID int
 }
