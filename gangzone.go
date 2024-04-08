@@ -23,11 +23,11 @@ func DestroyGangZone(gangZone *GangZone) {
 	panic("not implemented")
 }
 
-func (gz *GangZone) Flash(color int) {
+func (gz *GangZone) Flash(color uint) {
 	panic("not implemented")
 }
 
-func (gz *GangZone) FlashForPlayer(player *Player, color int) {
+func (gz *GangZone) FlashForPlayer(player *Player, color uint) {
 	panic("not implemented")
 }
 

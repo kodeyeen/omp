@@ -116,6 +116,35 @@ type PlayerKeyData struct {
 	LeftRight int
 }
 
+type PlayerKey int
+
+const (
+	PlayerKeyAction          PlayerKey = 1
+	PlayerKeyCrouch          PlayerKey = 2
+	PlayerKeyFire            PlayerKey = 4
+	PlayerKeySprint          PlayerKey = 8
+	PlayerKeySecondaryAttack PlayerKey = 16
+	PlayerKeyJump            PlayerKey = 32
+	PlayerKeyLookRight       PlayerKey = 64
+	PlayerKeyHandbrake       PlayerKey = 128
+	PlayerKeyAim             PlayerKey = 128
+	PlayerKeyLookLeft        PlayerKey = 256
+	PlayerKeyLookBehind      PlayerKey = 512
+	PlayerKeySubmission      PlayerKey = 512
+	PlayerKeyWalk            PlayerKey = 1024
+	PlayerKeyAnalogUp        PlayerKey = 2048
+	PlayerKeyAnalogDown      PlayerKey = 4096
+	PlayerKeyAnalogLeft      PlayerKey = 8192
+	PlayerKeyAnalogRight     PlayerKey = 16384
+	PlayerKeyYes             PlayerKey = 65536
+	PlayerKeyNo              PlayerKey = 131072
+	PlayerKeyCtrlBack        PlayerKey = 262144
+	PlayerKeyUp              PlayerKey = -128
+	PlayerKeyDown            PlayerKey = 128
+	PlayerKeyLeft            PlayerKey = -128
+	PlayerKeyRight           PlayerKey = 128
+)
+
 type PlayerWeaponState int
 
 const (
@@ -140,6 +169,14 @@ const (
 	PlayerAnimationSyncTypeNoSync PlayerAnimationSyncType = iota
 	PlayerAnimationSyncTypeSync
 	PlayerAnimationSyncTypeSyncOthers
+)
+
+type PlayerMarkerMode int
+
+const (
+	PlayerMarkerModeOff PlayerMarkerMode = iota
+	PlayerMarkerModeGlobal
+	PlayerMarkerModeStreamed
 )
 
 type Player struct {
@@ -338,15 +375,15 @@ func (p *Player) DrunkLevel() int {
 	return int(C.player_getDrunkLevel(p.handle))
 }
 
-func (p *Player) SetColor(color int) {
+func (p *Player) SetColor(color uint) {
 	C.player_setColour(p.handle, C.uint(color))
 }
 
-func (p *Player) Color() int {
-	return int(C.player_getColour(p.handle))
+func (p *Player) Color() uint {
+	return uint(C.player_getColour(p.handle))
 }
 
-func (p *Player) SetOtherColor(other *Player, color int) {
+func (p *Player) SetOtherColor(other *Player, color uint) {
 	C.player_setOtherColour(p.handle, other.handle, C.uint(color))
 }
 
@@ -363,23 +400,23 @@ func (p *Player) OtherColor(other *Player) (int, error) {
 }
 
 func (p *Player) Freeze() {
-	C.player_setControllable(p.handle, C.int(0))
+	C.player_setControllable(p.handle, 0)
 }
 
 func (p *Player) Unfreeze() {
-	C.player_setControllable(p.handle, C.int(1))
+	C.player_setControllable(p.handle, 1)
 }
 
 func (p *Player) IsFrozen() bool {
 	return C.player_getControllable(p.handle) != 0
 }
 
-func (p *Player) ToggleSpectating(enable bool) {
-	if enable {
-		C.player_setSpectating(p.handle, C.int(1))
-	} else {
-		C.player_setSpectating(p.handle, C.int(0))
-	}
+func (p *Player) EnableSpectating() {
+	C.player_setSpectating(p.handle, 1)
+}
+
+func (p *Player) DisableSpectating() {
+	C.player_setSpectating(p.handle, 0)
 }
 
 func (p *Player) SetWantedLevel(level int) {
@@ -407,9 +444,9 @@ func (p *Player) PlayAudio(url string, usePos bool, pos Vector3, distance float3
 		length: C.strlen(curl),
 	}
 
-	cusePos := C.int(0)
+	var cusePos C.int
 	if usePos {
-		cusePos = C.int(1)
+		cusePos = 1
 	}
 
 	C.player_playAudio(p.handle, cstr, cusePos, C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(distance))
@@ -475,19 +512,19 @@ func (p *Player) UnsetMapIcon(ID int) {
 }
 
 func (p *Player) EnableStuntBonuses() {
-	C.player_useStuntBonuses(p.handle, C.int(1))
+	C.player_useStuntBonuses(p.handle, 1)
 }
 
 func (p *Player) DisableStuntBonuses() {
-	C.player_useStuntBonuses(p.handle, C.int(0))
+	C.player_useStuntBonuses(p.handle, 0)
 }
 
 func (p *Player) ShowNameTagFor(other *Player) {
-	C.player_toggleOtherNameTag(other.handle, p.handle, C.int(1))
+	C.player_toggleOtherNameTag(other.handle, p.handle, 1)
 }
 
 func (p *Player) HideNameTagFor(other *Player) {
-	C.player_toggleOtherNameTag(other.handle, p.handle, C.int(0))
+	C.player_toggleOtherNameTag(other.handle, p.handle, 0)
 }
 
 func (p *Player) SetTime(time PlayerTime) {
@@ -504,11 +541,11 @@ func (p *Player) Time() PlayerTime {
 }
 
 func (p *Player) ShowClock() {
-	C.player_useClock(p.handle, C.int(1))
+	C.player_useClock(p.handle, 1)
 }
 
 func (p *Player) HideClock() {
-	C.player_useClock(p.handle, C.int(0))
+	C.player_useClock(p.handle, 0)
 }
 
 func (p *Player) IsClockShown() bool {
@@ -516,11 +553,11 @@ func (p *Player) IsClockShown() bool {
 }
 
 func (p *Player) EnableWidescreen() {
-	C.player_useWidescreen(p.handle, C.int(1))
+	C.player_useWidescreen(p.handle, 1)
 }
 
 func (p *Player) DisableWidescreen() {
-	C.player_useWidescreen(p.handle, C.int(0))
+	C.player_useWidescreen(p.handle, 0)
 }
 
 func (p *Player) IsWidescreenEnabled() bool {
@@ -590,7 +627,7 @@ func (p *Player) IsStreamedInFor(other *Player) bool {
 	return C.player_isStreamedInForPlayer(p.handle, other.handle) != 0
 }
 
-func (p *Player) State(other *Player) PlayerState {
+func (p *Player) State() PlayerState {
 	return PlayerState(C.player_getState(p.handle))
 }
 
@@ -607,10 +644,10 @@ func (p *Player) Skin() int {
 }
 
 func (p *Player) SetSkin(skin int) {
-	C.player_setSkin(p.handle, C.int(skin), C.int(1))
+	C.player_setSkin(p.handle, C.int(skin), 1)
 }
 
-func (p *Player) SetChatBubble(text string, color int, drawDist float32, expire time.Duration) {
+func (p *Player) SetChatBubble(text string, color uint, drawDist float32, expire time.Duration) {
 	ctext := C.CString(text)
 	defer C.free(unsafe.Pointer(ctext))
 
@@ -622,7 +659,7 @@ func (p *Player) SetChatBubble(text string, color int, drawDist float32, expire 
 	C.player_setChatBubble(p.handle, cstr, C.uint(color), C.float(drawDist), C.int(expire.Milliseconds()))
 }
 
-func (p *Player) SendMessage(msg string, color int) {
+func (p *Player) SendMessage(msg string, color Color) {
 	cmsg := C.CString(msg)
 	defer C.free(unsafe.Pointer(cmsg))
 
@@ -799,11 +836,11 @@ func (p *Player) AimZ() float32 {
 // TODO getPlayerBulletData
 
 func (p *Player) EnableCameraTargetting() {
-	C.player_useCameraTargetting(p.handle, C.int(1))
+	C.player_useCameraTargetting(p.handle, 1)
 }
 
 func (p *Player) DisableCameraTargetting() {
-	C.player_useCameraTargetting(p.handle, C.int(0))
+	C.player_useCameraTargetting(p.handle, 0)
 }
 
 func (p *Player) IsCameraTargettingEnabled() bool {
@@ -813,7 +850,7 @@ func (p *Player) IsCameraTargettingEnabled() bool {
 func (p *Player) RemoveFromVehicle(force bool) {
 	var cforce C.int
 	if force {
-		cforce = C.int(1)
+		cforce = 1
 	}
 
 	C.player_removeFromVehicle(p.handle, cforce)
@@ -856,11 +893,11 @@ func (p *Player) TargetActor() *Actor {
 }
 
 func (p *Player) EnableRemoteVehicleCollisions() {
-	C.player_setRemoteVehicleCollisions(p.handle, C.int(1))
+	C.player_setRemoteVehicleCollisions(p.handle, 1)
 }
 
 func (p *Player) DisableRemoteVehicleCollisions() {
-	C.player_setRemoteVehicleCollisions(p.handle, C.int(0))
+	C.player_setRemoteVehicleCollisions(p.handle, 0)
 }
 
 func (p *Player) SpectatePlayer(player *Player, mode PlayerSpectateMode) {
@@ -886,11 +923,11 @@ func (p *Player) SendClientCheck(actionType, address, offset, count int) {
 }
 
 func (p *Player) EnableGhostMode() {
-	C.player_toggleGhostMode(p.handle, C.int(1))
+	C.player_toggleGhostMode(p.handle, 1)
 }
 
 func (p *Player) DisableGhostMode() {
-	C.player_toggleGhostMode(p.handle, C.int(0))
+	C.player_toggleGhostMode(p.handle, 0)
 }
 
 func (p *Player) IsGhostModeEnabled() bool {
@@ -902,11 +939,11 @@ func (p *Player) RemovedBuildingCount() int {
 }
 
 func (p *Player) AllowWeapons() {
-	C.player_allowWeapons(p.handle, C.int(1))
+	C.player_allowWeapons(p.handle, 1)
 }
 
 func (p *Player) DisallowWeapons() {
-	C.player_allowWeapons(p.handle, C.int(0))
+	C.player_allowWeapons(p.handle, 0)
 }
 
 func (p *Player) AreWeaponsAllowed() bool {
@@ -914,11 +951,11 @@ func (p *Player) AreWeaponsAllowed() bool {
 }
 
 func (p *Player) AllowTeleport() {
-	C.player_allowTeleport(p.handle, C.int(1))
+	C.player_allowTeleport(p.handle, 1)
 }
 
 func (p *Player) DisallowTeleport() {
-	C.player_allowTeleport(p.handle, C.int(0))
+	C.player_allowTeleport(p.handle, 0)
 }
 
 func (p *Player) IsTeleportAllowed() bool {
@@ -975,11 +1012,11 @@ func (p *Player) NewDefaultCheckpoint(radius float32, pos Vector3) *DefaultCheck
 // console data
 
 func (p *Player) MakeAdmin() {
-	C.player_setConsoleAccessibility(p.handle, C.int(1))
+	C.player_setConsoleAccessibility(p.handle, 1)
 }
 
 func (p *Player) UnmakeAdmin() {
-	C.player_setConsoleAccessibility(p.handle, C.int(0))
+	C.player_setConsoleAccessibility(p.handle, 0)
 }
 
 func (p *Player) IsAdmin() bool {

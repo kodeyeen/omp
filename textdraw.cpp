@@ -1,6 +1,5 @@
 #include "include/gomp.h"
 #include "include/textdraw.h"
-#include "include/playertextdraw.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -15,6 +14,11 @@ extern "C"
     void textDraw_release(void* textdraw)
     {
         return call<void>("textDraw_release", textdraw);
+    }
+
+    int textDraw_getID(void* textdraw)
+    {
+        return call<int>("textDraw_getID", textdraw);
     }
 
     void textDraw_setPosition(void* textdraw, float posX, float posY)
@@ -227,6 +231,11 @@ extern "C"
     void playerTextDraw_release(void* textdraw, void* player)
     {
         return call<void>("playerTextDraw_release", textdraw, player);
+    }
+
+    int playerTextDraw_getID(void* textdraw)
+    {
+        return call<int>("playerTextDraw_getID", textdraw);
     }
 
     void playerTextDraw_setPosition(void* textdraw, float posX, float posY)

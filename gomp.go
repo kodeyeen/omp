@@ -29,6 +29,8 @@ type Vector2 struct {
 	Y float32
 }
 
+type Color uint
+
 var eventDispatcher = event.NewDispatcher()
 
 func On(evtType event.Type, handler any) {
@@ -56,11 +58,7 @@ func onGameModeInit() {
 
 	C.initFuncs(handle)
 
-	gm := &GameMode{}
-
-	event.Dispatch(eventDispatcher, EventTypeGameModeInit, &GameModeInitEvent{
-		GameMode: gm,
-	})
+	event.Dispatch(eventDispatcher, EventTypeGameModeInit, &GameModeInitEvent{})
 }
 
 // Player spawn events
@@ -667,9 +665,9 @@ func onPlayerExitedMenu(player unsafe.Pointer) {
 }
 
 //export onPlayerRequestClass
-func onPlayerRequestClass(player unsafe.Pointer, classID C.uint) {
+func onPlayerRequestClass(player, class unsafe.Pointer) {
 	event.Dispatch(eventDispatcher, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
-		Player:  &Player{handle: player},
-		ClassID: uint(classID),
+		Player: &Player{handle: player},
+		Class:  &Class{handle: class},
 	})
 }

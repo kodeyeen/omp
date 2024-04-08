@@ -25,7 +25,18 @@ extern "C"
     {
         funcs.emplace("freeArray", findFunc(handle, "freeArray"));
 
-        funcs.emplace("useManualEngineAndLights", findFunc(handle, "useManualEngineAndLights"));
+        funcs.emplace("server_setModeText", findFunc(handle, "server_setModeText"));
+        funcs.emplace("server_enableStuntBonuses", findFunc(handle, "server_enableStuntBonuses"));
+        funcs.emplace("server_setWeather", findFunc(handle, "server_setWeather"));
+        funcs.emplace("server_setWorldTime", findFunc(handle, "server_setWorldTime"));
+        funcs.emplace("config_setPlayerMarkerMode", findFunc(handle, "config_setPlayerMarkerMode"));
+        funcs.emplace("config_useNametags", findFunc(handle, "config_useNametags"));
+        funcs.emplace("config_setNametagDrawRadius", findFunc(handle, "config_setNametagDrawRadius"));
+        funcs.emplace("config_useEntryExitMarkers", findFunc(handle, "config_useEntryExitMarkers"));
+
+        funcs.emplace("class_create", findFunc(handle, "class_create"));
+        funcs.emplace("class_setClass", findFunc(handle, "class_setClass"));
+        funcs.emplace("class_getClass", findFunc(handle, "class_getClass"));
 
         // Player
         funcs.emplace("player_getByID", findFunc(handle, "player_getByID"));
@@ -254,6 +265,7 @@ extern "C"
         // TextDraw
         funcs.emplace("textDraw_create", findFunc(handle, "textDraw_create"));
         funcs.emplace("textDraw_release", findFunc(handle, "textDraw_release"));
+        funcs.emplace("textDraw_getID", findFunc(handle, "textDraw_getID"));
         funcs.emplace("textDraw_setPosition", findFunc(handle, "textDraw_setPosition"));
         funcs.emplace("textDraw_getPosition", findFunc(handle, "textDraw_getPosition"));
         funcs.emplace("textDraw_setText", findFunc(handle, "textDraw_setText"));
@@ -298,6 +310,7 @@ extern "C"
         // PlayeTextDraw
         funcs.emplace("playerTextDraw_create", findFunc(handle, "playerTextDraw_create"));
         funcs.emplace("playerTextDraw_release", findFunc(handle, "playerTextDraw_release"));
+        funcs.emplace("playerTextDraw_getID", findFunc(handle, "playerTextDraw_getID"));
         funcs.emplace("playerTextDraw_setPosition", findFunc(handle, "playerTextDraw_setPosition"));
         funcs.emplace("playerTextDraw_getPosition", findFunc(handle, "playerTextDraw_getPosition"));
         funcs.emplace("playerTextDraw_setText", findFunc(handle, "playerTextDraw_setText"));

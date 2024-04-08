@@ -5,6 +5,26 @@ extern "C"
 {
 #endif
 
+    typedef struct
+    {
+        int8_t engine;
+        int8_t lights;
+        int8_t alarm;
+        int8_t doors;
+        int8_t bonnet;
+        int8_t boot;
+        int8_t objective;
+        int8_t siren;
+        int8_t doorDriver;
+        int8_t doorPassenger;
+        int8_t doorBackLeft;
+        int8_t doorBackRight;
+        int8_t windowDriver;
+        int8_t windowPassenger;
+        int8_t windowBackLeft;
+        int8_t windowBackRight;
+    } VehicleParams;
+
     void* vehicle_create(int isStatic, int modelId, float x, float y, float z, float angle, int colour1, int colour2, int respawnDelay, int addSiren);
     void vehicle_release(void* vehicle);
     int vehicle_isStreamedInForPlayer(void* vehicle, void* player);
@@ -26,7 +46,7 @@ extern "C"
     void vehicle_putPlayer(void* vehicle, void* player, int seatID);
     void vehicle_setZAngle(void* vehicle, float angle);
     float vehicle_getZAngle(void* vehicle);
-    void vehicle_setParams(void* vehicle, VehicleParams *params);
+    void vehicle_setParams(void* vehicle, VehicleParams* params);
     void vehicle_setParamsForPlayer(void* vehicle, void* player, VehicleParams* params);
     VehicleParams vehicle_getParams(void* vehicle);
     int vehicle_isDead(void* vehicle);

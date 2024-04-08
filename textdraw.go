@@ -3,34 +3,33 @@ package gomp
 // #include <stdlib.h>
 // #include <string.h>
 // #include "include/textdraw.h"
-// #include "include/playertextdraw.h"
 import "C"
 import "unsafe"
 
 type TextDrawAlignment int
 
 const (
-	TextDrawAlignmentDefault TextDrawAlignment = iota
-	TextDrawAlignmentLeft
-	TextDrawAlignmentCenter
-	TextDrawAlignmentRight
+	TextdrawAlignmentDefault TextDrawAlignment = iota
+	TextdrawAlignmentLeft
+	TextdrawAlignmentCenter
+	TextdrawAlignmentRight
 )
 
-type TextDrawStyle int
+type TextdrawStyle int
 
 const (
-	TextDrawStyle0 TextDrawStyle = iota
-	TextDrawStyle1
-	TextDrawStyle2
-	TextDrawStyle3
-	TextDrawStyle4
-	TextDrawStyle5
-	TextDrawStyleFontBeckettRegular
-	TextDrawStyleFontAharoniBold
-	TextDrawStyleFontBankGothic
-	TextDrawStylePricedown
-	TextDrawStyleSprite
-	TextDrawStylePreview
+	TextdrawStyle0 TextdrawStyle = iota
+	TextdrawStyle1
+	TextdrawStyle2
+	TextdrawStyle3
+	TextdrawStyle4
+	TextdrawStyle5
+	TextdrawStyleFontBeckettRegular
+	TextdrawStyleFontAharoniBold
+	TextdrawStyleFontBankGothic
+	TextdrawStylePricedown
+	TextdrawStyleSprite
+	TextdrawStylePreview
 )
 
 type Textdraw struct {
@@ -63,6 +62,14 @@ func FreeTextdraw(td *Textdraw) {
 	}
 
 	C.playerTextDraw_release(td.handle, td.player.handle)
+}
+
+func (td *Textdraw) ID() int {
+	if td.player == nil {
+		return int(C.textDraw_getID(td.handle))
+	}
+
+	return int(C.playerTextDraw_getID(td.handle))
 }
 
 func (td *Textdraw) SetPosition(pos Vector2) {
@@ -128,32 +135,32 @@ func (td *Textdraw) Alignment() TextDrawAlignment {
 	return TextDrawAlignment(C.textDraw_getAlignment(td.handle))
 }
 
-func (td *Textdraw) SetColor(color int) {
+func (td *Textdraw) SetColor(color Color) {
 	C.textDraw_setColour(td.handle, C.uint(color))
 }
 
-func (td *Textdraw) Color() int {
-	return int(C.textDraw_getLetterColour(td.handle))
+func (td *Textdraw) Color() Color {
+	return Color(C.textDraw_getLetterColour(td.handle))
 }
 
 func (td *Textdraw) EnableBox() {
-	C.textDraw_useBox(td.handle, C.int(1))
+	C.textDraw_useBox(td.handle, 1)
 }
 
 func (td *Textdraw) DisableBox() {
-	C.textDraw_useBox(td.handle, C.int(0))
+	C.textDraw_useBox(td.handle, 0)
 }
 
 func (td *Textdraw) IsBoxEnabled() bool {
 	return C.textDraw_hasBox(td.handle) != 0
 }
 
-func (td *Textdraw) SetBoxColor(color int) {
+func (td *Textdraw) SetBoxColor(color Color) {
 	C.textDraw_setBoxColour(td.handle, C.uint(color))
 }
 
-func (td *Textdraw) BoxColor() int {
-	return int(C.textDraw_getBoxColour(td.handle))
+func (td *Textdraw) BoxColor() Color {
+	return Color(C.textDraw_getBoxColour(td.handle))
 }
 
 func (td *Textdraw) SetShadow(shadow int) {
@@ -172,28 +179,28 @@ func (td *Textdraw) Outline() int {
 	return int(C.textDraw_getOutline(td.handle))
 }
 
-func (td *Textdraw) SetBackgroundColor(color int) {
+func (td *Textdraw) SetBackgroundColor(color Color) {
 	C.textDraw_setBackgroundColour(td.handle, C.uint(color))
 }
 
-func (td *Textdraw) BackgroundColor() int {
-	return int(C.textDraw_getBackgroundColour(td.handle))
+func (td *Textdraw) BackgroundColor() Color {
+	return Color(C.textDraw_getBackgroundColour(td.handle))
 }
 
-func (td *Textdraw) SetStyle(style TextDrawStyle) {
+func (td *Textdraw) SetStyle(style TextdrawStyle) {
 	C.textDraw_setStyle(td.handle, C.int(style))
 }
 
-func (td *Textdraw) Style() TextDrawStyle {
-	return TextDrawStyle(C.textDraw_getStyle(td.handle))
+func (td *Textdraw) Style() TextdrawStyle {
+	return TextdrawStyle(C.textDraw_getStyle(td.handle))
 }
 
 func (td *Textdraw) EnableProportionality() {
-	C.textDraw_setProportional(td.handle, C.int(1))
+	C.textDraw_setProportional(td.handle, 1)
 }
 
 func (td *Textdraw) DisableProportionality() {
-	C.textDraw_setProportional(td.handle, C.int(0))
+	C.textDraw_setProportional(td.handle, 0)
 }
 
 func (td *Textdraw) IsProportional() bool {
@@ -201,11 +208,11 @@ func (td *Textdraw) IsProportional() bool {
 }
 
 func (td *Textdraw) EnableSelection() {
-	C.textDraw_setSelectable(td.handle, C.int(1))
+	C.textDraw_setSelectable(td.handle, 1)
 }
 
 func (td *Textdraw) DisableSelection() {
-	C.textDraw_setSelectable(td.handle, C.int(0))
+	C.textDraw_setSelectable(td.handle, 0)
 }
 
 func (td *Textdraw) IsSelectable() bool {

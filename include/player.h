@@ -5,6 +5,66 @@ extern "C"
 {
 #endif
 
+    typedef struct
+    {
+        Vector3 camFrontVector;
+        Vector3 camPos;
+        float aimZ;
+        float camZoom;
+        float aspectRatio;
+        int8_t weaponState;
+        uint8_t camMode;
+    } PlayerAimData;
+
+    typedef struct
+    {
+        Vector3 origin;
+        Vector3 hitPos;
+        Vector3 offset;
+        uint8_t weapon;
+        uint8_t hitType;
+        uint16_t hitID;
+    } PlayerBulletData;
+
+    typedef struct
+    {
+        uint8_t id;
+        uint32_t ammo;
+    } WeaponSlotData;
+
+    typedef struct
+    {
+        int hours;
+        int minutes;
+    } Time;
+
+    typedef struct
+    {
+        uint16_t ID;
+        uint16_t flags;
+    } PlayerAnimationData;
+
+    typedef struct
+    {
+        uint32_t keys;
+        int16_t upDown;
+        int16_t leftRight;
+    } PlayerKeyData;
+
+    typedef struct
+    {
+        int spectating;
+        int spectateID;
+        int type;
+    } PlayerSpectateData;
+
+    typedef enum
+    {
+        PlayerAnimationSyncType_NoSync,
+        PlayerAnimationSyncType_Sync,
+        PlayerAnimationSyncType_SyncOthers
+    } PlayerAnimationSyncType;
+
     void* player_getByID(int id);
     int player_getID(void* player);
 

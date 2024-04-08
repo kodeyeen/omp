@@ -47,7 +47,13 @@ type Vehicle struct {
 
 func NewVehicle(model VehicleModel, pos Vector3, angle float32) (*Vehicle, error) {
 	// TODO: error handling (invalid modelID and trains)
-	vehicle := C.vehicle_create(C.int(0), C.int(model), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), C.int(0), C.int(0), C.int(-1), C.int(0))
+	vehicle := C.vehicle_create(0, C.int(model), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), 0, 0, -1, 0)
+
+	return &Vehicle{handle: vehicle}, nil
+}
+
+func NewStaticVehicle(model VehicleModel, pos Vector3, angle float32) (*Vehicle, error) {
+	vehicle := C.vehicle_create(1, C.int(model), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), 0, 0, -1, 0)
 
 	return &Vehicle{handle: vehicle}, nil
 }
@@ -445,12 +451,12 @@ func (v *Vehicle) IsOccupied() bool {
 
 // Turn the siren for a vehicle on.
 func (v *Vehicle) EnableSiren() {
-	C.vehicle_setSiren(v.handle, C.int(1))
+	C.vehicle_setSiren(v.handle, 1)
 }
 
 // Turn the siren for a vehicle off.
 func (v *Vehicle) DisableSiren() {
-	C.vehicle_setSiren(v.handle, C.int(0))
+	C.vehicle_setSiren(v.handle, 0)
 }
 
 func (v *Vehicle) IsSirenEnabled() bool {

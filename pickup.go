@@ -13,7 +13,7 @@ type Pickup struct {
 }
 
 func NewPickup(modelID int, _type PickupType, pos Vector3, virtualWorld uint) *Pickup {
-	handle := C.pickup_create(C.int(modelID), C.uchar(_type), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.uint(virtualWorld), C.int(0), nil)
+	handle := C.pickup_create(C.int(modelID), C.uchar(_type), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.uint(virtualWorld), 0, nil)
 
 	pick := &Pickup{
 		handle: handle,

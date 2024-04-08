@@ -168,7 +168,6 @@ const (
 )
 
 type GameModeInitEvent struct {
-	GameMode *GameMode
 }
 
 type PlayerRequestSpawnEvent struct {
@@ -532,6 +531,6 @@ type PlayerExitedMenuEvent struct {
 }
 
 type PlayerRequestClassEvent struct {
-	Player  *Player
-	ClassID uint
+	Player *Player
+	Class  *Class
 }
