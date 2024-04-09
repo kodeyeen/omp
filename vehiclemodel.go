@@ -226,37 +226,37 @@ func VehicleCountForModel(model VehicleModel) int {
 	panic("not implemented")
 }
 
-func (m VehicleModel) Size() *Vector3 {
+func (m VehicleModel) Size() Vector3 {
 	// use GetVehicleModelInfo
 	panic("not implemented")
 }
 
-func (m VehicleModel) FrontSeatPosition() *Vector3 {
+func (m VehicleModel) FrontSeatPosition() Vector3 {
 	// use GetVehicleModelInfo
 	panic("not implemented")
 }
 
-func (m VehicleModel) RearSeatPosition() *Vector3 {
+func (m VehicleModel) RearSeatPosition() Vector3 {
 	// use GetVehicleModelInfo
 	panic("not implemented")
 }
 
-func (m VehicleModel) PetrolCapPosition() *Vector3 {
+func (m VehicleModel) PetrolCapPosition() Vector3 {
 	// use GetVehicleModelInfo
 	panic("not implemented")
 }
 
-func (m VehicleModel) FrontWheelsPosition() *Vector3 {
+func (m VehicleModel) FrontWheelsPosition() Vector3 {
 	// use GetVehicleModelInfo
 	panic("not implemented")
 }
 
-func (m VehicleModel) RearWheelsPosition() *Vector3 {
+func (m VehicleModel) RearWheelsPosition() Vector3 {
 	// use GetVehicleModelInfo
 	panic("not implemented")
 }
 
-func (m VehicleModel) MiddleWheelsPosition() *Vector3 {
+func (m VehicleModel) MiddleWheelsPosition() Vector3 {
 	// use GetVehicleModelInfo
 	panic("not implemented")
 }
