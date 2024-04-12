@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"math/rand/v2"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -46,7 +47,12 @@ var vehFiles = []string{
 	"tierra.txt", "trains_platform.txt", "trains.txt", "whetstone.txt",
 }
 
-func onGameModeInit(evt *gomp.GameModeInitEvent) {
+var lsSpawns = losSantosSpawns()
+var sfSpawns = sanFierroSpawns()
+var lvSpawns = lasVenturasSpawns()
+
+func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
+	fmt.Println("CALLBACK: onGameModeInit")
 	gomp.SetGameModeText("Grand Larceny")
 	gomp.SetPlayerMarkerMode(gomp.PlayerMarkerModeGlobal)
 	gomp.EnableNametags()
@@ -166,9 +172,12 @@ func onGameModeInit(evt *gomp.GameModeInitEvent) {
 	}
 
 	fmt.Printf("Total vehicles from files: %d\n", vehCnt)
+
+	return true
 }
 
-func onPlayerConnect(evt *gomp.PlayerConnectEvent) {
+func onPlayerConnect(evt *gomp.PlayerConnectEvent) bool {
+	fmt.Println("CALLBACK: onPlayerConnect")
 	char := &Character{
 		Player:             evt.Player,
 		citySelection:      -1,
@@ -180,31 +189,55 @@ func onPlayerConnect(evt *gomp.PlayerConnectEvent) {
 
 	char.ShowGameText("~w~Grand Larceny", 3*time.Second, 4)
 	char.SendMessage("Welcome to {88AA88}G{FFFFFF}rand {88AA88}L{FFFFFF}arceny", ColorWhite)
+
+	return true
 }
 
-func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) {
+func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) bool {
+	fmt.Println("CALLBACK: onPlayerSpawn")
 	char := chars[evt.Player.ID()]
 
 	if char.IsBot() {
-		return
+		return true
 	}
 
 	char.SetInterior(0)
-	char.ShowClock()
+	char.HideClock()
 	char.ResetMoney()
 	char.GiveMoney(30000)
+
+	var randSpawn Spawn
+
+	if char.citySelection == CityLosSantos {
+		randSpawnN := rand.IntN(len(lsSpawns))
+		randSpawn = lsSpawns[randSpawnN]
+	} else if char.citySelection == CitySanFierro {
+		randSpawnN := rand.IntN(len(sfSpawns))
+		randSpawn = sfSpawns[randSpawnN]
+	} else if char.citySelection == CityLasVenturas {
+		randSpawnN := rand.IntN(len(lvSpawns))
+		randSpawn = lvSpawns[randSpawnN]
+	}
+
+	char.SetPosition(gomp.Vector3{X: randSpawn.pos.X, Y: randSpawn.pos.Y, Z: randSpawn.pos.Z})
+	char.SetFacingAngle(randSpawn.angle)
+
+	char.GiveWeapon(gomp.WeaponColt45, 100)
+	char.HideClock()
+
+	return true
 }
 
-func onPlayerRequestClass(evt *gomp.PlayerRequestClassEvent) {
+func onPlayerRequestClass(evt *gomp.PlayerRequestClassEvent) bool {
 	char := chars[evt.Player.ID()]
 
 	if char.IsBot() {
-		return
+		return true
 	}
 
 	if char.hasCitySelected {
 		setupCharSelection(char)
-		return
+		return true
 	}
 
 	if char.State() != gomp.PlayerStateSpectating {
@@ -212,27 +245,32 @@ func onPlayerRequestClass(evt *gomp.PlayerRequestClassEvent) {
 		classSelHelperTd.ShowFor(char.Player)
 		char.citySelection = -1
 	}
+
+	return false
 }
 
-func onPlayerUpdate(evt *gomp.PlayerUpdateEvent) {
+func onPlayerUpdate(evt *gomp.PlayerUpdateEvent) bool {
 	char := chars[evt.Player.ID()]
 
 	if char.IsBot() {
-		return
+		return true
 	}
 
 	if !char.hasCitySelected && char.State() == gomp.PlayerStateSpectating {
 		handleCitySelection(char)
-		return
+		return true
 	}
 
 	if char.ArmedWeapon() == gomp.WeaponMinigun {
 		char.Kick()
-		return
+		return false
 	}
+
+	return true
 }
 
-func onPlayerDeath(evt *gomp.PlayerDeathEvent) {
+func onPlayerDeath(evt *gomp.PlayerDeathEvent) bool {
+	fmt.Println("CALLBACK: onPlayerUpdate")
 	char := chars[evt.Player.ID()]
 
 	char.hasCitySelected = false
@@ -244,13 +282,15 @@ func onPlayerDeath(evt *gomp.PlayerDeathEvent) {
 
 	if killer == nil {
 		char.ResetMoney()
-		return
+		return true
 	}
 
 	if char.Money() > 0 {
 		killer.GiveMoney(char.Money())
 		char.ResetMoney()
 	}
+
+	return true
 }
 
 func NewCityNameTextdraw(cityName string) (*gomp.Textdraw, error) {
@@ -415,6 +455,7 @@ func setupSelectedCity(char *Character) {
 	if char.citySelection == CityLosSantos {
 		char.SetCameraPosition(gomp.Vector3{X: 1630.6136, Y: -2286.0298, Z: 110.0})
 		char.SetCameraLookAt(gomp.Vector3{X: 1887.6034, Y: -1682.1442, Z: 47.6167}, gomp.PlayerCameraCutTypeCut)
+		fmt.Println(char.CameraPosition())
 
 		lsTd.ShowFor(char.Player)
 		sfTd.HideFor(char.Player)
@@ -422,6 +463,7 @@ func setupSelectedCity(char *Character) {
 	} else if char.citySelection == CitySanFierro {
 		char.SetCameraPosition(gomp.Vector3{X: -1300.8754, Y: 68.0546, Z: 129.4823})
 		char.SetCameraLookAt(gomp.Vector3{X: -1817.9412, Y: 769.3878, Z: 132.6589}, gomp.PlayerCameraCutTypeCut)
+		fmt.Println(char.CameraPosition())
 
 		lsTd.HideFor(char.Player)
 		sfTd.ShowFor(char.Player)
@@ -429,6 +471,7 @@ func setupSelectedCity(char *Character) {
 	} else if char.citySelection == CityLasVenturas {
 		char.SetCameraPosition(gomp.Vector3{X: 1310.6155, Y: 1675.9182, Z: 110.7390})
 		char.SetCameraLookAt(gomp.Vector3{X: 2285.2944, Y: 1919.3756, Z: 68.2275}, gomp.PlayerCameraCutTypeCut)
+		fmt.Println(char.CameraPosition())
 
 		lsTd.HideFor(char.Player)
 		sfTd.HideFor(char.Player)
@@ -438,18 +481,21 @@ func setupSelectedCity(char *Character) {
 
 func setupCharSelection(char *Character) {
 	if char.citySelection == CityLosSantos {
+		fmt.Println("City LOS SANTOS")
 		char.SetInterior(11)
 		char.SetPosition(gomp.Vector3{X: 508.7362, Y: -87.4335, Z: 998.9609})
 		char.SetFacingAngle(0.0)
 		char.SetCameraPosition(gomp.Vector3{X: 508.7362, Y: -83.4335, Z: 998.9609})
 		char.SetCameraLookAt(gomp.Vector3{X: 508.7362, Y: -87.4335, Z: 998.9609}, gomp.PlayerCameraCutTypeCut)
 	} else if char.citySelection == CitySanFierro {
+		fmt.Println("CITY SANFIERRO")
 		char.SetInterior(3)
 		char.SetPosition(gomp.Vector3{X: -2673.8381, Y: 1399.7424, Z: 918.3516})
 		char.SetFacingAngle(181.0)
 		char.SetCameraPosition(gomp.Vector3{X: -2673.2776, Y: 1394.3859, Z: 918.3516})
 		char.SetCameraLookAt(gomp.Vector3{X: -2673.8381, Y: 1399.7424, Z: 918.3516}, gomp.PlayerCameraCutTypeCut)
 	} else if char.citySelection == CityLasVenturas {
+		fmt.Println("CITY LAS VENTURAS")
 		char.SetInterior(3)
 		char.SetPosition(gomp.Vector3{X: 349.0453, Y: 193.2271, Z: 1014.1797})
 		char.SetFacingAngle(286.25)
