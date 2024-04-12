@@ -15,24 +15,30 @@ func NewDispatcher() *dispatcher {
 	}
 }
 
-func Dispatch[T any](d *dispatcher, evtType Type, evt T) {
+func Dispatch[T any](d *dispatcher, evtType Type, evt T) bool {
 	listeners, ok := d.listeners[evtType]
 	if !ok {
-		return
+		return true
 	}
 
 	for _, listener := range listeners {
-		handler, ok := listener.handler.(func(T))
+		handler, ok := listener.handler.(func(T) bool)
 		if !ok {
 			continue
 		}
 
-		handler(evt)
+		callNext := handler(evt)
 
 		if listener.once {
 			d.Off(evtType, listener.handler)
 		}
+
+		if !callNext {
+			return false
+		}
 	}
+
+	return true
 }
 
 func (d *dispatcher) On(evtType Type, handler any) {
