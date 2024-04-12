@@ -16,21 +16,21 @@ func NewDispatcher() *dispatcher {
 }
 
 func Dispatch[T any](d *dispatcher, evtType Type, evt T) {
-	lstrs, ok := d.listeners[evtType]
+	listeners, ok := d.listeners[evtType]
 	if !ok {
 		return
 	}
 
-	for _, lstr := range lstrs {
-		handler, ok := lstr.handler.(func(T))
+	for _, listener := range listeners {
+		handler, ok := listener.handler.(func(T))
 		if !ok {
 			continue
 		}
 
 		handler(evt)
 
-		if lstr.once {
-			d.Off(evtType, lstr.handler)
+		if listener.once {
+			d.Off(evtType, listener.handler)
 		}
 	}
 }
@@ -41,13 +41,13 @@ func (d *dispatcher) On(evtType Type, handler any) {
 		d.listeners[evtType] = make([]listener, 0)
 	}
 
-	lstrs := d.listeners[evtType]
-	lstrs = append(lstrs, listener{
+	listeners := d.listeners[evtType]
+	listeners = append(listeners, listener{
 		handler: handler,
 		once:    false,
 	})
 
-	d.listeners[evtType] = lstrs
+	d.listeners[evtType] = listeners
 }
 
 func (d *dispatcher) Once(evtType Type, handler any) {
