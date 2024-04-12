@@ -230,7 +230,7 @@ func (p *Player) SetPositionFindZ(pos Vector3) {
 }
 
 func (p *Player) SetCameraPosition(pos Vector3) {
-	C.player_setPositionFindZ(p.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+	C.player_setCameraPosition(p.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
 }
 
 func (p *Player) CameraPosition() Vector3 {
