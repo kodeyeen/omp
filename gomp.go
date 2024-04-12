@@ -73,7 +73,7 @@ func onPlayerRequestSpawn(player unsafe.Pointer) {
 
 //export onPlayerSpawn
 func onPlayerSpawn(player unsafe.Pointer) {
-	event.Dispatch(eventDispatcher, EventTypeIncomingConnection, &PlayerSpawnEvent{
+	event.Dispatch(eventDispatcher, EventTypePlayerSpawn, &PlayerSpawnEvent{
 		Player: &Player{handle: player},
 	})
 }
@@ -208,9 +208,14 @@ func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys C.uint) {
 
 //export onPlayerDeath
 func onPlayerDeath(player, killer unsafe.Pointer, reason C.int) {
+	evtKiller := &Player{handle: killer}
+	if killer == nil {
+		evtKiller = nil
+	}
+
 	event.Dispatch(eventDispatcher, EventTypePlayerDeath, &PlayerDeathEvent{
 		Player: &Player{handle: player},
-		Killer: &Player{handle: killer},
+		Killer: evtKiller,
 		Reason: int(reason),
 	})
 }
