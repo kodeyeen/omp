@@ -535,6 +535,6 @@ type PlayerExitedMenuEvent struct {
 }
 
 type PlayerRequestClassEvent struct {
-	Player  *Player
-	ClassID int
+	Player *Player
+	Class  *Class
 }
