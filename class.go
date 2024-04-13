@@ -38,6 +38,10 @@ func NewClass(
 	return &Class{handle: class}, nil
 }
 
+func (c *Class) ID() int {
+	return int(C.class_getID(c.handle))
+}
+
 func (c *Class) SetTeam(team int) {
 	data := C.class_getClass(c.handle)
 	data.team = C.int(team)

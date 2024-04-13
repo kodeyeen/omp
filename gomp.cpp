@@ -29,12 +29,14 @@ extern "C"
         funcs.emplace("server_enableStuntBonuses", findFunc(handle, "server_enableStuntBonuses"));
         funcs.emplace("server_setWeather", findFunc(handle, "server_setWeather"));
         funcs.emplace("server_setWorldTime", findFunc(handle, "server_setWorldTime"));
+
         funcs.emplace("config_setPlayerMarkerMode", findFunc(handle, "config_setPlayerMarkerMode"));
         funcs.emplace("config_useNametags", findFunc(handle, "config_useNametags"));
         funcs.emplace("config_setNametagDrawRadius", findFunc(handle, "config_setNametagDrawRadius"));
         funcs.emplace("config_useEntryExitMarkers", findFunc(handle, "config_useEntryExitMarkers"));
 
         funcs.emplace("class_create", findFunc(handle, "class_create"));
+        funcs.emplace("class_getID", findFunc(handle, "class_getID"));
         funcs.emplace("class_setClass", findFunc(handle, "class_setClass"));
         funcs.emplace("class_getClass", findFunc(handle, "class_getClass"));
 

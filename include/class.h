@@ -22,6 +22,7 @@ extern "C"
 	} ClassData;
 
 	void* class_create(ClassData* data);
+	int class_getID(void* class_);
 	void class_setClass(void* class_, ClassData* data);
 	ClassData class_getClass(void* class_);
 
