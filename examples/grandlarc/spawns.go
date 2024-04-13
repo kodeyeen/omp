@@ -1,6 +1,6 @@
 package main
 
-import "github.com/yeeckfy/gomp"
+import "github.com/kodeyeen/gomp"
 
 type Spawn struct {
 	pos   gomp.Vector3

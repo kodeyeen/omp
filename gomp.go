@@ -7,7 +7,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/yeeckfy/gomp/event"
+	"github.com/kodeyeen/gomp/event"
 )
 
 // go build -o test.dll -buildmode=c-shared

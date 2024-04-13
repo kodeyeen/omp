@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yeeckfy/gomp"
+	"github.com/kodeyeen/gomp"
 )
 
 // go build -o test.dll -buildmode=c-shared
