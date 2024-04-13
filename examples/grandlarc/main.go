@@ -52,7 +52,6 @@ var sfSpawns = sanFierroSpawns()
 var lvSpawns = lasVenturasSpawns()
 
 func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
-	fmt.Println("CALLBACK: onGameModeInit")
 	gomp.SetGameModeText("Grand Larceny")
 	gomp.SetPlayerMarkerMode(gomp.PlayerMarkerModeGlobal)
 	gomp.EnableNametags()
@@ -77,7 +76,6 @@ func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
 	classSelHelperTd.SetBackgroundColor(0x000000FF)
 	classSelHelperTd.SetColor(0xFFFFFFFF)
 
-	gomp.NewClass(0, 298, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
 	gomp.NewClass(0, 298, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
 	gomp.NewClass(0, 299, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
 	gomp.NewClass(0, 300, gomp.Vector3{X: 1759.0189, Y: -1898.1260, Z: 13.5622}, 266.4503, -1, -1, -1, -1, -1, -1)
@@ -177,7 +175,6 @@ func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
 }
 
 func onPlayerConnect(evt *gomp.PlayerConnectEvent) bool {
-	fmt.Println("CALLBACK: onPlayerConnect")
 	char := &Character{
 		Player:             evt.Player,
 		citySelection:      -1,
@@ -194,7 +191,6 @@ func onPlayerConnect(evt *gomp.PlayerConnectEvent) bool {
 }
 
 func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) bool {
-	fmt.Println("CALLBACK: onPlayerSpawn")
 	char := chars[evt.Player.ID()]
 
 	if char.IsBot() {
@@ -209,14 +205,14 @@ func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) bool {
 	var randSpawn Spawn
 
 	if char.citySelection == CityLosSantos {
-		randSpawnN := rand.IntN(len(lsSpawns))
-		randSpawn = lsSpawns[randSpawnN]
+		randN := rand.IntN(len(lsSpawns))
+		randSpawn = lsSpawns[randN]
 	} else if char.citySelection == CitySanFierro {
-		randSpawnN := rand.IntN(len(sfSpawns))
-		randSpawn = sfSpawns[randSpawnN]
+		randN := rand.IntN(len(sfSpawns))
+		randSpawn = sfSpawns[randN]
 	} else if char.citySelection == CityLasVenturas {
-		randSpawnN := rand.IntN(len(lvSpawns))
-		randSpawn = lvSpawns[randSpawnN]
+		randN := rand.IntN(len(lvSpawns))
+		randSpawn = lvSpawns[randN]
 	}
 
 	char.SetPosition(gomp.Vector3{X: randSpawn.pos.X, Y: randSpawn.pos.Y, Z: randSpawn.pos.Z})
@@ -270,7 +266,6 @@ func onPlayerUpdate(evt *gomp.PlayerUpdateEvent) bool {
 }
 
 func onPlayerDeath(evt *gomp.PlayerDeathEvent) bool {
-	fmt.Println("CALLBACK: onPlayerUpdate")
 	char := chars[evt.Player.ID()]
 
 	char.hasCitySelected = false
@@ -366,7 +361,6 @@ func LoadStaticVehiclesFromFile(filename string) (int, error) {
 		if err != nil {
 			continue
 		}
-		_ = primaryColor
 
 		secColAndName := strings.Split(split[6], ";")
 
@@ -374,7 +368,6 @@ func LoadStaticVehiclesFromFile(filename string) (int, error) {
 		if err != nil {
 			continue
 		}
-		_ = secondaryColor
 
 		veh, err := gomp.NewStaticVehicle(gomp.VehicleModel(model), gomp.Vector3{X: float32(spawnX), Y: float32(spawnY), Z: float32(spawnZ)}, float32(rot))
 		if err != nil {
@@ -455,7 +448,6 @@ func setupSelectedCity(char *Character) {
 	if char.citySelection == CityLosSantos {
 		char.SetCameraPosition(gomp.Vector3{X: 1630.6136, Y: -2286.0298, Z: 110.0})
 		char.SetCameraLookAt(gomp.Vector3{X: 1887.6034, Y: -1682.1442, Z: 47.6167}, gomp.PlayerCameraCutTypeCut)
-		fmt.Println(char.CameraPosition())
 
 		lsTd.ShowFor(char.Player)
 		sfTd.HideFor(char.Player)
@@ -463,7 +455,6 @@ func setupSelectedCity(char *Character) {
 	} else if char.citySelection == CitySanFierro {
 		char.SetCameraPosition(gomp.Vector3{X: -1300.8754, Y: 68.0546, Z: 129.4823})
 		char.SetCameraLookAt(gomp.Vector3{X: -1817.9412, Y: 769.3878, Z: 132.6589}, gomp.PlayerCameraCutTypeCut)
-		fmt.Println(char.CameraPosition())
 
 		lsTd.HideFor(char.Player)
 		sfTd.ShowFor(char.Player)
@@ -471,7 +462,6 @@ func setupSelectedCity(char *Character) {
 	} else if char.citySelection == CityLasVenturas {
 		char.SetCameraPosition(gomp.Vector3{X: 1310.6155, Y: 1675.9182, Z: 110.7390})
 		char.SetCameraLookAt(gomp.Vector3{X: 2285.2944, Y: 1919.3756, Z: 68.2275}, gomp.PlayerCameraCutTypeCut)
-		fmt.Println(char.CameraPosition())
 
 		lsTd.HideFor(char.Player)
 		sfTd.HideFor(char.Player)
@@ -481,21 +471,18 @@ func setupSelectedCity(char *Character) {
 
 func setupCharSelection(char *Character) {
 	if char.citySelection == CityLosSantos {
-		fmt.Println("City LOS SANTOS")
 		char.SetInterior(11)
 		char.SetPosition(gomp.Vector3{X: 508.7362, Y: -87.4335, Z: 998.9609})
 		char.SetFacingAngle(0.0)
 		char.SetCameraPosition(gomp.Vector3{X: 508.7362, Y: -83.4335, Z: 998.9609})
 		char.SetCameraLookAt(gomp.Vector3{X: 508.7362, Y: -87.4335, Z: 998.9609}, gomp.PlayerCameraCutTypeCut)
 	} else if char.citySelection == CitySanFierro {
-		fmt.Println("CITY SANFIERRO")
 		char.SetInterior(3)
 		char.SetPosition(gomp.Vector3{X: -2673.8381, Y: 1399.7424, Z: 918.3516})
 		char.SetFacingAngle(181.0)
 		char.SetCameraPosition(gomp.Vector3{X: -2673.2776, Y: 1394.3859, Z: 918.3516})
 		char.SetCameraLookAt(gomp.Vector3{X: -2673.8381, Y: 1399.7424, Z: 918.3516}, gomp.PlayerCameraCutTypeCut)
 	} else if char.citySelection == CityLasVenturas {
-		fmt.Println("CITY LAS VENTURAS")
 		char.SetInterior(3)
 		char.SetPosition(gomp.Vector3{X: 349.0453, Y: 193.2271, Z: 1014.1797})
 		char.SetFacingAngle(286.25)
