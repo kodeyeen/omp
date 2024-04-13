@@ -72,11 +72,8 @@ extern "C"
 #endif
 
     void* openLib(const char* path);
-
     void* findFunc(void* handle, const char* name);
-
     void initFuncs(void* handle);
-
     void freeArray(Array* arr);
 
 #ifdef __cplusplus
