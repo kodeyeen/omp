@@ -77,8 +77,7 @@ const (
 	EventTypePlayerStreamOut event.Type = "playerStreamOut"
 
 	// Player text events
-	EventTypePlayerText        event.Type = "playerText"
-	EventTypePlayerCommandText event.Type = "playerCommandText"
+	EventTypePlayerText event.Type = "playerText"
 
 	// Player change events
 	EventTypePlayerScoreChange    event.Type = "playerScoreChange"
