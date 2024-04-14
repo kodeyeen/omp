@@ -218,11 +218,6 @@ type PlayerTextEvent struct {
 	Message string
 }
 
-type PlayerCommandTextEvent struct {
-	Player  *Player
-	Command string
-}
-
 type PlayerScoreChangeEvent struct {
 	Player *Player
 	Score  int

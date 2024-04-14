@@ -4,6 +4,7 @@ package gomp
 // #include "include/gomp.h"
 import "C"
 import (
+	"strings"
 	"time"
 	"unsafe"
 
@@ -33,6 +34,7 @@ type Vector2 struct {
 type Color uint
 
 var eventDispatcher = event.NewDispatcher()
+var cmdMnr = newCommandManager()
 
 func On(evtType event.Type, handler any) {
 	eventDispatcher.On(evtType, handler)
@@ -48,6 +50,10 @@ func Off(evtType event.Type, handler any) {
 
 func Dispatch[T any](evtType event.Type, evt T) {
 	event.Dispatch(eventDispatcher, evtType, evt)
+}
+
+func AddCommand(name string, handler CommandHandler) {
+	cmdMnr.add(name, handler)
 }
 
 //export onGameModeInit
@@ -140,11 +146,26 @@ func onPlayerText(player unsafe.Pointer, message *C.char) {
 }
 
 //export onPlayerCommandText
-func onPlayerCommandText(player unsafe.Pointer, message *C.char) {
-	event.Dispatch(eventDispatcher, EventTypePlayerCommandText, &PlayerCommandTextEvent{
-		Player:  &Player{handle: player},
-		Command: C.GoString(message),
+func onPlayerCommandText(player unsafe.Pointer, message C.String) bool {
+	rawCmd := C.GoStringN(message.buf, C.int(message.length))
+
+	tmp := strings.Fields(rawCmd)
+	name := strings.TrimPrefix(tmp[0], "/")
+	args := tmp[1:]
+
+	exists := cmdMnr.has(name)
+	if !exists {
+		return false
+	}
+
+	cmdMnr.run(name, &Command{
+		Sender:   &Player{handle: player},
+		Name:     name,
+		Args:     args,
+		RawValue: rawCmd,
 	})
+
+	return true
 }
 
 // Player shot events

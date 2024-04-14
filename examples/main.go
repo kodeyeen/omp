@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"strings"
 
 	"github.com/kodeyeen/gomp"
 )
@@ -29,111 +28,107 @@ func init() {
 		gomp.NewPickup(1273, 2, gomp.Vector3{X: 2216.0325, Y: -1161.7224, Z: 25.7266}, 0)
 	})
 
-	var veh *gomp.Vehicle
+	gomp.AddCommand("getpos", func(cmd *gomp.Command) {
+		cmd.Sender.SendMessage(fmt.Sprintf("Your position is %+v", cmd.Sender.Position()), 0xFFFFFFFF)
+	})
 
-	gomp.On(gomp.EventTypePlayerCommandText, func(evt *gomp.PlayerCommandTextEvent) {
-		plr := evt.Player
+	gomp.AddCommand("createveh", func(cmd *gomp.Command) {
+		if len(cmd.Args) != 1 {
+			cmd.Sender.SendMessage("Invalid command syntax", 0xFFFFFFFF)
+			return
+		}
 
-		tmp := strings.Fields(evt.Command)
-		cmdName := strings.TrimPrefix(tmp[0], "/")
-		cmdArgs := tmp[1:]
+		modelID, err := strconv.Atoi(cmd.Args[0])
+		if err != nil {
+			cmd.Sender.SendMessage("Invalid command syntax", 0xFFFFFFFF)
+			return
+		}
 
-		plr.SendMessage(cmdName, 0xFFFFFFFF)
-		log.Println("COMMAND", cmdName)
+		gomp.NewVehicle(gomp.VehicleModel(modelID), cmd.Sender.Position(), 0.0)
+	})
 
-		switch cmdName {
-		// case "createcp":
-		// 	plr.NewDefaultCheckpoint(5.0, gomp.Vector3{X: -38.9655, Y: 30.4141, Z: 3.1172})
-		case "getpos":
-			plr.SendMessage(fmt.Sprintf("Your position is %+v", plr.Position()), 0xFFFFFFFF)
-		case "setname":
-			status := plr.SetName("кириллица")
-			plr.SendMessage(fmt.Sprintf("You changed %d your name to %s", status, plr.Name()), 0xFFFFFFFF)
-		case "createveh":
-			modelID, err := strconv.Atoi(cmdArgs[0])
-			if err != nil {
-				plr.SendMessage("Invalid command syntax", 0xFFFFFFFF)
-				return
-			}
+	gomp.AddCommand("setname", func(cmd *gomp.Command) {
+		status := cmd.Sender.SetName("кириллица")
+		cmd.Sender.SendMessage(fmt.Sprintf("You changed %d your name to %s", status, cmd.Sender.Name()), 0xFFFFFFFF)
+	})
 
-			veh, _ = gomp.NewVehicle(gomp.VehicleModel(modelID), plr.Position(), 0.0)
-		case "doors":
-			plrVeh, err := plr.Vehicle()
-			if err != nil {
-				return
-			}
+	gomp.AddCommand("doors", func(cmd *gomp.Command) {
+		plrVeh, err := cmd.Sender.Vehicle()
+		if err != nil {
+			return
+		}
 
-			if plrVeh.AreDoorsLocked() {
-				plrVeh.UnlockDoors()
-				plr.SendMessage("Doors unlocked", 0xFFFFFFFF)
-			} else {
-				plrVeh.LockDoors()
-				plr.SendMessage("Doors locked", 0xFFFFFFFF)
-			}
-		case "hood":
-			plrVeh, err := plr.Vehicle()
-			if err != nil {
-				return
-			}
+		if plrVeh.AreDoorsLocked() {
+			plrVeh.UnlockDoors()
+			cmd.Sender.SendMessage("Doors unlocked", 0xFFFFFFFF)
+		} else {
+			plrVeh.LockDoors()
+			cmd.Sender.SendMessage("Doors locked", 0xFFFFFFFF)
+		}
+	})
 
-			if plrVeh.IsHoodOpen() {
-				plrVeh.CloseHood()
-			} else {
-				plrVeh.OpenHood()
-			}
-		case "trunk":
-			plrVeh, err := plr.Vehicle()
-			if err != nil {
-				return
-			}
+	gomp.AddCommand("hood", func(cmd *gomp.Command) {
+		plrVeh, err := cmd.Sender.Vehicle()
+		if err != nil {
+			return
+		}
 
-			if plrVeh.IsTrunkOpen() {
-				plrVeh.CloseTrunk()
-			} else {
-				plrVeh.OpenTrunk()
-			}
-		case "lights":
-			plrVeh, err := plr.Vehicle()
-			if err != nil {
-				return
-			}
+		if plrVeh.IsHoodOpen() {
+			plrVeh.CloseHood()
+		} else {
+			plrVeh.OpenHood()
+		}
+	})
 
-			if plrVeh.AreLightsTurnedOn() {
-				plrVeh.TurnOffLights()
-			} else {
-				plrVeh.TurnOnLights()
-			}
-		case "engine":
-			plrVeh, err := plr.Vehicle()
-			if err != nil {
-				return
-			}
+	gomp.AddCommand("trunk", func(cmd *gomp.Command) {
+		plrVeh, err := cmd.Sender.Vehicle()
+		if err != nil {
+			return
+		}
 
-			if plrVeh.IsEngineStarted() {
-				plrVeh.StopEngine()
-			} else {
-				plrVeh.StartEngine()
-			}
-		case "alarm":
-			plrVeh, err := plr.Vehicle()
-			if err != nil {
-				return
-			}
+		if plrVeh.IsTrunkOpen() {
+			plrVeh.CloseTrunk()
+		} else {
+			plrVeh.OpenTrunk()
+		}
+	})
 
-			if plrVeh.IsAlarmTurnedOn() {
-				plrVeh.TurnOffAlarm()
-			} else {
-				plrVeh.TurnOnAlarm()
-			}
-		case "passengers":
-			// plrVeh, err := plr.Vehicle()
-			// if err != nil {
-			// 	log.Println("NO VEH")
-			// 	return
-			// }
+	gomp.AddCommand("lights", func(cmd *gomp.Command) {
+		plrVeh, err := cmd.Sender.Vehicle()
+		if err != nil {
+			return
+		}
 
-			passengers := veh.Passengers()
-			log.Println("PASSES", passengers)
+		if plrVeh.AreLightsTurnedOn() {
+			plrVeh.TurnOffLights()
+		} else {
+			plrVeh.TurnOnLights()
+		}
+	})
+
+	gomp.AddCommand("engine", func(cmd *gomp.Command) {
+		plrVeh, err := cmd.Sender.Vehicle()
+		if err != nil {
+			return
+		}
+
+		if plrVeh.IsEngineStarted() {
+			plrVeh.StopEngine()
+		} else {
+			plrVeh.StartEngine()
+		}
+	})
+
+	gomp.AddCommand("alarm", func(cmd *gomp.Command) {
+		plrVeh, err := cmd.Sender.Vehicle()
+		if err != nil {
+			return
+		}
+
+		if plrVeh.IsAlarmTurnedOn() {
+			plrVeh.TurnOffAlarm()
+		} else {
+			plrVeh.TurnOnAlarm()
 		}
 	})
 }
