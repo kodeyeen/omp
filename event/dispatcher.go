@@ -70,7 +70,9 @@ func (d *dispatcher) Off(evtType Type, handler any) {
 		return reflect.ValueOf(l.handler).Pointer() == reflect.ValueOf(handler).Pointer()
 	})
 
-	listeners = append(listeners[:idx], listeners[idx+1:]...)
+	if idx == -1 {
+		return
+	}
 
-	d.listeners[evtType] = listeners
+	d.listeners[evtType] = slices.Delete(listeners, idx, idx+1)
 }
