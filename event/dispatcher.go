@@ -61,10 +61,7 @@ func (d *dispatcher) Once(evtType Type, handler any) {
 }
 
 func (d *dispatcher) Off(evtType Type, handler any) {
-	listeners, ok := d.listeners[evtType]
-	if !ok {
-		return
-	}
+	listeners := d.listeners[evtType]
 
 	idx := slices.IndexFunc(listeners, func(l listener) bool {
 		return reflect.ValueOf(l.handler).Pointer() == reflect.ValueOf(handler).Pointer()
