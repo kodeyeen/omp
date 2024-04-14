@@ -16,10 +16,7 @@ func NewDispatcher() *dispatcher {
 }
 
 func Dispatch[T any](d *dispatcher, evtType Type, evt T) bool {
-	listeners, ok := d.listeners[evtType]
-	if !ok {
-		return true
-	}
+	listeners := d.listeners[evtType]
 
 	for _, l := range listeners {
 		handler, ok := l.handler.(func(T) bool)
