@@ -163,7 +163,7 @@ func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
 
 		cnt, err := LoadStaticVehiclesFromFile(filename)
 		if err != nil {
-			fmt.Printf("Failed to load vehicles from %s: %v\n", filename, err)
+			fmt.Printf("Failed to load vehicles from %s: %s\n", filename, err.Error())
 		}
 
 		vehCnt += cnt
