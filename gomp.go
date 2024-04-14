@@ -297,17 +297,11 @@ func onClientCheckResponse(player unsafe.Pointer, actionType, address, results i
 // Player update event
 
 //export onPlayerUpdate
-func onPlayerUpdate(player unsafe.Pointer, now C.long) int {
-	ret := event.Dispatch(evtDispatcher, EventTypePlayerUpdate, &PlayerUpdateEvent{
+func onPlayerUpdate(player unsafe.Pointer, now C.long) bool {
+	return event.Dispatch(evtDispatcher, EventTypePlayerUpdate, &PlayerUpdateEvent{
 		Player: &Player{handle: player},
 		Now:    time.Unix(0, int64(now)*int64(time.Millisecond)),
 	})
-
-	if ret {
-		return 1
-	}
-
-	return 0
 }
 
 // Player dialog event
@@ -698,15 +692,9 @@ func onPlayerExitedMenu(player unsafe.Pointer) {
 }
 
 //export onPlayerRequestClass
-func onPlayerRequestClass(player, class unsafe.Pointer) int {
-	ret := event.Dispatch(evtDispatcher, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
+func onPlayerRequestClass(player, class unsafe.Pointer) bool {
+	return event.Dispatch(evtDispatcher, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
 		Player: &Player{handle: player},
 		Class:  &Class{handle: class},
 	})
-
-	if ret {
-		return 1
-	}
-
-	return 0
 }
