@@ -21,16 +21,16 @@ func Dispatch[T any](d *dispatcher, evtType Type, evt T) bool {
 		return true
 	}
 
-	for _, listener := range listeners {
-		handler, ok := listener.handler.(func(T) bool)
+	for _, l := range listeners {
+		handler, ok := l.handler.(func(T) bool)
 		if !ok {
 			continue
 		}
 
 		callNext := handler(evt)
 
-		if listener.once {
-			d.Off(evtType, listener.handler)
+		if l.once {
+			d.Off(evtType, l.handler)
 		}
 
 		if !callNext {
@@ -42,12 +42,8 @@ func Dispatch[T any](d *dispatcher, evtType Type, evt T) bool {
 }
 
 func (d *dispatcher) On(evtType Type, handler any) {
-	_, ok := d.listeners[evtType]
-	if !ok {
-		d.listeners[evtType] = make([]listener, 0)
-	}
-
 	listeners := d.listeners[evtType]
+
 	listeners = append(listeners, listener{
 		handler: handler,
 		once:    false,
@@ -57,31 +53,27 @@ func (d *dispatcher) On(evtType Type, handler any) {
 }
 
 func (d *dispatcher) Once(evtType Type, handler any) {
-	_, ok := d.listeners[evtType]
-	if !ok {
-		d.listeners[evtType] = make([]listener, 0)
-	}
+	listeners := d.listeners[evtType]
 
-	lstrs := d.listeners[evtType]
-	lstrs = append(lstrs, listener{
+	listeners = append(listeners, listener{
 		handler: handler,
 		once:    true,
 	})
 
-	d.listeners[evtType] = lstrs
+	d.listeners[evtType] = listeners
 }
 
 func (d *dispatcher) Off(evtType Type, handler any) {
-	lstrs, ok := d.listeners[evtType]
+	listeners, ok := d.listeners[evtType]
 	if !ok {
 		return
 	}
 
-	idx := slices.IndexFunc(lstrs, func(lstr listener) bool {
-		return reflect.ValueOf(lstr.handler).Pointer() == reflect.ValueOf(handler).Pointer()
+	idx := slices.IndexFunc(listeners, func(l listener) bool {
+		return reflect.ValueOf(l.handler).Pointer() == reflect.ValueOf(handler).Pointer()
 	})
 
-	lstrs = append(lstrs[:idx], lstrs[idx+1:]...)
+	listeners = append(listeners[:idx], listeners[idx+1:]...)
 
-	d.listeners[evtType] = lstrs
+	d.listeners[evtType] = listeners
 }
