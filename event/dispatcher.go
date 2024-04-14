@@ -73,3 +73,8 @@ func (d *dispatcher) Off(evtType Type, handler any) {
 
 	d.listeners[evtType] = slices.Delete(listeners, idx, idx+1)
 }
+
+func (d *dispatcher) Has(evtType Type) bool {
+	_, ok := d.listeners[evtType]
+	return ok
+}
