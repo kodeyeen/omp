@@ -375,8 +375,8 @@ func LoadStaticVehiclesFromFile(filename string) (int, error) {
 		}
 
 		veh.SetColor(gomp.VehicleColor{
-			Primary:   int(primaryColor),
-			Secondary: int(secondaryColor),
+			Primary:   gomp.Color(primaryColor),
+			Secondary: gomp.Color(secondaryColor),
 		})
 
 		cnt++

@@ -249,8 +249,8 @@ func (td *Textdraw) PreviewVehicleColor() VehicleColor {
 	color := C.textDraw_getPreviewVehicleColour(td.handle)
 
 	return VehicleColor{
-		Primary:   int(color.primary),
-		Secondary: int(color.secondary),
+		Primary:   Color(color.primary),
+		Secondary: Color(color.secondary),
 	}
 }
 
