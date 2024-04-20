@@ -31,9 +31,10 @@ extern "C"
         funcs.emplace("server_setWorldTime", findFunc(handle, "server_setWorldTime"));
 
         funcs.emplace("config_setPlayerMarkerMode", findFunc(handle, "config_setPlayerMarkerMode"));
-        funcs.emplace("config_useNametags", findFunc(handle, "config_useNametags"));
         funcs.emplace("config_setNametagDrawRadius", findFunc(handle, "config_setNametagDrawRadius"));
         funcs.emplace("config_useEntryExitMarkers", findFunc(handle, "config_useEntryExitMarkers"));
+        funcs.emplace("config_useManualEngineAndLights", findFunc(handle, "config_useManualEngineAndLights"));
+        funcs.emplace("config_useNametags", findFunc(handle, "config_useNametags"));
 
         funcs.emplace("class_create", findFunc(handle, "class_create"));
         funcs.emplace("class_getID", findFunc(handle, "class_getID"));
@@ -306,6 +307,20 @@ extern "C"
         funcs.emplace("vehicle_isInRangeOfPoint", findFunc(handle, "vehicle_isInRangeOfPoint"));
 
         funcs.emplace("pickup_create", findFunc(handle, "pickup_create"));
+        funcs.emplace("pickup_release", findFunc(handle, "pickup_release"));
+        funcs.emplace("pickup_getID", findFunc(handle, "pickup_getID"));
+        funcs.emplace("pickup_setType", findFunc(handle, "pickup_setType"));
+        funcs.emplace("pickup_getType", findFunc(handle, "pickup_getType"));
+        funcs.emplace("pickup_setModel", findFunc(handle, "pickup_setModel"));
+        funcs.emplace("pickup_getModel", findFunc(handle, "pickup_getModel"));
+        funcs.emplace("pickup_isStreamedInForPlayer", findFunc(handle, "pickup_isStreamedInForPlayer"));
+        funcs.emplace("pickup_setPickupHiddenForPlayer", findFunc(handle, "pickup_setPickupHiddenForPlayer"));
+        funcs.emplace("pickup_isPickupHiddenForPlayer", findFunc(handle, "pickup_isPickupHiddenForPlayer"));
+
+        funcs.emplace("pickup_setPosition", findFunc(handle, "pickup_setPosition"));
+        funcs.emplace("pickup_getPosition", findFunc(handle, "pickup_getPosition"));
+        funcs.emplace("pickup_setVirtualWorld", findFunc(handle, "pickup_setVirtualWorld"));
+        funcs.emplace("pickup_getVirtualWorld", findFunc(handle, "pickup_getVirtualWorld"));
 
         // TextDraw
         funcs.emplace("textDraw_create", findFunc(handle, "textDraw_create"));

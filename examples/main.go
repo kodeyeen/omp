@@ -11,12 +11,13 @@ import (
 // go build -o test.dll -buildmode=c-shared
 
 func init() {
-	gomp.On(gomp.EventTypeGameModeInit, func(evt *gomp.GameModeInitEvent) {
+	gomp.On(gomp.EventTypeGameModeInit, func(evt *gomp.GameModeInitEvent) bool {
 		log.Println("GAME MODE INITIALIZED")
 		gomp.EnableManualEngineAndLights()
+		return true
 	})
 
-	gomp.On(gomp.EventTypePlayerConnect, func(evt *gomp.PlayerConnectEvent) {
+	gomp.On(gomp.EventTypePlayerConnect, func(evt *gomp.PlayerConnectEvent) bool {
 		plr := evt.Player
 
 		plr.GiveWeapon(gomp.WeaponDeagle, 100)
@@ -25,7 +26,9 @@ func init() {
 
 		gomp.NewVehicle(gomp.VehicleModelAlpha, gomp.Vector3{X: 2161.8389, Y: -1143.7473, Z: 24.6501}, 266.9070)
 
-		gomp.NewPickup(1273, 2, gomp.Vector3{X: 2216.0325, Y: -1161.7224, Z: 25.7266}, 0)
+		gomp.NewPickup(1273, 1, 0, gomp.Vector3{X: 3.9905, Y: 7.0804, Z: 3.1096})
+
+		return true
 	})
 
 	gomp.AddCommand("getpos", func(cmd *gomp.Command) {
