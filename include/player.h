@@ -65,6 +65,17 @@ extern "C"
         PlayerAnimationSyncType_SyncOthers
     } PlayerAnimationSyncType;
 
+    typedef struct
+    {
+        int model;
+        int bone;
+        Vector3 offset;
+        Vector3 rotation;
+        Vector3 scale;
+        uint32_t colour1;
+        uint32_t colour2;
+    } PlayerAttachedObject;
+
     void* player_getByID(int id);
     int player_getID(void* player);
 
@@ -225,6 +236,18 @@ extern "C"
     void* player_getVehicle(void* player);
     int player_getSeat(void* player);
     int player_isInModShop(void* player);
+
+    // object data
+    void player_beginObjectEditing(void* player, void* object);
+    void player_endObjectEditing(void* player);
+    unsigned char player_isEditingObject(void* player);
+    void player_beginObjectSelecting(void* player);
+    unsigned char player_isSelectingObject(void* player);
+    void player_setAttachedObject(void* player, int index, int modelId, int bone, float offsetX, float offsetY, float offsetZ, float rotX, float rotY, float rotZ, float scaleX, float scaleY, float scaleZ, uint32_t colour1, uint32_t colour2);
+    PlayerAttachedObject player_getAttachedObject(void* player, int index);
+    void player_removeAttachedObject(void* player, int index);
+    void player_editAttachedObject(void* player, int index);
+    unsigned char player_hasAttachedObject(void* player, int index);
 
     // misc
 

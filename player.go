@@ -177,6 +177,36 @@ const (
 	PlayerMarkerModeStreamed
 )
 
+type PlayerAttachment struct {
+	ModelID            int
+	Bone               PlayerBone
+	Offset, Rot, Scale Vector3
+	Color1, Color2     Color
+}
+
+type PlayerBone int
+
+const (
+	PlayerBoneSpine PlayerBone = iota + 1
+	PlayerBoneHead
+	PlayerBoneLeftUpperArm
+	PlayerBoneRightUpperArm
+	PlayerBoneLeftHand
+	PlayerBoneRightHand
+	PlayerBoneLeftThigh
+	PlayerBoneRightThigh
+	PlayerBoneLeftFoot
+	PlayerBoneRightFoot
+	PlayerBoneRightCalf
+	PlayerBoneLeftCalf
+	PlayerBoneLeftForearm
+	PlayerBoneRightForearm
+	PlayerBoneLeftClavicle
+	PlayerBoneRightClavicle
+	PlayerBoneNeck
+	PlayerBoneJaw
+)
+
 type Player struct {
 	handle unsafe.Pointer
 }
@@ -1053,6 +1083,86 @@ func (p *Player) Vehicle() (*Vehicle, error) {
 
 func (p *Player) VehicleSeat() int {
 	return int(C.player_getSeat(p.handle))
+}
+
+// object data
+
+func (p *Player) BeginObjectEditing(obj *Object) {
+	C.player_beginObjectEditing(p.handle, obj.handle)
+}
+
+func (p *Player) EndObjectEditing() {
+	C.player_endObjectEditing(p.handle)
+}
+
+func (p *Player) IsEditingObject() bool {
+	return C.player_isEditingObject(p.handle) != 0
+}
+
+func (p *Player) BeginObjectSelecting() {
+	C.player_beginObjectSelecting(p.handle)
+}
+
+func (p *Player) IsSelectingObject() bool {
+	return C.player_isSelectingObject(p.handle) != 0
+}
+
+func (p *Player) SetAttachment(slotIdx int, attachment PlayerAttachment) {
+	C.player_setAttachedObject(
+		p.handle,
+		C.int(slotIdx),
+		C.int(attachment.ModelID),
+		C.int(attachment.Bone),
+		C.float(attachment.Offset.X),
+		C.float(attachment.Offset.Y),
+		C.float(attachment.Offset.Z),
+		C.float(attachment.Rot.X),
+		C.float(attachment.Rot.Y),
+		C.float(attachment.Rot.Z),
+		C.float(attachment.Scale.X),
+		C.float(attachment.Scale.Y),
+		C.float(attachment.Scale.Z),
+		C.uint(attachment.Color1),
+		C.uint(attachment.Color2),
+	)
+}
+
+func (p *Player) Attachment(slotIdx int) PlayerAttachment {
+	obj := C.player_getAttachedObject(p.handle, C.int(slotIdx))
+
+	return PlayerAttachment{
+		ModelID: int(obj.model),
+		Bone:    PlayerBone(obj.bone),
+		Offset: Vector3{
+			X: float32(obj.offset.x),
+			Y: float32(obj.offset.y),
+			Z: float32(obj.offset.z),
+		},
+		Rot: Vector3{
+			X: float32(obj.rotation.x),
+			Y: float32(obj.rotation.y),
+			Z: float32(obj.rotation.z),
+		},
+		Scale: Vector3{
+			X: float32(obj.scale.x),
+			Y: float32(obj.scale.y),
+			Z: float32(obj.scale.z),
+		},
+		Color1: Color(obj.colour1),
+		Color2: Color(obj.colour2),
+	}
+}
+
+func (p *Player) RemoveAttachment(slotIdx int) {
+	C.player_removeAttachedObject(p.handle, C.int(slotIdx))
+}
+
+func (p *Player) EditAttachment(slotIdx int) {
+	C.player_editAttachedObject(p.handle, C.int(slotIdx))
+}
+
+func (p *Player) HasAttachment(slotIdx int) bool {
+	return C.player_hasAttachedObject(p.handle, C.int(slotIdx)) != 0
 }
 
 // misc

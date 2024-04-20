@@ -16,6 +16,11 @@ extern "C"
         return call<void>("vehicle_release", vehicle);
     }
 
+    void* vehicle_getByID(int id)
+    {
+        return call<void*>("vehicle_getByID", id);
+    }
+
     int vehicle_isStreamedInForPlayer(void* vehicle, void* player)
     {
         return call<int>("vehicle_isStreamedInForPlayer", vehicle, player);

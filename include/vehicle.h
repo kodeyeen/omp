@@ -27,6 +27,7 @@ extern "C"
 
     void* vehicle_create(int isStatic, int modelId, float x, float y, float z, float angle, int colour1, int colour2, int respawnDelay, int addSiren);
     void vehicle_release(void* vehicle);
+    void* vehicle_getByID(int id);
     int vehicle_isStreamedInForPlayer(void* vehicle, void* player);
     void vehicle_setColour(void* vehicle, int col1, int col2);
     VehicleColour vehicle_getColour(void* vehicle);

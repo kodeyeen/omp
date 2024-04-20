@@ -58,7 +58,7 @@ func AddCommand(name string, handler CommandHandler) {
 
 //export onGameModeInit
 func onGameModeInit() {
-	clibpath := C.CString("./components/Gomp.dll")
+	clibpath := C.CString("./components/Gomponent.dll")
 	defer C.free(unsafe.Pointer(clibpath))
 
 	handle := C.openLib(clibpath)

@@ -40,6 +40,37 @@ extern "C"
         funcs.emplace("class_setClass", findFunc(handle, "class_setClass"));
         funcs.emplace("class_getClass", findFunc(handle, "class_getClass"));
 
+        // Object
+        funcs.emplace("object_create", findFunc(handle, "object_create"));
+        funcs.emplace("object_release", findFunc(handle, "object_release"));
+        funcs.emplace("object_getByID", findFunc(handle, "object_getByID"));
+        funcs.emplace("object_setDefaultCameraCollision", findFunc(handle, "object_setDefaultCameraCollision"));
+        funcs.emplace("object_setDrawDistance", findFunc(handle, "object_setDrawDistance"));
+        funcs.emplace("object_getDrawDistance", findFunc(handle, "object_getDrawDistance"));
+        funcs.emplace("object_setModel", findFunc(handle, "object_setModel"));
+        funcs.emplace("object_getModel", findFunc(handle, "object_getModel"));
+        funcs.emplace("object_setCameraCollision", findFunc(handle, "object_setCameraCollision"));
+        funcs.emplace("object_getCameraCollision", findFunc(handle, "object_getCameraCollision"));
+        funcs.emplace("object_move", findFunc(handle, "object_move"));
+        funcs.emplace("object_isMoving", findFunc(handle, "object_isMoving"));
+        funcs.emplace("object_stop", findFunc(handle, "object_stop"));
+        funcs.emplace("object_getMovingData", findFunc(handle, "object_getMovingData"));
+        funcs.emplace("object_attachToVehicle", findFunc(handle, "object_attachToVehicle"));
+        funcs.emplace("object_resetAttachment", findFunc(handle, "object_resetAttachment"));
+        funcs.emplace("object_getAttachmentData", findFunc(handle, "object_getAttachmentData"));
+        funcs.emplace("object_isMaterialSlotUsed", findFunc(handle, "object_isMaterialSlotUsed"));
+        funcs.emplace("object_getMaterial", findFunc(handle, "object_getMaterial"));
+        funcs.emplace("object_getMaterialText", findFunc(handle, "object_getMaterialText"));
+        funcs.emplace("object_setMaterial", findFunc(handle, "object_setMaterial"));
+        funcs.emplace("object_setMaterialText", findFunc(handle, "object_setMaterialText"));
+        funcs.emplace("object_attachToPlayer", findFunc(handle, "object_attachToPlayer"));
+        funcs.emplace("object_attachToObject", findFunc(handle, "object_attachToObject"));
+
+        funcs.emplace("object_setPosition", findFunc(handle, "object_setPosition"));
+        funcs.emplace("object_getPosition", findFunc(handle, "object_getPosition"));
+        funcs.emplace("object_setRotation", findFunc(handle, "object_setRotation"));
+        funcs.emplace("object_getRotation", findFunc(handle, "object_getRotation"));
+
         // Player
         funcs.emplace("player_getByID", findFunc(handle, "player_getByID"));
         funcs.emplace("player_getID", findFunc(handle, "player_getID"));
@@ -196,6 +227,17 @@ extern "C"
         funcs.emplace("player_getSeat", findFunc(handle, "player_getSeat"));
         funcs.emplace("player_isInModShop", findFunc(handle, "player_isInModShop"));
 
+        funcs.emplace("player_beginObjectEditing", findFunc(handle, "player_beginObjectEditing"));
+        funcs.emplace("player_endObjectEditing", findFunc(handle, "player_endObjectEditing"));
+        funcs.emplace("player_isEditingObject", findFunc(handle, "player_isEditingObject"));
+        funcs.emplace("player_beginObjectSelecting", findFunc(handle, "player_beginObjectSelecting"));
+        funcs.emplace("player_isSelectingObject", findFunc(handle, "player_isSelectingObject"));
+        funcs.emplace("player_setAttachedObject", findFunc(handle, "player_setAttachedObject"));
+        funcs.emplace("player_getAttachedObject", findFunc(handle, "player_getAttachedObject"));
+        funcs.emplace("player_removeAttachedObject", findFunc(handle, "player_removeAttachedObject"));
+        funcs.emplace("player_editAttachedObject", findFunc(handle, "player_editAttachedObject"));
+        funcs.emplace("player_hasAttachedObject", findFunc(handle, "player_hasAttachedObject"));
+
         funcs.emplace("player_getDistanceFromPoint", findFunc(handle, "player_getDistanceFromPoint"));
         funcs.emplace("player_isInRangeOfPoint", findFunc(handle, "player_isInRangeOfPoint"));
         funcs.emplace("player_setFacingAngle", findFunc(handle, "player_setFacingAngle"));
@@ -204,6 +246,7 @@ extern "C"
         // Vehicle
         funcs.emplace("vehicle_create", findFunc(handle, "vehicle_create"));
         funcs.emplace("vehicle_release", findFunc(handle, "vehicle_release"));
+        funcs.emplace("vehicle_getByID", findFunc(handle, "vehicle_getByID"));
         funcs.emplace("vehicle_isStreamedInForPlayer", findFunc(handle, "vehicle_isStreamedInForPlayer"));
         funcs.emplace("vehicle_setColour", findFunc(handle, "vehicle_setColour"));
         funcs.emplace("vehicle_getColour", findFunc(handle, "vehicle_getColour"));

@@ -750,6 +750,58 @@ extern "C"
         return call<int>("player_isInModShop", player);
     }
 
+    // object data
+
+    void player_beginObjectEditing(void* player, void* object)
+    {
+        return call<void>("player_beginObjectEditing", player, object);
+    }
+
+    void player_endObjectEditing(void* player)
+    {
+        return call<void>("player_endObjectEditing", player);
+    }
+
+    unsigned char player_isEditingObject(void* player)
+    {
+        return call<unsigned char>("player_isEditingObject", player);
+    }
+
+    void player_beginObjectSelecting(void* player)
+    {
+        return call<void>("player_beginObjectSelecting", player);
+    }
+
+    unsigned char player_isSelectingObject(void* player)
+    {
+        return call<unsigned char>("player_isSelectingObject", player);
+    }
+
+    void player_setAttachedObject(void* player, int index, int modelId, int bone, float offsetX, float offsetY, float offsetZ, float rotX, float rotY, float rotZ, float scaleX, float scaleY, float scaleZ, uint32_t colour1, uint32_t colour2)
+    {
+        return call<void>("player_setAttachedObject", player, index, modelId, bone, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, scaleX, scaleY, scaleZ, colour1, colour2);
+    }
+
+    PlayerAttachedObject player_getAttachedObject(void* player, int index)
+    {
+        return call<PlayerAttachedObject>("player_getAttachedObject", player, index);
+    }
+
+    void player_removeAttachedObject(void* player, int index)
+    {
+        return call<void>("player_removeAttachedObject", player, index);
+    }
+
+    void player_editAttachedObject(void* player, int index)
+    {
+        return call<void>("player_editAttachedObject", player, index);
+    }
+
+    unsigned char player_hasAttachedObject(void* player, int index)
+    {
+        return call<unsigned char>("player_hasAttachedObject", player, index);
+    }
+
     // misc
 
     float player_getDistanceFromPoint(void* player, float pX, float pY, float pZ)
