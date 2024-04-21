@@ -12,6 +12,7 @@ extern "C"
 
     void* gangZone_create(float minX, float minY, float maxX, float maxY);
     void gangZone_release(void* gangZone);
+    void gangZone_useCheck(void* gangZone, unsigned char use);
     unsigned char gangZone_isShownForPlayer(void* gangZone, void* player);
     unsigned char gangZone_isFlashingForPlayer(void* gangZone, void* player);
     void gangZone_showForPlayer(void* gangZone, void* player, uint32_t colour);

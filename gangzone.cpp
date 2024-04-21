@@ -16,6 +16,11 @@ extern "C"
         return call<void>("gangZone_release", gangZone);
     }
 
+    void gangZone_useCheck(void* gangZone, unsigned char use)
+    {
+        return call<void>("gangZone_useCheck", gangZone, use);
+    }
+
     unsigned char gangZone_isShownForPlayer(void* gangZone, void* player)
     {
         return call<unsigned char>("gangZone_isShownForPlayer", gangZone, player);

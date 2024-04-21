@@ -44,6 +44,7 @@ extern "C"
         // GangZone
         funcs.emplace("gangZone_create", findFunc(handle, "gangZone_create"));
         funcs.emplace("gangZone_release", findFunc(handle, "gangZone_release"));
+        funcs.emplace("gangZone_useCheck", findFunc(handle, "gangZone_useCheck"));
         funcs.emplace("gangZone_isShownForPlayer", findFunc(handle, "gangZone_isShownForPlayer"));
         funcs.emplace("gangZone_isFlashingForPlayer", findFunc(handle, "gangZone_isFlashingForPlayer"));
         funcs.emplace("gangZone_showForPlayer", findFunc(handle, "gangZone_showForPlayer"));

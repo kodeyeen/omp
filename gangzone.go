@@ -23,6 +23,14 @@ func FreeGangzone(gz *Gangzone) {
 	C.gangZone_release(gz.handle)
 }
 
+func EnableGangzoneCheck(gz *Gangzone) {
+	C.gangZone_useCheck(gz.handle, 1)
+}
+
+func DisableGangzoneCheck(gz *Gangzone) {
+	C.gangZone_useCheck(gz.handle, 0)
+}
+
 func (g *Gangzone) IsShownFor(plr *Player) bool {
 	return C.gangZone_isShownForPlayer(g.handle, plr.handle) != 0
 }
