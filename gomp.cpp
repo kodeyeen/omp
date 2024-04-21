@@ -41,6 +41,21 @@ extern "C"
         funcs.emplace("class_setClass", findFunc(handle, "class_setClass"));
         funcs.emplace("class_getClass", findFunc(handle, "class_getClass"));
 
+        // GangZone
+        funcs.emplace("gangZone_create", findFunc(handle, "gangZone_create"));
+        funcs.emplace("gangZone_release", findFunc(handle, "gangZone_release"));
+        funcs.emplace("gangZone_isShownForPlayer", findFunc(handle, "gangZone_isShownForPlayer"));
+        funcs.emplace("gangZone_isFlashingForPlayer", findFunc(handle, "gangZone_isFlashingForPlayer"));
+        funcs.emplace("gangZone_showForPlayer", findFunc(handle, "gangZone_showForPlayer"));
+        funcs.emplace("gangZone_hideForPlayer", findFunc(handle, "gangZone_hideForPlayer"));
+        funcs.emplace("gangZone_flashForPlayer", findFunc(handle, "gangZone_flashForPlayer"));
+        funcs.emplace("gangZone_stopFlashForPlayer", findFunc(handle, "gangZone_stopFlashForPlayer"));
+        funcs.emplace("gangZone_getPosition", findFunc(handle, "gangZone_getPosition"));
+        funcs.emplace("gangZone_setPosition", findFunc(handle, "gangZone_setPosition"));
+        funcs.emplace("gangZone_isPlayerInside", findFunc(handle, "gangZone_isPlayerInside"));
+        funcs.emplace("gangZone_getFlashingColourForPlayer", findFunc(handle, "gangZone_getFlashingColourForPlayer"));
+        funcs.emplace("gangZone_getColourForPlayer", findFunc(handle, "gangZone_getColourForPlayer"));
+
         // Object
         funcs.emplace("object_create", findFunc(handle, "object_create"));
         funcs.emplace("object_release", findFunc(handle, "object_release"));

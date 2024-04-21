@@ -1,44 +1,79 @@
 package gomp
 
+// #include "include/gangzone.h"
+import "C"
 import "unsafe"
 
-type GangZonePosition struct {
+type GangzonePosition struct {
 	Min Vector2
 	Max Vector2
 }
 
-type GangZone struct {
+type Gangzone struct {
 	handle unsafe.Pointer
 }
 
-func NewGangZone() *GangZone {
-	return &GangZone{}
+func NewGangzone(pos GangzonePosition) *Gangzone {
+	gz := C.gangZone_create(C.float(pos.Min.X), C.float(pos.Min.Y), C.float(pos.Max.X), C.float(pos.Max.Y))
+
+	return &Gangzone{handle: gz}
 }
 
-func NewPlayerGangZone() *GangZone {
-	return &GangZone{}
+func FreeGangzone(gz *Gangzone) {
+	C.gangZone_release(gz.handle)
 }
 
-func DestroyGangZone(gangZone *GangZone) {
-	panic("not implemented")
+func (g *Gangzone) IsShownFor(plr *Player) bool {
+	return C.gangZone_isShownForPlayer(g.handle, plr.handle) != 0
 }
 
-func (gz *GangZone) Flash(color uint) {
-	panic("not implemented")
+func (g *Gangzone) IsFlashingFor(plr *Player) bool {
+	return C.gangZone_isFlashingForPlayer(g.handle, plr.handle) != 0
 }
 
-func (gz *GangZone) FlashForPlayer(player *Player, color uint) {
-	panic("not implemented")
+func (g *Gangzone) ShowFor(plr *Player, clr Color) {
+	C.gangZone_showForPlayer(g.handle, plr.handle, C.uint(clr))
 }
 
-func (gz *GangZone) ColorForPlayer(player *Player) int {
-	panic("not implemented")
+func (g *Gangzone) HideFor(plr *Player) {
+	C.gangZone_hideForPlayer(g.handle, plr.handle)
 }
 
-func (gz *GangZone) FlashColorForPlayer(player *Player) int {
-	panic("not implemented")
+func (g *Gangzone) FlashFor(plr *Player, clr Color) {
+	C.gangZone_flashForPlayer(g.handle, plr.handle, C.uint(clr))
 }
 
-func (gz *GangZone) Position() *GangZonePosition {
-	panic("not implemented")
+func (g *Gangzone) StopFlashFor(plr *Player) {
+	C.gangZone_stopFlashForPlayer(g.handle, plr.handle)
+}
+
+func (g *Gangzone) Position() GangzonePosition {
+	cPos := C.gangZone_getPosition(g.handle)
+
+	return GangzonePosition{
+		Min: Vector2{
+			X: float32(cPos.min.x),
+			Y: float32(cPos.min.y),
+		},
+		Max: Vector2{
+			X: float32(cPos.max.x),
+			Y: float32(cPos.max.y),
+		},
+	}
+}
+
+func (g *Gangzone) SetPosition(pos GangzonePosition) {
+	C.gangZone_setPosition(g.handle, C.float(pos.Min.X), C.float(pos.Min.Y), C.float(pos.Max.X), C.float(pos.Max.Y))
+}
+
+func (g *Gangzone) IsPlayerInside(plr *Player) bool {
+	return C.gangZone_isPlayerInside(g.handle, plr.handle) != 0
+}
+
+func (g *Gangzone) FlashingColorFor(plr *Player) Color {
+	return Color(C.gangZone_getFlashingColourForPlayer(g.handle, plr.handle))
+}
+
+func (g *Gangzone) ColorFor(plr *Player) Color {
+	return Color(C.gangZone_getColourForPlayer(g.handle, plr.handle))
 }

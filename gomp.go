@@ -651,26 +651,26 @@ func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
 // GangZone events
 
 //export onPlayerEnterGangZone
-func onPlayerEnterGangZone(player, gangZone unsafe.Pointer) {
+func onPlayerEnterGangZone(player, gangzone unsafe.Pointer) {
 	event.Dispatch(evtDispatcher, EventTypePlayerEnterGangZone, &PlayerEnterGangZoneEvent{
 		Player:   &Player{handle: player},
-		GangZone: &GangZone{handle: gangZone},
+		GangZone: &Gangzone{handle: gangzone},
 	})
 }
 
 //export onPlayerLeaveGangZone
-func onPlayerLeaveGangZone(player, gangZone unsafe.Pointer) {
+func onPlayerLeaveGangZone(player, gangzone unsafe.Pointer) {
 	event.Dispatch(evtDispatcher, EventTypePlayerLeaveGangZone, &PlayerLeaveGangZoneEvent{
 		Player:   &Player{handle: player},
-		GangZone: &GangZone{handle: gangZone},
+		GangZone: &Gangzone{handle: gangzone},
 	})
 }
 
 //export onPlayerClickGangZone
-func onPlayerClickGangZone(player, gangZone unsafe.Pointer) {
+func onPlayerClickGangZone(player, gangzone unsafe.Pointer) {
 	event.Dispatch(evtDispatcher, EventTypePlayerClickGangZone, &PlayerClickGangZoneEvent{
 		Player:   &Player{handle: player},
-		GangZone: &GangZone{handle: gangZone},
+		GangZone: &Gangzone{handle: gangzone},
 	})
 }
 
