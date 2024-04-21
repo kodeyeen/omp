@@ -48,9 +48,13 @@ extern "C"
         funcs.emplace("gangZone_isShownForPlayer", findFunc(handle, "gangZone_isShownForPlayer"));
         funcs.emplace("gangZone_isFlashingForPlayer", findFunc(handle, "gangZone_isFlashingForPlayer"));
         funcs.emplace("gangZone_showForPlayer", findFunc(handle, "gangZone_showForPlayer"));
+        funcs.emplace("gangZone_showForAll", findFunc(handle, "gangZone_showForAll"));
         funcs.emplace("gangZone_hideForPlayer", findFunc(handle, "gangZone_hideForPlayer"));
+        funcs.emplace("gangZone_hideForAll", findFunc(handle, "gangZone_hideForAll"));
         funcs.emplace("gangZone_flashForPlayer", findFunc(handle, "gangZone_flashForPlayer"));
+        funcs.emplace("gangZone_flashForAll", findFunc(handle, "gangZone_flashForAll"));
         funcs.emplace("gangZone_stopFlashForPlayer", findFunc(handle, "gangZone_stopFlashForPlayer"));
+        funcs.emplace("gangZone_stopFlashForAll", findFunc(handle, "gangZone_stopFlashForAll"));
         funcs.emplace("gangZone_getPosition", findFunc(handle, "gangZone_getPosition"));
         funcs.emplace("gangZone_setPosition", findFunc(handle, "gangZone_setPosition"));
         funcs.emplace("gangZone_isPlayerInside", findFunc(handle, "gangZone_isPlayerInside"));

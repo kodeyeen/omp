@@ -16,9 +16,13 @@ extern "C"
     unsigned char gangZone_isShownForPlayer(void* gangZone, void* player);
     unsigned char gangZone_isFlashingForPlayer(void* gangZone, void* player);
     void gangZone_showForPlayer(void* gangZone, void* player, uint32_t colour);
+    void gangZone_showForAll(void* gangZone, uint32_t colour);
     void gangZone_hideForPlayer(void* gangZone, void* player);
+    void gangZone_hideForAll(void* gangZone);
     void gangZone_flashForPlayer(void* gangZone, void* player, uint32_t colour);
+    void gangZone_flashForAll(void* gangZone, uint32_t colour);
     void gangZone_stopFlashForPlayer(void* gangZone, void* player);
+    void gangZone_stopFlashForAll(void* gangZone);
     GangZonePos gangZone_getPosition(void* gangZone);
     void gangZone_setPosition(void* gangZone, float minX, float minY, float maxX, float maxY);
     unsigned char gangZone_isPlayerInside(void* gangZone, void* player);

@@ -43,16 +43,32 @@ func (g *Gangzone) ShowFor(plr *Player, clr Color) {
 	C.gangZone_showForPlayer(g.handle, plr.handle, C.uint(clr))
 }
 
+func (g *Gangzone) ShowForAll(clr Color) {
+	C.gangZone_showForAll(g.handle, C.uint(clr))
+}
+
 func (g *Gangzone) HideFor(plr *Player) {
 	C.gangZone_hideForPlayer(g.handle, plr.handle)
+}
+
+func (g *Gangzone) HideForAll() {
+	C.gangZone_hideForAll(g.handle)
 }
 
 func (g *Gangzone) FlashFor(plr *Player, clr Color) {
 	C.gangZone_flashForPlayer(g.handle, plr.handle, C.uint(clr))
 }
 
+func (g *Gangzone) FlashForAll(clr Color) {
+	C.gangZone_flashForAll(g.handle, C.uint(clr))
+}
+
 func (g *Gangzone) StopFlashFor(plr *Player) {
 	C.gangZone_stopFlashForPlayer(g.handle, plr.handle)
+}
+
+func (g *Gangzone) StopFlashForAll() {
+	C.gangZone_stopFlashForAll(g.handle)
 }
 
 func (g *Gangzone) Position() GangzonePosition {

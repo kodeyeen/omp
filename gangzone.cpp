@@ -36,9 +36,19 @@ extern "C"
         return call<void>("gangZone_showForPlayer", gangZone, player, colour);
     }
 
+    void gangZone_showForAll(void* gangZone, uint32_t colour)
+    {
+        return call<void>("gangZone_showForAll", gangZone, colour);
+    }
+
     void gangZone_hideForPlayer(void* gangZone, void* player)
     {
         return call<void>("gangZone_hideForPlayer", gangZone, player);
+    }
+
+    void gangZone_hideForAll(void* gangZone)
+    {
+        return call<void>("gangZone_hideForAll", gangZone);
     }
 
     void gangZone_flashForPlayer(void* gangZone, void* player, uint32_t colour)
@@ -46,9 +56,19 @@ extern "C"
         return call<void>("gangZone_flashForPlayer", gangZone, player, colour);
     }
 
+    void gangZone_flashForAll(void* gangZone, uint32_t colour)
+    {
+        return call<void>("gangZone_flashForAll", gangZone, colour);
+    }
+
     void gangZone_stopFlashForPlayer(void* gangZone, void* player)
     {
         return call<void>("gangZone_stopFlashForPlayer", gangZone, player);
+    }
+
+    void gangZone_stopFlashForAll(void* gangZone)
+    {
+        return call<void>("gangZone_stopFlashForAll", gangZone);
     }
 
     GangZonePos gangZone_getPosition(void* gangZone)
