@@ -1,0 +1,145 @@
+package gomp
+
+// #include <stdlib.h>
+// #include <string.h>
+// #include "include/textlabel.h"
+// #include "include/player.h"
+// #include "include/vehicle.h"
+import "C"
+import (
+	"errors"
+	"unsafe"
+)
+
+type TextLabelAttachmentTarget interface {
+	Vehicle | Player
+}
+
+type TextLabelAttachmentData[T TextLabelAttachmentTarget] struct {
+	Target T
+}
+
+type TextLabel struct {
+	handle unsafe.Pointer
+}
+
+func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) *TextLabel {
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
+
+	cTextStr := C.String{
+		buf:    cText,
+		length: C.strlen(cText),
+	}
+
+	var cLos C.uchar
+	if los {
+		cLos = 1
+	}
+
+	tl := C.textLabel_create(cTextStr, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), cLos)
+
+	return &TextLabel{handle: tl}
+}
+
+func FreeTextLabel(tl *TextLabel) {
+	C.textLabel_release(tl.handle)
+}
+
+func TextLabelAttachedData[T TextLabelAttachmentTarget](tl *TextLabel) (TextLabelAttachmentData[T], error) {
+	data := C.textLabel_getAttachmentData(tl.handle)
+
+	t := any(new(T))
+
+	var result TextLabelAttachmentData[T]
+	var target any
+
+	switch t.(type) {
+	case *Vehicle:
+		veh := C.vehicle_getByID(data.vehicleID)
+		if veh == nil {
+			return result, errors.New("text label is not attached to a vehicle")
+		}
+
+		target = Vehicle{handle: veh}
+	case *Player:
+		plr := C.player_getByID(data.playerID)
+		if plr == nil {
+			return result, errors.New("text label is not attached to a player")
+		}
+
+		target = Player{handle: plr}
+	}
+
+	result = TextLabelAttachmentData[T]{
+		Target: target.(T),
+	}
+
+	return result, nil
+}
+
+func (tl *TextLabel) SetText(text string) {
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
+
+	cTextStr := C.String{
+		buf:    cText,
+		length: C.strlen(cText),
+	}
+
+	C.textLabel_setText(tl.handle, cTextStr)
+}
+
+func (tl *TextLabel) Text() string {
+	cTextStr := C.textLabel_getText(tl.handle)
+
+	return C.GoStringN(cTextStr.buf, C.int(cTextStr.length))
+}
+
+func (tl *TextLabel) SetColor(clr Color) {
+	C.textLabel_setColour(tl.handle, C.uint(clr))
+}
+
+func (tl *TextLabel) Color() Color {
+	return Color(C.textLabel_getColour(tl.handle))
+}
+
+func (tl *TextLabel) SetDrawDistance(drawDist float32) {
+	C.textLabel_setDrawDistance(tl.handle, C.float(drawDist))
+}
+
+func (tl *TextLabel) DrawDistance() float32 {
+	return float32(C.textLabel_getDrawDistance(tl.handle))
+}
+
+func (tl *TextLabel) AttachToPlayer(plr *Player, offset Vector3) {
+	C.textLabel_attachToPlayer(tl.handle, plr.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
+}
+
+func (tl *TextLabel) AttachToVehicle(veh *Vehicle, offset Vector3) {
+	C.textLabel_attachToVehicle(tl.handle, veh.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
+}
+
+func (tl *TextLabel) DetachFromPlayer(plr *Player, pos Vector3) {
+	C.textLabel_detachFromPlayer(tl.handle, plr.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+}
+
+func (tl *TextLabel) DetachFromVehicle(veh *Vehicle, pos Vector3) {
+	C.textLabel_detachFromVehicle(tl.handle, veh.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+}
+
+func (tl *TextLabel) EnableLOSTest() {
+	C.textLabel_setTestLOS(tl.handle, 1)
+}
+
+func (tl *TextLabel) DisableLOSTest() {
+	C.textLabel_setTestLOS(tl.handle, 0)
+}
+
+func (tl *TextLabel) IsLOSTestEnabled() bool {
+	return C.textLabel_getTestLOS(tl.handle) != 0
+}
+
+func (tl *TextLabel) IsStreamedInFor(plr *Player) bool {
+	return C.textLabel_isStreamedInForPlayer(tl.handle, plr.handle) != 0
+}

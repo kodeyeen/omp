@@ -430,6 +430,24 @@ extern "C"
         funcs.emplace("playerTextDraw_show", findFunc(handle, "playerTextDraw_show"));
         funcs.emplace("playerTextDraw_hide", findFunc(handle, "playerTextDraw_hide"));
         funcs.emplace("playerTextDraw_isShown", findFunc(handle, "playerTextDraw_isShown"));
+    
+        // TextLabel
+        funcs.emplace("textLabel_create", findFunc(handle, "textLabel_create"));
+        funcs.emplace("textLabel_release", findFunc(handle, "textLabel_release"));
+        funcs.emplace("textLabel_setText", findFunc(handle, "textLabel_setText"));
+        funcs.emplace("textLabel_getText", findFunc(handle, "textLabel_getText"));
+        funcs.emplace("textLabel_setColour", findFunc(handle, "textLabel_setColour"));
+        funcs.emplace("textLabel_getColour", findFunc(handle, "textLabel_getColour"));
+        funcs.emplace("textLabel_setDrawDistance", findFunc(handle, "textLabel_setDrawDistance"));
+        funcs.emplace("textLabel_getDrawDistance", findFunc(handle, "textLabel_getDrawDistance"));
+        funcs.emplace("textLabel_attachToPlayer", findFunc(handle, "textLabel_attachToPlayer"));
+        funcs.emplace("textLabel_attachToVehicle", findFunc(handle, "textLabel_attachToVehicle"));
+        funcs.emplace("textLabel_getAttachmentData", findFunc(handle, "textLabel_getAttachmentData"));
+        funcs.emplace("textLabel_detachFromPlayer", findFunc(handle, "textLabel_detachFromPlayer"));
+        funcs.emplace("textLabel_detachFromVehicle", findFunc(handle, "textLabel_detachFromVehicle"));
+        funcs.emplace("textLabel_setTestLOS", findFunc(handle, "textLabel_setTestLOS"));
+        funcs.emplace("textLabel_getTestLOS", findFunc(handle, "textLabel_getTestLOS"));
+        funcs.emplace("textLabel_isStreamedInForPlayer", findFunc(handle, "textLabel_isStreamedInForPlayer"));
     }
 
     void freeArray(Array* arr)
