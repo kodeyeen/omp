@@ -648,29 +648,29 @@ func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
 	})
 }
 
-// Gangzone events
+// Turf events
 
-//export onPlayerEnterGangzone
-func onPlayerEnterGangzone(player, gangzone unsafe.Pointer) {
-	event.Dispatch(evtDispatcher, EventTypePlayerEnterGangzone, &PlayerEnterGangzoneEvent{
-		Player:   &Player{handle: player},
-		Gangzone: &Gangzone{handle: gangzone},
+//export onPlayerEnterTurf
+func onPlayerEnterTurf(player, turf unsafe.Pointer) {
+	event.Dispatch(evtDispatcher, EventTypePlayerEnterTurf, &PlayerEnterTurfEvent{
+		Player: &Player{handle: player},
+		Turf:   &Turf{handle: turf},
 	})
 }
 
-//export onPlayerLeaveGangzone
-func onPlayerLeaveGangzone(player, gangzone unsafe.Pointer) {
-	event.Dispatch(evtDispatcher, EventTypePlayerLeaveGangzone, &PlayerLeaveGangzoneEvent{
-		Player:   &Player{handle: player},
-		Gangzone: &Gangzone{handle: gangzone},
+//export onPlayerLeaveTurf
+func onPlayerLeaveTurf(player, turf unsafe.Pointer) {
+	event.Dispatch(evtDispatcher, EventTypePlayerLeaveTurf, &PlayerLeaveTurfEvent{
+		Player: &Player{handle: player},
+		Turf:   &Turf{handle: turf},
 	})
 }
 
-//export onPlayerClickGangzone
-func onPlayerClickGangzone(player, gangzone unsafe.Pointer) {
-	event.Dispatch(evtDispatcher, EventTypePlayerClickGangzone, &PlayerClickGangzoneEvent{
-		Player:   &Player{handle: player},
-		Gangzone: &Gangzone{handle: gangzone},
+//export onPlayerClickTurf
+func onPlayerClickTurf(player, turf unsafe.Pointer) {
+	event.Dispatch(evtDispatcher, EventTypePlayerClickTurf, &PlayerClickTurfEvent{
+		Player: &Player{handle: player},
+		Turf:   &Turf{handle: turf},
 	})
 }
 

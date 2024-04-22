@@ -157,10 +157,10 @@ const (
 	// Pickup events
 	EventTypePlayerPickUpPickup event.Type = "playerPickUpPickup"
 
-	// Gangzone events
-	EventTypePlayerEnterGangzone event.Type = "playerEnterGangzone"
-	EventTypePlayerLeaveGangzone event.Type = "playerLeaveGangzone"
-	EventTypePlayerClickGangzone event.Type = "playerClickGangzone"
+	// Turf events
+	EventTypePlayerEnterTurf event.Type = "playerEnterTurf"
+	EventTypePlayerLeaveTurf event.Type = "playerLeaveTurf"
+	EventTypePlayerClickTurf event.Type = "playerClickTurf"
 
 	// Menu events
 	EventTypePlayerSelectedMenuRow event.Type = "playerSelectedMenuRow"
@@ -504,19 +504,19 @@ type PlayerPickUpPickupEvent struct {
 	Pickup *Pickup
 }
 
-type PlayerEnterGangzoneEvent struct {
-	Player   *Player
-	Gangzone *Gangzone
+type PlayerEnterTurfEvent struct {
+	Player *Player
+	Turf   *Turf
 }
 
-type PlayerLeaveGangzoneEvent struct {
-	Player   *Player
-	Gangzone *Gangzone
+type PlayerLeaveTurfEvent struct {
+	Player *Player
+	Turf   *Turf
 }
 
-type PlayerClickGangzoneEvent struct {
-	Player   *Player
-	Gangzone *Gangzone
+type PlayerClickTurfEvent struct {
+	Player *Player
+	Turf   *Turf
 }
 
 type PlayerSelectedMenuRowEvent struct {
