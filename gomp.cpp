@@ -61,6 +61,24 @@ extern "C"
         funcs.emplace("gangZone_getFlashingColourForPlayer", findFunc(handle, "gangZone_getFlashingColourForPlayer"));
         funcs.emplace("gangZone_getColourForPlayer", findFunc(handle, "gangZone_getColourForPlayer"));
 
+        // Menu
+        funcs.emplace("menu_create", findFunc(handle, "menu_create"));
+        funcs.emplace("menu_release", findFunc(handle, "menu_release"));
+        funcs.emplace("menu_setColumnHeader", findFunc(handle, "menu_setColumnHeader"));
+        funcs.emplace("menu_addCell", findFunc(handle, "menu_addCell"));
+        funcs.emplace("menu_disableRow", findFunc(handle, "menu_disableRow"));
+        funcs.emplace("menu_isRowEnabled", findFunc(handle, "menu_isRowEnabled"));
+        funcs.emplace("menu_disable", findFunc(handle, "menu_disable"));
+        funcs.emplace("menu_isEnabled", findFunc(handle, "menu_isEnabled"));
+        funcs.emplace("menu_getPosition", findFunc(handle, "menu_getPosition"));
+        funcs.emplace("menu_getRowCount", findFunc(handle, "menu_getRowCount"));
+        funcs.emplace("menu_getColumnCount", findFunc(handle, "menu_getColumnCount"));
+        funcs.emplace("menu_getColumnWidths", findFunc(handle, "menu_getColumnWidths"));
+        funcs.emplace("menu_getColumnHeader", findFunc(handle, "menu_getColumnHeader"));
+        funcs.emplace("menu_getCell", findFunc(handle, "menu_getCell"));
+        funcs.emplace("menu_showForPlayer", findFunc(handle, "menu_showForPlayer"));
+        funcs.emplace("menu_hideForPlayer", findFunc(handle, "menu_hideForPlayer"));
+
         // Object
         funcs.emplace("object_create", findFunc(handle, "object_create"));
         funcs.emplace("object_release", findFunc(handle, "object_release"));
