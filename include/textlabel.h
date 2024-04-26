@@ -27,6 +27,10 @@ extern "C"
     void textLabel_setTestLOS(void* textLabel, unsigned char status);
     unsigned char textLabel_getTestLOS(void* textLabel);
     unsigned char textLabel_isStreamedInForPlayer(void* textLabel, void* player);
+    void textLabel_setPosition(void* textLabel, float posX, float posY, float posZ);
+    Vector3 textLabel_getPosition(void* textLabel);
+    void textLabel_setVirtualWorld(void* textLabel, int vw);
+    int textLabel_getVirtualWorld(void* textLabel);
 
 #ifdef __cplusplus
 }

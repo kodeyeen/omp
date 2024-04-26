@@ -86,6 +86,26 @@ extern "C"
         return call<unsigned char>("textLabel_isStreamedInForPlayer", textLabel, player);
     }
 
+    void textLabel_setPosition(void* textLabel, float posX, float posY, float posZ)
+    {
+        return call<void>("textLabel_setPosition", textLabel, posX, posY, posZ);
+    }
+
+    Vector3 textLabel_getPosition(void* textLabel)
+    {
+        return call<Vector3>("textLabel_getPosition", textLabel);
+    }
+
+    void textLabel_setVirtualWorld(void* textLabel, int vw)
+    {
+        return call<void>("textLabel_setVirtualWorld", textLabel, vw);
+    }
+
+    int textLabel_getVirtualWorld(void* textLabel)
+    {
+        return call<int>("textLabel_getVirtualWorld", textLabel);
+    }
+
 #ifdef __cplusplus
 }
 #endif

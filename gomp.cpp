@@ -448,6 +448,10 @@ extern "C"
         funcs.emplace("textLabel_setTestLOS", findFunc(handle, "textLabel_setTestLOS"));
         funcs.emplace("textLabel_getTestLOS", findFunc(handle, "textLabel_getTestLOS"));
         funcs.emplace("textLabel_isStreamedInForPlayer", findFunc(handle, "textLabel_isStreamedInForPlayer"));
+        funcs.emplace("textLabel_setPosition", findFunc(handle, "textLabel_setPosition"));
+        funcs.emplace("textLabel_getPosition", findFunc(handle, "textLabel_getPosition"));
+        funcs.emplace("textLabel_setVirtualWorld", findFunc(handle, "textLabel_setVirtualWorld"));
+        funcs.emplace("textLabel_getVirtualWorld", findFunc(handle, "textLabel_getVirtualWorld"));
     }
 
     void freeArray(Array* arr)

@@ -143,3 +143,25 @@ func (tl *TextLabel) IsLOSTestEnabled() bool {
 func (tl *TextLabel) IsStreamedInFor(plr *Player) bool {
 	return C.textLabel_isStreamedInForPlayer(tl.handle, plr.handle) != 0
 }
+
+func (tl *TextLabel) SetPosition(pos Vector3) {
+	C.textLabel_setPosition(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+}
+
+func (tl *TextLabel) Position() Vector3 {
+	pos := C.textLabel_getPosition(tl.handle)
+
+	return Vector3{
+		X: float32(pos.x),
+		Y: float32(pos.y),
+		Z: float32(pos.z),
+	}
+}
+
+func (tl *TextLabel) SetVirtualWorld(vw int) {
+	C.textLabel_setVirtualWorld(tl.handle, C.int(vw))
+}
+
+func (tl *TextLabel) VirtualWorld() int {
+	return int(C.textLabel_getVirtualWorld(tl.handle))
+}
