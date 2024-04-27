@@ -37,6 +37,12 @@ extern "C"
     unsigned char actor_isInvulnerable(void* actor);
     unsigned char actor_isStreamedInForPlayer(void* actor, void* player);
     ActorSpawnData actor_getSpawnData(void* actor);
+    void actor_setPosition(void* actor, float posX, float posY, float posZ);
+    Vector3 actor_getPosition(void* actor);
+    void actor_setVirtualWorld(void* actor, int vw);
+    int actor_getVirtualWorld(void* actor);
+    void actor_setFacingAngle(void* actor, float angle);
+    float actor_getFacingAngle(void* actor);
 
 #ifdef __cplusplus
 }

@@ -129,3 +129,33 @@ func (a *Actor) SpawnData() ActorSpawnData {
 		Skin:        int(data.skin),
 	}
 }
+
+func (a *Actor) SetPosition(pos Vector3) {
+	C.actor_setPosition(a.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+}
+
+func (a *Actor) Position() Vector3 {
+	cPos := C.actor_getPosition(a.handle)
+
+	return Vector3{
+		X: float32(cPos.x),
+		Y: float32(cPos.y),
+		Z: float32(cPos.z),
+	}
+}
+
+func (a *Actor) SetVirtualWorld(vw int) {
+	C.actor_setVirtualWorld(a.handle, C.int(vw))
+}
+
+func (a *Actor) VirtualWorld() int {
+	return int(C.actor_getVirtualWorld(a.handle))
+}
+
+func (a *Actor) SetFacingAngle(angle float32) {
+	C.actor_setFacingAngle(a.handle, C.float(angle))
+}
+
+func (a *Actor) FacingAngle() float32 {
+	return float32(C.actor_getFacingAngle(a.handle))
+}

@@ -71,6 +71,36 @@ extern "C"
         return call<ActorSpawnData>("actor_getSpawnData", actor);
     }
 
+    void actor_setPosition(void* actor, float posX, float posY, float posZ)
+    {
+        return call<void>("actor_setPosition", actor, posX, posY, posZ);
+    }
+
+    Vector3 actor_getPosition(void* actor)
+    {
+        return call<Vector3>("actor_getPosition", actor);
+    }
+
+    void actor_setVirtualWorld(void* actor, int vw)
+    {
+        return call<void>("actor_setVirtualWorld", actor, vw);
+    }
+
+    int actor_getVirtualWorld(void* actor)
+    {
+        return call<int>("actor_getVirtualWorld", actor);
+    }
+
+    void actor_setFacingAngle(void* actor, float angle)
+    {
+        return call<void>("actor_setFacingAngle", actor, angle);
+    }
+
+    float actor_getFacingAngle(void* actor)
+    {
+        return call<float>("actor_getFacingAngle", actor);
+    }
+
 #ifdef __cplusplus
 }
 #endif

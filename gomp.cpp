@@ -39,6 +39,12 @@ extern "C"
         funcs.emplace("actor_isInvulnerable", findFunc(handle, "actor_isInvulnerable"));
         funcs.emplace("actor_isStreamedInForPlayer", findFunc(handle, "actor_isStreamedInForPlayer"));
         funcs.emplace("actor_getSpawnData", findFunc(handle, "actor_getSpawnData"));
+        funcs.emplace("actor_setPosition", findFunc(handle, "actor_setPosition"));
+        funcs.emplace("actor_getPosition", findFunc(handle, "actor_getPosition"));
+        funcs.emplace("actor_setVirtualWorld", findFunc(handle, "actor_setVirtualWorld"));
+        funcs.emplace("actor_getVirtualWorld", findFunc(handle, "actor_getVirtualWorld"));
+        funcs.emplace("actor_setFacingAngle", findFunc(handle, "actor_setFacingAngle"));
+        funcs.emplace("actor_getFacingAngle", findFunc(handle, "actor_getFacingAngle"));
 
         funcs.emplace("server_setModeText", findFunc(handle, "server_setModeText"));
         funcs.emplace("server_enableStuntBonuses", findFunc(handle, "server_enableStuntBonuses"));
