@@ -13,6 +13,13 @@ import (
 
 // go build -o test.dll -buildmode=c-shared
 
+type Animation struct {
+	Lib, Name                  string
+	Delta                      float32
+	Loop, LockX, LockY, Freeze bool
+	Duration                   time.Duration
+}
+
 type Vector4 struct {
 	X float32
 	Y float32

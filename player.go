@@ -628,9 +628,35 @@ func (p *Player) SetWorldTime(time int) {
 	C.player_setWorldTime(p.handle, C.int(time))
 }
 
-func (p *Player) ApplyAnimation(delta float32, loop, lockX, lockY, freeze bool, duration time.Duration, lib, name string, syncType PlayerAnimationSyncType) {
-	// TODO
-	// C.player_applyAnimation(p.handle, ...)
+func (p *Player) ApplyAnimation(anim Animation, syncType PlayerAnimationSyncType) {
+	cLib := C.CString(anim.Lib)
+	defer C.free(unsafe.Pointer(cLib))
+
+	cLibStr := C.String{
+		buf:    cLib,
+		length: C.strlen(cLib),
+	}
+
+	cName := C.CString(anim.Name)
+	defer C.free(unsafe.Pointer(cName))
+
+	cNameStr := C.String{
+		buf:    cName,
+		length: C.strlen(cName),
+	}
+
+	C.player_applyAnimation(
+		p.handle,
+		C.float(anim.Delta),
+		boolToCUchar(anim.Loop),
+		boolToCUchar(anim.LockX),
+		boolToCUchar(anim.LockY),
+		boolToCUchar(anim.Freeze),
+		C.uint(anim.Duration.Milliseconds()),
+		cLibStr,
+		cNameStr,
+		C.int(syncType),
+	)
 }
 
 func (p *Player) ClearAnimations(syncType PlayerAnimationSyncType) {
@@ -1027,14 +1053,6 @@ func (p *Player) SetVirtualWorld(vw int) {
 
 func (p *Player) VirtualWorld() int {
 	return int(C.player_getVirtualWorld(p.handle))
-}
-
-// checkpoint data
-
-func (p *Player) NewDefaultCheckpoint(radius float32, pos Vector3) *DefaultCheckpoint {
-	cp := C.player_setCheckpoint(p.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(radius))
-
-	return &DefaultCheckpoint{cp}
 }
 
 // console data

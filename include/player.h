@@ -155,7 +155,7 @@ extern "C"
     void player_setGravity(void* player, float gravity);
     float player_getGravity(void* player);
     void player_setWorldTime(void* player, int time);
-    void player_applyAnimation(void* player, float delta, int loop, int lockX, int lockY, int freeze, uint32_t time, String lib, String name, int syncType);
+    void player_applyAnimation(void* player, float delta, unsigned char loop, unsigned char lockX, unsigned char lockY, unsigned char freeze, uint32_t time, String lib, String name, int syncType);
     void player_clearAnimations(void* player, int syncType);
     PlayerAnimationData player_getAnimationData(void* player);
     int player_isStreamedInForPlayer(void* player, void* other);

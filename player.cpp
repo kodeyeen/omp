@@ -396,7 +396,7 @@ extern "C"
         return call<void>("player_setWorldTime", player, time);
     }
 
-    void player_applyAnimation(void* player, float delta, int loop, int lockX, int lockY, int freeze, uint32_t time, String lib, String name, int syncType)
+    void player_applyAnimation(void* player, float delta, unsigned char loop, unsigned char lockX, unsigned char lockY, unsigned char freeze, uint32_t time, String lib, String name, int syncType)
     {
         return call<void>("player_applyAnimation", player, delta, loop, lockX, lockY, freeze, time, lib, name, syncType);
     }

@@ -5,16 +5,8 @@ package gomp
 // #include "include/actor.h"
 import "C"
 import (
-	"time"
 	"unsafe"
 )
-
-type Animation struct {
-	Lib, Name                  string
-	Delta                      float32
-	Loop, LockX, LockY, Freeze bool
-	Duration                   time.Duration
-}
 
 type ActorSpawnData struct {
 	Position    Vector3
