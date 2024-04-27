@@ -699,9 +699,14 @@ extern "C"
     }
 
     // checkpoint data
-    void* player_setCheckpoint(void* player, float pX, float pY, float pZ, float radius)
+    void* player_getCheckpoint(void* player)
     {
-        return call<void*>("player_setCheckpoint", player, pX, pY, pZ, radius);
+        return call<void*>("player_getCheckpoint", player);
+    }
+
+    void* player_getRaceCheckpoint(void* player)
+    {
+        return call<void*>("player_getRaceCheckpoint", player);
     }
 
     // console data

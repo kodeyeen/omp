@@ -57,6 +57,27 @@ extern "C"
         funcs.emplace("config_useManualEngineAndLights", findFunc(handle, "config_useManualEngineAndLights"));
         funcs.emplace("config_useNametags", findFunc(handle, "config_useNametags"));
 
+        funcs.emplace("checkpoint_setPosition", findFunc(handle, "checkpoint_setPosition"));
+        funcs.emplace("checkpoint_getPosition", findFunc(handle, "checkpoint_getPosition"));
+        funcs.emplace("checkpoint_setRadius", findFunc(handle, "checkpoint_setRadius"));
+        funcs.emplace("checkpoint_getRadius", findFunc(handle, "checkpoint_getRadius"));
+        funcs.emplace("checkpoint_isPlayerInside", findFunc(handle, "checkpoint_isPlayerInside"));
+        funcs.emplace("checkpoint_enable", findFunc(handle, "checkpoint_enable"));
+        funcs.emplace("checkpoint_disable", findFunc(handle, "checkpoint_disable"));
+        funcs.emplace("checkpoint_isEnabled", findFunc(handle, "checkpoint_isEnabled"));
+        funcs.emplace("raceCheckpoint_setPosition", findFunc(handle, "raceCheckpoint_setPosition"));
+        funcs.emplace("raceCheckpoint_getPosition", findFunc(handle, "raceCheckpoint_getPosition"));
+        funcs.emplace("raceCheckpoint_setRadius", findFunc(handle, "raceCheckpoint_setRadius"));
+        funcs.emplace("raceCheckpoint_getRadius", findFunc(handle, "raceCheckpoint_getRadius"));
+        funcs.emplace("raceCheckpoint_isPlayerInside", findFunc(handle, "raceCheckpoint_isPlayerInside"));
+        funcs.emplace("raceCheckpoint_enable", findFunc(handle, "raceCheckpoint_enable"));
+        funcs.emplace("raceCheckpoint_disable", findFunc(handle, "raceCheckpoint_disable"));
+        funcs.emplace("raceCheckpoint_isEnabled", findFunc(handle, "raceCheckpoint_isEnabled"));
+        funcs.emplace("raceCheckpoint_setType", findFunc(handle, "raceCheckpoint_setType"));
+        funcs.emplace("raceCheckpoint_getType", findFunc(handle, "raceCheckpoint_getType"));
+        funcs.emplace("raceCheckpoint_setNextPosition", findFunc(handle, "raceCheckpoint_setNextPosition"));
+        funcs.emplace("raceCheckpoint_getNextPosition", findFunc(handle, "raceCheckpoint_getNextPosition"));
+
         funcs.emplace("class_create", findFunc(handle, "class_create"));
         funcs.emplace("class_getID", findFunc(handle, "class_getID"));
         funcs.emplace("class_setClass", findFunc(handle, "class_setClass"));
@@ -277,6 +298,9 @@ extern "C"
 
         funcs.emplace("player_setConsoleAccessibility", findFunc(handle, "player_setConsoleAccessibility"));
         funcs.emplace("player_hasConsoleAccess", findFunc(handle, "player_hasConsoleAccess"));
+
+        funcs.emplace("player_getCheckpoint", findFunc(handle, "player_getCheckpoint"));
+        funcs.emplace("player_getRaceCheckpoint", findFunc(handle, "player_getRaceCheckpoint"));
 
         funcs.emplace("player_getCustomSkin", findFunc(handle, "player_getCustomSkin"));
 

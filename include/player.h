@@ -225,6 +225,10 @@ extern "C"
     void player_setConsoleAccessibility(void* player, int set);
     int player_hasConsoleAccess(void* player);
 
+    // checkpoint data
+    void* player_getCheckpoint(void* player);
+    void* player_getRaceCheckpoint(void* player);
+
     // custom models data
     int player_getCustomSkin(void* player);
 

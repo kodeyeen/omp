@@ -1051,6 +1051,20 @@ func (p *Player) IsAdmin() bool {
 	return C.player_hasConsoleAccess(p.handle) != 0
 }
 
+// checkpoint data
+
+func (p *Player) DefaultCheckpoint() *DefaultCheckpoint {
+	cp := C.player_getCheckpoint(p.handle)
+
+	return &DefaultCheckpoint{handle: cp}
+}
+
+func (p *Player) RaceCheckpoint() *RaceCheckpoint {
+	cp := C.player_getRaceCheckpoint(p.handle)
+
+	return &RaceCheckpoint{handle: cp}
+}
+
 // custom models data
 
 func (p *Player) CustomSkin() int {
