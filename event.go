@@ -3,7 +3,7 @@ package gomp
 import (
 	"time"
 
-	"github.com/kodeyeen/gomp/event"
+	"github.com/kodeyeen/event"
 )
 
 type DisconnectReason int
