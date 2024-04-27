@@ -28,7 +28,7 @@ func FreeMenu(menu *Menu) {
 	C.menu_release(menu.handle)
 }
 
-func (m *Menu) SetColumnHeader(header string, column int) {
+func (m *Menu) SetColumnHeader(column int, header string) {
 	cHeader := C.CString(header)
 	defer C.free(unsafe.Pointer(cHeader))
 
@@ -46,7 +46,7 @@ func (m *Menu) ColumnHeader(column int) string {
 	return C.GoStringN(header.buf, C.int(header.length))
 }
 
-func (m *Menu) AddItem(text string, column int) {
+func (m *Menu) AddItem(column int, text string) {
 	cText := C.CString(text)
 	defer C.free(unsafe.Pointer(cText))
 
