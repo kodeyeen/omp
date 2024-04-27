@@ -218,9 +218,6 @@ extern "C"
     void player_setVirtualWorld(void* player, int vw);
     int player_getVirtualWorld(void* player);
 
-    // checkpoint data
-    void* player_setCheckpoint(void* player, float pX, float pY, float pZ, float radius);
-
     // console data
     void player_setConsoleAccessibility(void* player, int set);
     int player_hasConsoleAccess(void* player);
