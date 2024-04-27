@@ -25,6 +25,21 @@ extern "C"
     {
         funcs.emplace("freeArray", findFunc(handle, "freeArray"));
 
+        // Actor
+        funcs.emplace("actor_create", findFunc(handle, "actor_create"));
+        funcs.emplace("actor_release", findFunc(handle, "actor_release"));
+        funcs.emplace("actor_setSkin", findFunc(handle, "actor_setSkin"));
+        funcs.emplace("actor_getSkin", findFunc(handle, "actor_getSkin"));
+        funcs.emplace("actor_applyAnimation", findFunc(handle, "actor_applyAnimation"));
+        funcs.emplace("actor_getAnimation", findFunc(handle, "actor_getAnimation"));
+        funcs.emplace("actor_clearAnimations", findFunc(handle, "actor_clearAnimations"));
+        funcs.emplace("actor_setHealth", findFunc(handle, "actor_setHealth"));
+        funcs.emplace("actor_getHealth", findFunc(handle, "actor_getHealth"));
+        funcs.emplace("actor_setInvulnerable", findFunc(handle, "actor_setInvulnerable"));
+        funcs.emplace("actor_isInvulnerable", findFunc(handle, "actor_isInvulnerable"));
+        funcs.emplace("actor_isStreamedInForPlayer", findFunc(handle, "actor_isStreamedInForPlayer"));
+        funcs.emplace("actor_getSpawnData", findFunc(handle, "actor_getSpawnData"));
+
         funcs.emplace("server_setModeText", findFunc(handle, "server_setModeText"));
         funcs.emplace("server_enableStuntBonuses", findFunc(handle, "server_enableStuntBonuses"));
         funcs.emplace("server_setWeather", findFunc(handle, "server_setWeather"));
