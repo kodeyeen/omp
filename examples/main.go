@@ -13,7 +13,7 @@ import (
 func init() {
 	gomp.On(gomp.EventTypeGameModeInit, func(evt *gomp.GameModeInitEvent) bool {
 		log.Println("GAME MODE INITIALIZED")
-		gomp.EnableManualEngineAndLights()
+		gomp.SetConfig("game.use_manual_engine_and_lights", true)
 		return true
 	})
 

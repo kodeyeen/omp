@@ -51,11 +51,13 @@ extern "C"
         funcs.emplace("server_setWeather", findFunc(handle, "server_setWeather"));
         funcs.emplace("server_setWorldTime", findFunc(handle, "server_setWorldTime"));
 
-        funcs.emplace("config_setPlayerMarkerMode", findFunc(handle, "config_setPlayerMarkerMode"));
-        funcs.emplace("config_setNametagDrawRadius", findFunc(handle, "config_setNametagDrawRadius"));
-        funcs.emplace("config_useEntryExitMarkers", findFunc(handle, "config_useEntryExitMarkers"));
-        funcs.emplace("config_useManualEngineAndLights", findFunc(handle, "config_useManualEngineAndLights"));
-        funcs.emplace("config_useNametags", findFunc(handle, "config_useNametags"));
+        funcs.emplace("config_setFloat", findFunc(handle, "config_setFloat"));
+        funcs.emplace("config_setInt", findFunc(handle, "config_setInt"));
+        funcs.emplace("config_setBool", findFunc(handle, "config_setBool"));
+        funcs.emplace("config_getType", findFunc(handle, "config_getType"));
+        funcs.emplace("config_getFloat", findFunc(handle, "config_getFloat"));
+        funcs.emplace("config_getInt", findFunc(handle, "config_getInt"));
+        funcs.emplace("config_getBool", findFunc(handle, "config_getBool"));
 
         funcs.emplace("checkpoint_setPosition", findFunc(handle, "checkpoint_setPosition"));
         funcs.emplace("checkpoint_getPosition", findFunc(handle, "checkpoint_getPosition"));

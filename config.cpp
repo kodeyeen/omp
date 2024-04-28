@@ -6,29 +6,39 @@ extern "C"
 {
 #endif
 
-    void config_setPlayerMarkerMode(int mode)
+    void config_setFloat(String key, float value)
     {
-        return call<void>("config_setPlayerMarkerMode", mode);
+        return call<void>("config_setFloat", key, value);
     }
 
-    void config_setNametagDrawRadius(float radius)
+    void config_setInt(String key, int value)
     {
-        return call<void>("config_setNametagDrawRadius", radius);
+        return call<void>("config_setInt", key, value);
     }
 
-    void config_useEntryExitMarkers(int use)
+    void config_setBool(String key, unsigned char value)
     {
-        return call<void>("config_useEntryExitMarkers", use);
+        return call<void>("config_setBool", key, value);
     }
 
-    void config_useManualEngineAndLights(int use)
+    int config_getType(String key)
     {
-        return call<void>("config_useManualEngineAndLights", use);
+        return call<int>("config_getType", key);
     }
 
-    void config_useNametags(int use)
+    float config_getFloat(String key)
     {
-        return call<void>("config_useNametags", use);
+        return call<float>("config_getFloat", key);
+    }
+
+    int config_getInt(String key)
+    {
+        return call<int>("config_getInt", key);
+    }
+
+    unsigned char config_getBool(String key)
+    {
+        return call<unsigned char>("config_getBool", key);
     }
 
 #ifdef __cplusplus

@@ -169,14 +169,6 @@ const (
 	PlayerAnimationSyncTypeSyncOthers
 )
 
-type PlayerMarkerMode int
-
-const (
-	PlayerMarkerModeOff PlayerMarkerMode = iota
-	PlayerMarkerModeGlobal
-	PlayerMarkerModeStreamed
-)
-
 type PlayerAttachment struct {
 	ModelID            int
 	Bone               PlayerBone

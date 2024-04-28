@@ -5,11 +5,13 @@ extern "C"
 {
 #endif
 
-    void config_setPlayerMarkerMode(int mode);
-    void config_setNametagDrawRadius(float radius);
-    void config_useEntryExitMarkers(int use);
-    void config_useManualEngineAndLights(int use);
-    void config_useNametags(int use);
+    void config_setFloat(String key, float value);
+    void config_setInt(String key, int value);
+    void config_setBool(String key, unsigned char value);
+    int config_getType(String key);
+    float config_getFloat(String key);
+    int config_getInt(String key);
+    unsigned char config_getBool(String key);
 
 #ifdef __cplusplus
 }
