@@ -889,16 +889,16 @@ func (p *Player) AimZ() float32 {
 
 // TODO getPlayerBulletData
 
-func (p *Player) EnableCameraTargetting() {
-	C.player_useCameraTargetting(p.handle, 1)
+func (p *Player) EnableCameraTargeting() {
+	C.player_useCameraTargeting(p.handle, 1)
 }
 
-func (p *Player) DisableCameraTargetting() {
-	C.player_useCameraTargetting(p.handle, 0)
+func (p *Player) DisableCameraTargeting() {
+	C.player_useCameraTargeting(p.handle, 0)
 }
 
-func (p *Player) IsCameraTargettingEnabled() bool {
-	return C.player_hasCameraTargetting(p.handle) != 0
+func (p *Player) IsCameraTargetingEnabled() bool {
+	return C.player_hasCameraTargeting(p.handle) != 0
 }
 
 func (p *Player) RemoveFromVehicle(force bool) {

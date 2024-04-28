@@ -187,8 +187,8 @@ extern "C"
     PlayerKeyData player_getKeyData(void* player);
     const PlayerAimData* player_getAimData(void* player);
     const PlayerBulletData* player_getBulletData(void* player);
-    void player_useCameraTargetting(void* player, int enable);
-    int player_hasCameraTargetting(void* player);
+    void player_useCameraTargeting(void* player, int enable);
+    int player_hasCameraTargeting(void* player);
     void player_removeFromVehicle(void* player, int force);
     void* player_getCameraTargetPlayer(void* player);
     void* player_getCameraTargetVehicle(void* player);

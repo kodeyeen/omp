@@ -263,8 +263,8 @@ extern "C"
         funcs.emplace("player_getKeyData", findFunc(handle, "player_getKeyData"));
         funcs.emplace("player_getAimData", findFunc(handle, "player_getAimData"));
         funcs.emplace("player_getBulletData", findFunc(handle, "player_getBulletData"));
-        funcs.emplace("player_useCameraTargetting", findFunc(handle, "player_useCameraTargetting"));
-        funcs.emplace("player_hasCameraTargetting", findFunc(handle, "player_hasCameraTargetting"));
+        funcs.emplace("player_useCameraTargeting", findFunc(handle, "player_useCameraTargeting"));
+        funcs.emplace("player_hasCameraTargeting", findFunc(handle, "player_hasCameraTargeting"));
         funcs.emplace("player_removeFromVehicle", findFunc(handle, "player_removeFromVehicle"));
         funcs.emplace("player_getCameraTargetPlayer", findFunc(handle, "player_getCameraTargetPlayer"));
         funcs.emplace("player_getCameraTargetVehicle", findFunc(handle, "player_getCameraTargetVehicle"));
