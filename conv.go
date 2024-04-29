@@ -1,5 +1,7 @@
 package gomp
 
+// #include <string.h>
+// #include "include/gomp.h"
 import "C"
 
 func boolToCUchar(val bool) C.uchar {
@@ -8,4 +10,13 @@ func boolToCUchar(val bool) C.uchar {
 	}
 
 	return 0
+}
+
+func stringToCString(str string) C.String {
+	cKey := C.CString(str)
+
+	return C.String{
+		buf:    cKey,
+		length: C.strlen(cKey),
+	}
 }

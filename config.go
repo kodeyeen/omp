@@ -23,15 +23,10 @@ var (
 )
 
 func SetConfig(key string, value any) error {
-	cKey := C.CString(key)
-	defer C.free(unsafe.Pointer(cKey))
+	cKey := stringToCString(key)
+	defer C.free(unsafe.Pointer(cKey.buf))
 
-	cKeyStr := C.String{
-		buf:    cKey,
-		length: C.strlen(cKey),
-	}
-
-	cType := C.config_getType(cKeyStr)
+	cType := C.config_getType(cKey)
 
 	switch cType {
 	case -1:
@@ -42,7 +37,7 @@ func SetConfig(key string, value any) error {
 			return ErrInvalidValueType
 		}
 
-		C.config_setInt(cKeyStr, C.int(v))
+		C.config_setInt(cKey, C.int(v))
 	case 1:
 		return ErrUnsupportedOption
 	case 2:
@@ -51,7 +46,7 @@ func SetConfig(key string, value any) error {
 			return ErrInvalidValueType
 		}
 
-		C.config_setFloat(cKeyStr, C.float(v))
+		C.config_setFloat(cKey, C.float(v))
 	case 3:
 		return ErrUnsupportedOption
 	case 4:
@@ -60,36 +55,31 @@ func SetConfig(key string, value any) error {
 			return ErrInvalidValueType
 		}
 
-		C.config_setBool(cKeyStr, boolToCUchar(v))
+		C.config_setBool(cKey, boolToCUchar(v))
 	}
 
 	return ErrSomethingWentWrong
 }
 
 func Config(key string) (any, error) {
-	cKey := C.CString(key)
-	defer C.free(unsafe.Pointer(cKey))
+	cKey := stringToCString(key)
+	defer C.free(unsafe.Pointer(cKey.buf))
 
-	cKeyStr := C.String{
-		buf:    cKey,
-		length: C.strlen(cKey),
-	}
-
-	cType := C.config_getType(cKeyStr)
+	cType := C.config_getType(cKey)
 
 	switch cType {
 	case -1:
 		return nil, ErrUnknownOption
 	case 0:
-		return int(C.config_getInt(cKeyStr)), nil
+		return int(C.config_getInt(cKey)), nil
 	case 1:
 		return nil, ErrUnsupportedOption
 	case 2:
-		return float64(C.config_getFloat(cKeyStr)), nil
+		return float64(C.config_getFloat(cKey)), nil
 	case 3:
 		return nil, ErrUnsupportedOption
 	case 4:
-		return C.config_getBool(cKeyStr) != 0, nil
+		return C.config_getBool(cKey) != 0, nil
 	}
 
 	return nil, ErrSomethingWentWrong
