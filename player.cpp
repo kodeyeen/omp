@@ -116,9 +116,9 @@ extern "C"
         return call<String>("player_getSerial", player);
     }
 
-    void player_giveWeapon(void* player, WeaponSlotData weapon)
+    void player_giveWeapon(void* player, uint8_t id, uint32_t ammo)
     {
-        return call<void>("player_giveWeapon", player, weapon);
+        return call<void>("player_giveWeapon", player, id, ammo);
     }
 
     void player_removeWeapon(void* player, uint8_t weapon)
@@ -126,9 +126,9 @@ extern "C"
         return call<void>("player_removeWeapon", player, weapon);
     }
 
-    void player_setWeaponAmmo(void* player, WeaponSlotData data)
+    void player_setWeaponAmmo(void* player, uint8_t id, uint32_t ammo)
     {
-        return call<void>("player_setWeaponAmmo", player, data);
+        return call<void>("player_setWeaponAmmo", player, id, ammo);
     }
 
     Array* player_getWeapons(void* player)
@@ -561,12 +561,12 @@ extern "C"
         return call<void>("player_useCameraTargetting", player, enable);
     }
 
-    int player_hasCameraTargetting(void* player)
+    unsigned char player_hasCameraTargetting(void* player)
     {
         return call<int>("player_hasCameraTargetting", player);
     }
 
-    void player_removeFromVehicle(void* player, int force)
+    void player_removeFromVehicle(void* player, unsigned char force)
     {
         return call<void>("player_removeFromVehicle", player, force);
     }

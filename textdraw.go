@@ -38,12 +38,12 @@ type Textdraw struct {
 }
 
 func NewTextdraw(pos Vector2, text string, plr *Player) (*Textdraw, error) {
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
 
 	cstr := C.String{
-		buf:    ctext,
-		length: C.strlen(ctext),
+		buf:    cText,
+		length: C.strlen(cText),
 	}
 
 	if plr == nil {
@@ -86,12 +86,12 @@ func (td *Textdraw) Position() Vector2 {
 }
 
 func (td *Textdraw) SetText(text string) {
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
 
 	C.textDraw_setText(td.handle, C.String{
-		buf:    ctext,
-		length: C.strlen(ctext),
+		buf:    cText,
+		length: C.strlen(cText),
 	})
 }
 
@@ -275,11 +275,11 @@ func (td *Textdraw) IsShownFor(plr *Player) bool {
 }
 
 func (td *Textdraw) SetTextFor(plr *Player, text string) {
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
 
 	C.textDraw_setTextForPlayer(td.handle, plr.handle, C.String{
-		buf:    ctext,
-		length: C.strlen(ctext),
+		buf:    cText,
+		length: C.strlen(cText),
 	})
 }

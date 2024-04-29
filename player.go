@@ -291,8 +291,8 @@ func (p *Player) InterpolateCameraLookAt(from Vector3, to Vector3, time int, cut
 	C.player_interpolateCameraLookAt(p.handle, C.float(from.X), C.float(from.Y), C.float(from.Z), C.float(to.X), C.float(to.Y), C.float(to.Z), C.int(time), C.int(cutType))
 }
 
-func (p *Player) AttachCameraToObject() {
-	panic("not implemented")
+func (p *Player) AttachCameraToObject(obj *Object) {
+	C.player_attachCameraToObject(p.handle, obj.handle)
 }
 
 func (p *Player) SetName(name string) PlayerNameStatus {
@@ -320,10 +320,7 @@ func (p *Player) Serial() string {
 }
 
 func (p *Player) GiveWeapon(weapon Weapon, ammo int) {
-	C.player_giveWeapon(p.handle, C.WeaponSlotData{
-		id:   C.uchar(weapon),
-		ammo: C.uint(ammo),
-	})
+	C.player_giveWeapon(p.handle, C.uchar(weapon), C.uint(ammo))
 }
 
 func (p *Player) RemoveWeapon(weapon Weapon) {
@@ -331,22 +328,19 @@ func (p *Player) RemoveWeapon(weapon Weapon) {
 }
 
 func (p *Player) SetWeaponAmmo(weapon Weapon, ammo int) {
-	C.player_setWeaponAmmo(p.handle, C.WeaponSlotData{
-		id:   C.uchar(weapon),
-		ammo: C.uint(ammo),
-	})
+	C.player_setWeaponAmmo(p.handle, C.uchar(weapon), C.uint(ammo))
 }
 
 func (p *Player) WeaponSlots() []*WeaponSlot {
 	panic("not implemented")
 }
 
-func (p *Player) WeaponSlot(_type WeaponSlotIndex) (WeaponSlot, error) {
-	if _type < WeaponSlotIndexUnknown || _type > WeaponSlotIndexDetonator {
-		return WeaponSlot{}, errors.New("invalid slot type")
+func (p *Player) WeaponSlot(slotIdx WeaponSlotIndex) (WeaponSlot, error) {
+	if slotIdx < WeaponSlotIndexUnknown || slotIdx > WeaponSlotIndexDetonator {
+		return WeaponSlot{}, errors.New("invalid slot index")
 	}
 
-	slot := C.player_getWeaponSlot(p.handle, C.int(_type))
+	slot := C.player_getWeaponSlot(p.handle, C.int(slotIdx))
 
 	return WeaponSlot{
 		Weapon: Weapon(slot.id),
@@ -372,12 +366,12 @@ func (p *Player) ArmedWeaponAmmo() int {
 }
 
 func (p *Player) SetShopName(name string) {
-	cname := C.CString(name)
-	defer C.free(unsafe.Pointer(cname))
+	cName := C.CString(name)
+	defer C.free(unsafe.Pointer(cName))
 
 	C.player_setShopName(p.handle, C.String{
-		buf:    cname,
-		length: C.strlen(cname),
+		buf:    cName,
+		length: C.strlen(cName),
 	})
 }
 
@@ -395,28 +389,28 @@ func (p *Player) DrunkLevel() int {
 	return int(C.player_getDrunkLevel(p.handle))
 }
 
-func (p *Player) SetColor(color uint) {
+func (p *Player) SetColor(color Color) {
 	C.player_setColour(p.handle, C.uint(color))
 }
 
-func (p *Player) Color() uint {
-	return uint(C.player_getColour(p.handle))
+func (p *Player) Color() Color {
+	return Color(C.player_getColour(p.handle))
 }
 
-func (p *Player) SetOtherColor(other *Player, color uint) {
+func (p *Player) SetColorFor(other *Player, color Color) {
 	C.player_setOtherColour(p.handle, other.handle, C.uint(color))
 }
 
 // Get the colour of a player's nametag and radar blip for another player.
-func (p *Player) OtherColor(other *Player) (int, error) {
-	var ccolor C.uint
-	hasSpecificColor := C.player_getOtherColour(p.handle, other.handle, &ccolor) != 0
+func (p *Player) ColorFor(other *Player) (Color, error) {
+	var cColor C.uint
+	hasSpecificColor := C.player_getOtherColour(p.handle, other.handle, &cColor) != 0
 
 	if !hasSpecificColor {
 		return 0, errors.New("player has no specific color")
 	}
 
-	return int(ccolor), nil
+	return Color(cColor), nil
 }
 
 func (p *Player) Freeze() {
@@ -486,7 +480,6 @@ func (p *Player) LastPlayedAudio() string {
 	return C.GoStringN(audio.buf, C.int(audio.length))
 }
 
-// TODO type constants
 func (p *Player) CreateExplosion(_type int, radius float32, pos Vector3) {
 	C.player_createExplosion(p.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.int(_type), C.float(radius))
 }
@@ -523,7 +516,7 @@ func (p *Player) Money() int {
 	return int(C.player_getMoney(p.handle))
 }
 
-func (p *Player) SetMapIcon(ID int, pos Vector3, _type, color, style int) {
+func (p *Player) SetMapIcon(ID int, pos Vector3, _type int, color Color, style int) {
 	C.player_setMapIcon(p.handle, C.int(ID), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.int(_type), C.uint(color), C.int(style))
 }
 
@@ -693,45 +686,45 @@ func (p *Player) SetSkin(skin int) {
 	C.player_setSkin(p.handle, C.int(skin), 1)
 }
 
-func (p *Player) SetChatBubble(text string, color uint, drawDist float32, expire time.Duration) {
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
+func (p *Player) SetChatBubble(text string, color Color, drawDist float32, expire time.Duration) {
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
 
-	cstr := C.String{
-		buf:    ctext,
-		length: C.strlen(ctext),
+	cTextStr := C.String{
+		buf:    cText,
+		length: C.strlen(cText),
 	}
 
-	C.player_setChatBubble(p.handle, cstr, C.uint(color), C.float(drawDist), C.int(expire.Milliseconds()))
+	C.player_setChatBubble(p.handle, cTextStr, C.uint(color), C.float(drawDist), C.int(expire.Milliseconds()))
 }
 
 func (p *Player) SendMessage(msg string, color Color) {
-	cmsg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cmsg))
+	cMsg := C.CString(msg)
+	defer C.free(unsafe.Pointer(cMsg))
 
 	C.player_sendClientMessage(p.handle, C.uint(color), C.String{
-		buf:    cmsg,
-		length: C.strlen(cmsg),
+		buf:    cMsg,
+		length: C.strlen(cMsg),
 	})
 }
 
 func (p *Player) SendMessageFrom(other *Player, msg string) {
-	cmsg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cmsg))
+	cMsg := C.CString(msg)
+	defer C.free(unsafe.Pointer(cMsg))
 
 	C.player_sendChatMessage(p.handle, other.handle, C.String{
-		buf:    cmsg,
-		length: C.strlen(cmsg),
+		buf:    cMsg,
+		length: C.strlen(cMsg),
 	})
 }
 
 func (p *Player) ShowGameText(msg string, delay time.Duration, style int) {
-	cmsg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cmsg))
+	cMsg := C.CString(msg)
+	defer C.free(unsafe.Pointer(cMsg))
 
 	cstr := C.String{
-		buf:    cmsg,
-		length: C.strlen(cmsg),
+		buf:    cMsg,
+		length: C.strlen(cMsg),
 	}
 
 	C.player_sendGameText(p.handle, cstr, C.int(delay.Milliseconds()), C.int(style))
@@ -746,14 +739,14 @@ func (p *Player) IsGameTextShown(style int) {
 }
 
 func (p *Player) GameText(style int) *PlayerGameText {
-	var cstr C.String
+	var cTextStr C.String
 	var delay C.int
 	var remaining C.int
 
-	C.player_getGameText(p.handle, C.int(style), &cstr, &delay, &remaining)
+	C.player_getGameText(p.handle, C.int(style), &cTextStr, &delay, &remaining)
 
 	return &PlayerGameText{
-		Text:      C.GoStringN(cstr.buf, C.int(cstr.length)),
+		Text:      C.GoStringN(cTextStr.buf, C.int(cTextStr.length)),
 		Delay:     time.Duration(delay) * time.Millisecond,
 		Remaining: time.Duration(remaining) * time.Millisecond,
 	}
@@ -894,48 +887,43 @@ func (p *Player) IsCameraTargetingEnabled() bool {
 }
 
 func (p *Player) RemoveFromVehicle(force bool) {
-	var cforce C.int
-	if force {
-		cforce = 1
-	}
-
-	C.player_removeFromVehicle(p.handle, cforce)
+	C.player_removeFromVehicle(p.handle, boolToCUchar(force))
 }
 
 func (p *Player) CameraTargetPlayer() *Player {
 	player := C.player_getCameraTargetPlayer(p.handle)
 
-	return &Player{player}
+	return &Player{handle: player}
 }
 
 func (p *Player) CameraTargetVehicle() *Vehicle {
 	vehicle := C.player_getCameraTargetVehicle(p.handle)
 
-	return &Vehicle{vehicle}
+	return &Vehicle{handle: vehicle}
 }
 
 func (p *Player) CameraTargetObject() *Object {
 	object := C.player_getCameraTargetObject(p.handle)
 
-	return &Object{object}
+	return &Object{handle: object}
 }
 
 func (p *Player) CameraTargetActor() *Actor {
 	actor := C.player_getCameraTargetActor(p.handle)
 
-	return &Actor{actor}
+	return &Actor{handle: actor}
 }
 
 func (p *Player) TargetPlayer() *Player {
 	player := C.player_getTargetPlayer(p.handle)
 
-	return &Player{player}
+	return &Player{handle: player}
 }
 
 func (p *Player) TargetActor() *Actor {
 	actor := C.player_getTargetActor(p.handle)
 
-	return &Actor{actor}
+	return &Actor{handle: actor}
 }
 
 func (p *Player) EnableRemoteVehicleCollisions() {

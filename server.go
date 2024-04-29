@@ -7,12 +7,12 @@ import "C"
 import "unsafe"
 
 func SetGameModeText(text string) {
-	ctext := C.CString(text)
-	defer C.free(unsafe.Pointer(ctext))
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
 
 	C.server_setModeText(C.String{
-		buf:    ctext,
-		length: C.strlen(ctext),
+		buf:    cText,
+		length: C.strlen(cText),
 	})
 }
 

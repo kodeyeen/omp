@@ -99,9 +99,9 @@ extern "C"
     int player_setName(void* player, String name);
     String player_getName(void* player);
     String player_getSerial(void* player);
-    void player_giveWeapon(void* player, WeaponSlotData weapon);
+    void player_giveWeapon(void* player, uint8_t id, uint32_t ammo);
     void player_removeWeapon(void* player, uint8_t weapon);
-    void player_setWeaponAmmo(void* player, WeaponSlotData data);
+    void player_setWeaponAmmo(void* player, uint8_t id, uint32_t ammo);
     Array* player_getWeapons(void* player);
     WeaponSlotData player_getWeaponSlot(void* player, int slot);
     void player_resetWeapons(void* player);
@@ -188,8 +188,8 @@ extern "C"
     const PlayerAimData* player_getAimData(void* player);
     const PlayerBulletData* player_getBulletData(void* player);
     void player_useCameraTargeting(void* player, int enable);
-    int player_hasCameraTargeting(void* player);
-    void player_removeFromVehicle(void* player, int force);
+    unsigned char player_hasCameraTargeting(void* player);
+    void player_removeFromVehicle(void* player, unsigned char force);
     void* player_getCameraTargetPlayer(void* player);
     void* player_getCameraTargetVehicle(void* player);
     void* player_getCameraTargetObject(void* player);
