@@ -128,7 +128,7 @@ extern "C"
     void player_stopAudio(void* player);
     String player_lastPlayedAudio(void* player);
     void player_createExplosion(void* player, float vecX, float vecY, float vecZ, int type, float radius);
-    void player_sendDeathMessage(void* player, void* plr, void* killer, int weapon);
+    void player_sendDeathMessage(void* player, void* killee, void* killer, int weapon);
 	void player_sendEmptyDeathMessage(void* player);
     void player_removeDefaultObjects(void* player, unsigned model, float posX, float posY, float posZ, float radius);
     void player_forceClassSelection(void* player);

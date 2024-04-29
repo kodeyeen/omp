@@ -484,8 +484,8 @@ func (p *Player) CreateExplosion(_type int, radius float32, pos Vector3) {
 	C.player_createExplosion(p.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.int(_type), C.float(radius))
 }
 
-func (p *Player) SendDeathMessage(player *Player, killer *Player, weapon int) {
-	C.player_sendDeathMessage(p.handle, player.handle, killer.handle, C.int(weapon))
+func (p *Player) SendDeathMessage(killer *Player, killee *Player, weapon int) {
+	C.player_sendDeathMessage(p.handle, killer.handle, killee.handle, C.int(weapon))
 }
 
 func (p *Player) SendEmptyDeathMessage() {
@@ -516,7 +516,7 @@ func (p *Player) Money() int {
 	return int(C.player_getMoney(p.handle))
 }
 
-func (p *Player) SetMapIcon(ID int, pos Vector3, _type int, color Color, style int) {
+func (p *Player) SetMapIcon(ID int, _type int, color Color, style int, pos Vector3) {
 	C.player_setMapIcon(p.handle, C.int(ID), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.int(_type), C.uint(color), C.int(style))
 }
 

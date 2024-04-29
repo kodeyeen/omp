@@ -261,7 +261,7 @@ extern "C"
         return call<void>("player_createExplosion", player, vecX, vecY, vecZ, type, radius);
     }
 
-    void player_sendDeathMessage(void* player, void* plr, void* killer, int weapon)
+    void player_sendDeathMessage(void* player, void* killee, void* killer, int weapon)
     {
         return call<void>("player_sendDeathMessage", player, plr, killer, weapon);
     }
