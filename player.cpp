@@ -263,7 +263,7 @@ extern "C"
 
     void player_sendDeathMessage(void* player, void* killee, void* killer, int weapon)
     {
-        return call<void>("player_sendDeathMessage", player, plr, killer, weapon);
+        return call<void>("player_sendDeathMessage", player, killee, killer, weapon);
     }
 
 	void player_sendEmptyDeathMessage(void* player)
