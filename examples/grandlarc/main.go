@@ -53,11 +53,11 @@ var lvSpawns = lasVenturasSpawns()
 
 func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
 	gomp.SetGameModeText("Grand Larceny")
-	gomp.SetPlayerMarkerMode(gomp.PlayerMarkerModeGlobal)
-	gomp.EnableNametags()
-	gomp.SetNametagDrawRadius(40.0)
-	gomp.EnableStuntBonuses()
-	gomp.DisableEntryExitMarkers()
+	// gomp.SetPlayerMarkerMode(gomp.PlayerMarkerModeGlobal)
+	// gomp.EnableNametags()
+	// gomp.SetNametagDrawRadius(40.0)
+	// gomp.EnableStuntBonuses()
+	// gomp.DisableEntryExitMarkers()
 	gomp.SetWeather(2)
 	gomp.SetWorldTime(11)
 

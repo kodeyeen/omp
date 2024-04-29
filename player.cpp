@@ -556,14 +556,14 @@ extern "C"
         return call<const PlayerBulletData*>("player_getBulletData", player);
     }
 
-    void player_useCameraTargetting(void* player, int enable)
+    void player_useCameraTargeting(void* player, int enable)
     {
-        return call<void>("player_useCameraTargetting", player, enable);
+        return call<void>("player_useCameraTargeting", player, enable);
     }
 
-    unsigned char player_hasCameraTargetting(void* player)
+    unsigned char player_hasCameraTargeting(void* player)
     {
-        return call<int>("player_hasCameraTargetting", player);
+        return call<int>("player_hasCameraTargeting", player);
     }
 
     void player_removeFromVehicle(void* player, unsigned char force)
