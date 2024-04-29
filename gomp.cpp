@@ -123,6 +123,11 @@ extern "C"
         funcs.emplace("menu_showForPlayer", findFunc(handle, "menu_showForPlayer"));
         funcs.emplace("menu_hideForPlayer", findFunc(handle, "menu_hideForPlayer"));
 
+        // CustomModel
+        funcs.emplace("customModel_add", findFunc(handle, "customModel_add"));
+        funcs.emplace("customModel_getNameFromCheckSum", findFunc(handle, "customModel_getNameFromCheckSum"));
+        funcs.emplace("customModel_getPath", findFunc(handle, "customModel_getPath"));
+
         // Object
         funcs.emplace("object_create", findFunc(handle, "object_create"));
         funcs.emplace("object_release", findFunc(handle, "object_release"));

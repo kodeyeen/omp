@@ -8,7 +8,7 @@ import (
 	"github.com/kodeyeen/gomp"
 )
 
-// go build -o test.dll -buildmode=c-shared
+// go build -buildmode=c-shared -o test.dll
 
 func init() {
 	gomp.On(gomp.EventTypeGameModeInit, func(evt *gomp.GameModeInitEvent) bool {
