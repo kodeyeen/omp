@@ -1,5 +1,5 @@
-#ifndef API_H
-#define API_H
+#ifndef GOMP_H
+#define GOMP_H
 
 #include <stdint.h>
 
@@ -80,4 +80,4 @@ extern "C"
 }
 #endif
 
-#endif // API_H
+#endif // GOMP_H
