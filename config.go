@@ -5,7 +5,6 @@ package gomp
 // #include "include/config.h"
 import "C"
 import (
-	"errors"
 	"unsafe"
 )
 
@@ -15,72 +14,203 @@ const (
 	PlayerMarkerModeStreamed
 )
 
-var (
-	ErrInvalidValueType   = errors.New("invalid value type")
-	ErrSomethingWentWrong = errors.New("something went wrong")
-	ErrUnknownOption      = errors.New("unknown option")
-	ErrUnsupportedOption  = errors.New("unsupported option")
-)
-
-func SetConfig(key string, value any) error {
-	cKey := stringToCString(key)
-	defer C.free(unsafe.Pointer(cKey.buf))
-
-	cType := C.config_getType(cKey)
-
-	switch cType {
-	case -1:
-		return ErrUnknownOption
-	case 0:
-		v, ok := value.(int)
-		if !ok {
-			return ErrInvalidValueType
-		}
-
-		C.config_setInt(cKey, C.int(v))
-	case 1:
-		return ErrUnsupportedOption
-	case 2:
-		v, ok := value.(float64)
-		if !ok {
-			return ErrInvalidValueType
-		}
-
-		C.config_setFloat(cKey, C.float(v))
-	case 3:
-		return ErrUnsupportedOption
-	case 4:
-		v, ok := value.(bool)
-		if !ok {
-			return ErrInvalidValueType
-		}
-
-		C.config_setBool(cKey, boolToCUchar(v))
-	}
-
-	return ErrSomethingWentWrong
+type configOptionValue interface {
+	float64 | int | bool
 }
 
-func Config(key string) (any, error) {
+func setConfigOption[T configOptionValue](key string, value T) {
 	cKey := stringToCString(key)
 	defer C.free(unsafe.Pointer(cKey.buf))
 
-	cType := C.config_getType(cKey)
+	switch v := any(value).(type) {
+	case float64:
+		C.config_setFloat(cKey, C.float(v))
+	case int:
+		C.config_setInt(cKey, C.int(v))
+	case bool:
+		C.config_setBool(cKey, boolToCUchar(v))
+	}
+}
 
-	switch cType {
-	case -1:
-		return nil, ErrUnknownOption
-	case 0:
-		return int(C.config_getInt(cKey)), nil
-	case 1:
-		return nil, ErrUnsupportedOption
-	case 2:
-		return float64(C.config_getFloat(cKey)), nil
-	case 3:
-		return nil, ErrUnsupportedOption
-	case 4:
-		return C.config_getBool(cKey) != 0, nil
+func configOption[T configOptionValue](key string) T {
+	cKey := stringToCString(key)
+	defer C.free(unsafe.Pointer(cKey.buf))
+
+	t := any(new(T))
+	var result any
+
+	switch t.(type) {
+	case float64:
+		result = C.config_getFloat(cKey)
+	case int:
+		result = C.config_getInt(cKey)
+	case bool:
+		result = C.config_getBool(cKey)
 	}
 
-	return nil, ErrSomethingWentWrong
+	return result.(T)
+}
+
+func AllowAdminTeleport() {
+	setConfigOption("rcon.allow_teleport", true)
+}
+
+func DisallowAdminTeleport() {
+	setConfigOption("rcon.allow_teleport", false)
+}
+
+func IsAdminTeleportAllowed() bool {
+	return configOption[bool]("rcon.allow_teleport")
+}
+
+func AreInteriorWeaponsAllowed() bool {
+	return configOption[bool]("game.allow_interior_weapons")
+}
+
+func EnableInteriorEnterExits() {
+	setConfigOption("game.use_entry_exit_markers", true)
+}
+
+func DisableInteriorEnterExits() {
+	setConfigOption("game.use_entry_exit_markers", false)
+}
+
+func AreInteriorEnterExitsEnabled() bool {
+	return configOption[bool]("game.use_entry_exit_markers")
+}
+
+func EnableNametagLOS() {
+	setConfigOption("game.use_nametag_los", true)
+}
+
+func DisableNametagLOS() {
+	setConfigOption("game.use_nametag_los", false)
+}
+
+func IsNametagLOSEnabled() bool {
+	return configOption[bool]("game.use_nametag_los")
+}
+
+func EnableAllAnimations() {
+	setConfigOption("game.use_all_animations", true)
+}
+
+func DisableAllAnimations() {
+	setConfigOption("game.use_all_animations", false)
+}
+
+func AreAllAnimationsEnabled() bool {
+	return configOption[bool]("game.use_all_animations")
+}
+
+func EnableVehicleFriendlyFire() {
+	setConfigOption("game.use_vehicle_friendly_fire", true)
+}
+
+func DisableVehicleFriendlyFire() {
+	setConfigOption("game.use_vehicle_friendly_fire", false)
+}
+
+func IsVehicleFriendlyFireEnabled() bool {
+	return configOption[bool]("game.use_vehicle_friendly_fire")
+}
+
+func EnableZoneNames() {
+	setConfigOption("game.use_zone_names", true)
+}
+
+func DisableZoneNames() {
+	setConfigOption("game.use_zone_names", false)
+}
+
+func AreZoneNamesEnabled() bool {
+	return configOption[bool]("game.use_zone_names")
+}
+
+func MaxPlayers() int {
+	return configOption[int]("max_players")
+}
+
+func Weather() int {
+	return configOption[int]("game.weather")
+}
+
+func WorldTime() int {
+	return configOption[int]("game.time")
+}
+
+func IsIPBanned(IP string) bool {
+	cIP := stringToCString(IP)
+
+	return C.config_isBanned(cIP) != 0
+}
+
+func LimitGlobalChatRadius(radius float64) {
+	setConfigOption("game.use_chat_radius", true)
+	setConfigOption("game.chat_radius", radius)
+}
+
+func LimitPlayerMarkerRadius(radius float64) {
+	setConfigOption("game.use_player_marker_draw_radius", true)
+	setConfigOption("game.player_marker_draw_radius", radius)
+}
+
+func EnableManualEngineAndLights() {
+	setConfigOption("game.use_manual_engine_and_lights", true)
+}
+
+func DisableManualEngineAndLights() {
+	setConfigOption("game.use_manual_engine_and_lights", true)
+}
+
+func IsManualEngineAndLightsEnabled() bool {
+	return configOption[bool]("game.use_manual_engine_and_lights")
+}
+
+func SetNametagDrawRadius(radius float64) {
+	setConfigOption("game.nametag_draw_radius", radius)
+}
+
+func EnableNametags() {
+	setConfigOption("game.use_nametags", true)
+}
+
+func DisableNametags() {
+	setConfigOption("game.use_nametags", true)
+}
+
+func IsNametagsEnabled() bool {
+	return configOption[bool]("game.use_nametags")
+}
+
+func SetPlayerMarkerMode(mode int) {
+	setConfigOption("game.player_marker_mode", mode)
+}
+
+func PlayerMarkerMode() int {
+	return configOption[int]("game.player_marker_mode")
+}
+
+func EnableChatInputFilter() {
+	setConfigOption("chat_input_filter", true)
+}
+
+func DisableChatInputFilter() {
+	setConfigOption("chat_input_filter", false)
+}
+
+func IsChatInputFilterEnabled() bool {
+	return configOption[bool]("chat_input_filter")
+}
+
+func EnablePlayerPedAnims() {
+	setConfigOption("game.use_player_ped_anims", true)
+}
+
+func DisablePlayerPedAnims() {
+	setConfigOption("game.use_player_ped_anims", false)
+}
+
+func ArePlayerPedAnimsEnabled() bool {
+	return configOption[bool]("game.use_player_ped_anims")
 }

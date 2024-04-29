@@ -41,6 +41,11 @@ extern "C"
         return call<unsigned char>("config_getBool", key);
     }
 
+    unsigned char config_isBanned(String ip)
+    {
+        return call<unsigned char>("config_isIPBanned", ip);
+    }
+
 #ifdef __cplusplus
 }
 #endif

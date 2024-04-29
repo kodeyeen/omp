@@ -12,6 +12,7 @@ extern "C"
     float config_getFloat(String key);
     int config_getInt(String key);
     unsigned char config_getBool(String key);
+    unsigned char config_isBanned(String ip);
 
 #ifdef __cplusplus
 }
