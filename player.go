@@ -1090,7 +1090,7 @@ func (p *Player) Vehicle() (*Vehicle, error) {
 		return nil, errors.New("player is not in a vehicle")
 	}
 
-	return &Vehicle{vehicle}, nil
+	return &Vehicle{handle: vehicle}, nil
 }
 
 func (p *Player) VehicleSeat() int {
