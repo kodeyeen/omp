@@ -11,6 +11,11 @@ extern "C"
         return call<void*>("class_create", data);
     }
 
+    void class_release(void* _class)
+    {
+        return call<void>("class_release", _class);
+    }
+
     int class_getID(void* class_)
     {
         return call<int>("class_getID", class_);

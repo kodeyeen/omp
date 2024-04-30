@@ -81,6 +81,7 @@ extern "C"
         funcs.emplace("raceCheckpoint_getNextPosition", findFunc(handle, "raceCheckpoint_getNextPosition"));
 
         funcs.emplace("class_create", findFunc(handle, "class_create"));
+        funcs.emplace("class_release", findFunc(handle, "class_release"));
         funcs.emplace("class_getID", findFunc(handle, "class_getID"));
         funcs.emplace("class_setClass", findFunc(handle, "class_setClass"));
         funcs.emplace("class_getClass", findFunc(handle, "class_getClass"));

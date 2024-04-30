@@ -44,6 +44,10 @@ func NewClass(
 	return &Class{handle: cClass}, nil
 }
 
+func FreeClass(cls *Class) {
+	C.class_release(cls.handle)
+}
+
 func (c *Class) ID() int {
 	return int(C.class_getID(c.handle))
 }
