@@ -1,7 +1,5 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/actor.h"
 import "C"
 import (
@@ -41,32 +39,22 @@ func (a *Actor) Skin() int {
 }
 
 func (a *Actor) ApplyAnimation(anim Animation) {
-	cLib := C.CString(anim.Lib)
-	defer C.free(unsafe.Pointer(cLib))
+	cLib := newCString(anim.Lib)
+	defer freeCString(cLib)
 
-	cLibStr := C.String{
-		buf:    cLib,
-		length: C.strlen(cLib),
-	}
-
-	cName := C.CString(anim.Name)
-	defer C.free(unsafe.Pointer(cName))
-
-	cNameStr := C.String{
-		buf:    cName,
-		length: C.strlen(cName),
-	}
+	cName := newCString(anim.Name)
+	defer freeCString(cName)
 
 	C.actor_applyAnimation(
 		a.handle,
 		C.float(anim.Delta),
-		boolToCUchar(anim.Loop),
-		boolToCUchar(anim.LockX),
-		boolToCUchar(anim.LockY),
-		boolToCUchar(anim.Freeze),
+		newCUchar(anim.Loop),
+		newCUchar(anim.LockX),
+		newCUchar(anim.LockY),
+		newCUchar(anim.Freeze),
 		C.uint(anim.Duration.Milliseconds()),
-		cLibStr,
-		cNameStr,
+		cLib,
+		cName,
 	)
 }
 

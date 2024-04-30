@@ -1,7 +1,5 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/textlabel.h"
 // #include "include/player.h"
 // #include "include/vehicle.h"
@@ -24,10 +22,10 @@ type TextLabel struct {
 }
 
 func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) (*TextLabel, error) {
-	cText := stringToCString(text)
-	defer C.free(unsafe.Pointer(cText.buf))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	cTl := C.textLabel_create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), boolToCUchar(los))
+	cTl := C.textLabel_create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), newCUchar(los))
 	if cTl == nil {
 		return nil, errors.New("text label limit reached")
 	}
@@ -72,15 +70,10 @@ func TextLabelAttachedData[T TextLabelAttachmentTarget](tl *TextLabel) (TextLabe
 }
 
 func (tl *TextLabel) SetText(text string) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	cTextStr := C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	}
-
-	C.textLabel_setText(tl.handle, cTextStr)
+	C.textLabel_setText(tl.handle, cText)
 }
 
 func (tl *TextLabel) Text() string {

@@ -1,19 +1,13 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/server.h"
 import "C"
-import "unsafe"
 
 func SetGameModeText(text string) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	C.server_setModeText(C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	})
+	C.server_setModeText(cText)
 }
 
 func SetWeather(weather int) {

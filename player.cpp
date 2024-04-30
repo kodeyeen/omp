@@ -236,7 +236,7 @@ extern "C"
         return call<uint32_t>("player_lastPlayedSound", player);
     }
 
-    void player_playAudio(void* player, String url, int usePos, float posX, float posY, float posZ, float distance)
+    void player_playAudio(void* player, String url, unsigned char usePos, float posX, float posY, float posZ, float distance)
     {
         return call<void>("player_playAudio", player, url, usePos, posX, posY, posZ, distance);
     }

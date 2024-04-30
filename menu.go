@@ -1,7 +1,5 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/menu.h"
 import "C"
 import (
@@ -14,15 +12,10 @@ type Menu struct {
 }
 
 func NewMenu(title string, pos Vector2, columns int, col1Width, col2Width float32) (*Menu, error) {
-	cTitle := C.CString(title)
-	defer C.free(unsafe.Pointer(cTitle))
+	cTitle := newCString(title)
+	freeCString(cTitle)
 
-	cTitleStr := C.String{
-		buf:    cTitle,
-		length: C.strlen(cTitle),
-	}
-
-	cMenu := C.menu_create(cTitleStr, C.float(pos.X), C.float(pos.Y), C.uchar(columns), C.float(col1Width), C.float(col2Width))
+	cMenu := C.menu_create(cTitle, C.float(pos.X), C.float(pos.Y), C.uchar(columns), C.float(col1Width), C.float(col2Width))
 	if cMenu == nil {
 		return nil, errors.New("menu limit reached")
 	}
@@ -35,15 +28,10 @@ func FreeMenu(menu *Menu) {
 }
 
 func (m *Menu) SetColumnHeader(column int, header string) {
-	cHeader := C.CString(header)
-	defer C.free(unsafe.Pointer(cHeader))
+	cHeader := newCString(header)
+	defer freeCString(cHeader)
 
-	cHeaderStr := C.String{
-		buf:    cHeader,
-		length: C.strlen(cHeader),
-	}
-
-	C.menu_setColumnHeader(m.handle, cHeaderStr, C.uchar(column))
+	C.menu_setColumnHeader(m.handle, cHeader, C.uchar(column))
 }
 
 func (m *Menu) ColumnHeader(column int) string {
@@ -53,15 +41,10 @@ func (m *Menu) ColumnHeader(column int) string {
 }
 
 func (m *Menu) AddItem(column int, text string) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	cTextStr := C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	}
-
-	C.menu_addCell(m.handle, cTextStr, C.uchar(column))
+	C.menu_addCell(m.handle, cText, C.uchar(column))
 }
 
 func (m *Menu) DisableRow(row int) {

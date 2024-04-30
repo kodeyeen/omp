@@ -1,7 +1,5 @@
 package gomp
 
-// #include <string.h>
-// #include <stdlib.h>
 // #include "include/object.h"
 // #include "include/player.h"
 // #include "include/vehicle.h"
@@ -260,16 +258,13 @@ func (o *Object) MaterialText(slotIdx int) (ObjectMaterialText, error) {
 }
 
 func (o *Object) SetMaterial(idx, model int, textureLib, textureName string, color int) {
-	cTextureLib := C.CString(textureLib)
-	defer C.free(unsafe.Pointer(cTextureLib))
+	cTextureLib := newCString(textureLib)
+	defer freeCString(cTextureLib)
 
-	cTextureName := C.CString(textureName)
-	defer C.free(unsafe.Pointer(cTextureName))
+	cTextureName := newCString(textureName)
+	defer freeCString(cTextureName)
 
-	cTextureLibStr := C.String{buf: cTextureLib, length: C.strlen(cTextureLib)}
-	cTextureNameStr := C.String{buf: cTextureName, length: C.strlen(cTextureName)}
-
-	C.object_setMaterial(o.handle, C.uint(idx), C.int(model), cTextureLibStr, cTextureNameStr, C.uint(color))
+	C.object_setMaterial(o.handle, C.uint(idx), C.int(model), cTextureLib, cTextureName, C.uint(color))
 }
 
 func (o *Object) SetMaterialText(
@@ -282,21 +277,13 @@ func (o *Object) SetMaterialText(
 	fontColor, bgColor Color,
 	align ObjectMaterialTextAlign,
 ) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	cFontFace := C.CString(fontFace)
-	defer C.free(unsafe.Pointer(cFontFace))
+	cFontFace := newCString(fontFace)
+	defer freeCString(cFontFace)
 
-	cTextStr := C.String{buf: cText, length: C.strlen(cText)}
-	cFontFaceStr := C.String{buf: cFontFace, length: C.strlen(cFontFace)}
-
-	var cBold C.uchar
-	if bold {
-		cBold = 1
-	}
-
-	C.object_setMaterialText(o.handle, C.uint(slotIdx), cTextStr, C.ObjectMaterialSize(size), cFontFaceStr, C.int(fontSize), cBold, C.uint(fontColor), C.uint(bgColor), C.ObjectMaterialTextAlign(align))
+	C.object_setMaterialText(o.handle, C.uint(slotIdx), cText, C.ObjectMaterialSize(size), cFontFace, C.int(fontSize), newCUchar(bold), C.uint(fontColor), C.uint(bgColor), C.ObjectMaterialTextAlign(align))
 }
 
 func (o *Object) AttachToPlayer(plr *Player, offset Vector3, rot Vector3) {

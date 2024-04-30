@@ -1,11 +1,9 @@
 package gomp
 
-// #include <stdlib.h>
 // #include "include/model.h"
 import "C"
 import (
 	"errors"
-	"unsafe"
 )
 
 type modelPath struct {
@@ -13,11 +11,11 @@ type modelPath struct {
 }
 
 func AddCharModel(baseID, newID int, dff, txd string) error {
-	cDff := stringToCString(dff)
-	defer C.free(unsafe.Pointer(cDff.buf))
+	cDff := newCString(dff)
+	freeCString(cDff)
 
-	cTxd := stringToCString(txd)
-	defer C.free(unsafe.Pointer(cTxd.buf))
+	cTxd := newCString(txd)
+	defer freeCString(cTxd)
 
 	cOk := C.model_add(1, C.int(newID), C.int(baseID), cDff, cTxd, -1, 0, 0)
 	if cOk == 0 {
@@ -28,11 +26,11 @@ func AddCharModel(baseID, newID int, dff, txd string) error {
 }
 
 func AddSimpleModel(vw, baseID, newID int, dff, txd string) error {
-	cDff := stringToCString(dff)
-	defer C.free(unsafe.Pointer(cDff.buf))
+	cDff := newCString(dff)
+	defer freeCString(cDff)
 
-	cTxd := stringToCString(txd)
-	defer C.free(unsafe.Pointer(cTxd.buf))
+	cTxd := newCString(txd)
+	defer freeCString(cTxd)
 
 	cOk := C.model_add(2, C.int(newID), C.int(baseID), cDff, cTxd, C.int(vw), 0, 0)
 	if cOk == 0 {
@@ -43,11 +41,11 @@ func AddSimpleModel(vw, baseID, newID int, dff, txd string) error {
 }
 
 func AddSimpleModelTimed(vw, baseID, newID int, dff, txd string, timeOn, timeOff int) error {
-	cDff := stringToCString(dff)
-	defer C.free(unsafe.Pointer(cDff.buf))
+	cDff := newCString(dff)
+	freeCString(cDff)
 
-	cTxd := stringToCString(txd)
-	defer C.free(unsafe.Pointer(cTxd.buf))
+	cTxd := newCString(txd)
+	defer freeCString(cTxd)
 
 	cOk := C.model_add(2, C.int(newID), C.int(baseID), cDff, cTxd, C.int(vw), C.uchar(timeOn), C.uchar(timeOff))
 	if cOk == 0 {

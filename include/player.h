@@ -123,7 +123,7 @@ extern "C"
     unsigned player_getWantedLevel(void* player);
     void player_playSound(void* player, uint32_t sound, float posX, float posY, float posZ);
     uint32_t player_lastPlayedSound(void* player);
-    void player_playAudio(void* player, String url, int usePos, float posX, float posY, float posZ, float distance);
+    void player_playAudio(void* player, String url, unsigned char usePos, float posX, float posY, float posZ, float distance);
     int player_playerCrimeReport(void* player, void* suspect, int crime);
     void player_stopAudio(void* player);
     String player_lastPlayedAudio(void* player);

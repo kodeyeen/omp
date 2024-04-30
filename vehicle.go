@@ -1,7 +1,5 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/player.h"
 // #include "include/vehicle.h"
 import "C"
@@ -123,13 +121,10 @@ func (v *Vehicle) Passengers() []*Player {
 }
 
 func (v *Vehicle) SetNumberPlate(numberPlate string) {
-	cNumberPlate := C.CString(numberPlate)
-	defer C.free(unsafe.Pointer(cNumberPlate))
+	cNumberPlate := newCString(numberPlate)
+	defer freeCString(cNumberPlate)
 
-	C.vehicle_setPlate(v.handle, C.String{
-		buf:    cNumberPlate,
-		length: C.strlen(cNumberPlate),
-	})
+	C.vehicle_setPlate(v.handle, cNumberPlate)
 }
 
 func (v *Vehicle) NumberPlate() string {

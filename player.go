@@ -1,7 +1,5 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/player.h"
 import "C"
 import (
@@ -212,13 +210,10 @@ func (p *Player) Kick() {
 }
 
 func (p *Player) Ban(reason string) {
-	creason := C.CString(reason)
-	defer C.free(unsafe.Pointer(creason))
+	cReason := newCString(reason)
+	defer freeCString(cReason)
 
-	C.player_ban(p.handle, C.String{
-		buf:    creason,
-		length: C.strlen(creason),
-	})
+	C.player_ban(p.handle, cReason)
 }
 
 func (p *Player) IsBot() bool {
@@ -296,15 +291,10 @@ func (p *Player) AttachCameraToObject(obj *Object) {
 }
 
 func (p *Player) SetName(name string) PlayerNameStatus {
-	cname := C.CString(name)
-	defer C.free(unsafe.Pointer(cname))
+	cName := newCString(name)
+	defer freeCString(cName)
 
-	status := C.player_setName(p.handle, C.String{
-		buf:    cname,
-		length: C.strlen(cname),
-	})
-
-	return PlayerNameStatus(status)
+	return PlayerNameStatus(C.player_setName(p.handle, cName))
 }
 
 func (p *Player) Name() string {
@@ -366,13 +356,10 @@ func (p *Player) ArmedWeaponAmmo() int {
 }
 
 func (p *Player) SetShopName(name string) {
-	cName := C.CString(name)
-	defer C.free(unsafe.Pointer(cName))
+	cName := newCString(name)
+	defer freeCString(cName)
 
-	C.player_setShopName(p.handle, C.String{
-		buf:    cName,
-		length: C.strlen(cName),
-	})
+	C.player_setShopName(p.handle, cName)
 }
 
 func (p *Player) ShopName() string {
@@ -450,20 +437,10 @@ func (p *Player) LastPlayedSound() int {
 }
 
 func (p *Player) PlayAudio(url string, usePos bool, pos Vector3, distance float32) {
-	curl := C.CString(url)
-	defer C.free(unsafe.Pointer(curl))
+	cUrl := newCString(url)
+	defer freeCString(cUrl)
 
-	cstr := C.String{
-		buf:    curl,
-		length: C.strlen(curl),
-	}
-
-	var cusePos C.int
-	if usePos {
-		cusePos = 1
-	}
-
-	C.player_playAudio(p.handle, cstr, cusePos, C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(distance))
+	C.player_playAudio(p.handle, cUrl, newCUchar(usePos), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(distance))
 }
 
 func (p *Player) PlayCrimeReport(suspect *Player, crime int) {
@@ -614,32 +591,22 @@ func (p *Player) SetWorldTime(time int) {
 }
 
 func (p *Player) ApplyAnimation(anim Animation, syncType PlayerAnimationSyncType) {
-	cLib := C.CString(anim.Lib)
-	defer C.free(unsafe.Pointer(cLib))
+	cLib := newCString(anim.Lib)
+	defer freeCString(cLib)
 
-	cLibStr := C.String{
-		buf:    cLib,
-		length: C.strlen(cLib),
-	}
-
-	cName := C.CString(anim.Name)
-	defer C.free(unsafe.Pointer(cName))
-
-	cNameStr := C.String{
-		buf:    cName,
-		length: C.strlen(cName),
-	}
+	cName := newCString(anim.Name)
+	defer freeCString(cName)
 
 	C.player_applyAnimation(
 		p.handle,
 		C.float(anim.Delta),
-		boolToCUchar(anim.Loop),
-		boolToCUchar(anim.LockX),
-		boolToCUchar(anim.LockY),
-		boolToCUchar(anim.Freeze),
+		newCUchar(anim.Loop),
+		newCUchar(anim.LockX),
+		newCUchar(anim.LockY),
+		newCUchar(anim.Freeze),
 		C.uint(anim.Duration.Milliseconds()),
-		cLibStr,
-		cNameStr,
+		cLib,
+		cName,
 		C.int(syncType),
 	)
 }
@@ -687,47 +654,31 @@ func (p *Player) SetSkin(skin int) {
 }
 
 func (p *Player) SetChatBubble(text string, color Color, drawDist float32, expire time.Duration) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	cTextStr := C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	}
-
-	C.player_setChatBubble(p.handle, cTextStr, C.uint(color), C.float(drawDist), C.int(expire.Milliseconds()))
+	C.player_setChatBubble(p.handle, cText, C.uint(color), C.float(drawDist), C.int(expire.Milliseconds()))
 }
 
 func (p *Player) SendMessage(msg string, color Color) {
-	cMsg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cMsg))
+	cMsg := newCString(msg)
+	defer freeCString(cMsg)
 
-	C.player_sendClientMessage(p.handle, C.uint(color), C.String{
-		buf:    cMsg,
-		length: C.strlen(cMsg),
-	})
+	C.player_sendClientMessage(p.handle, C.uint(color), cMsg)
 }
 
 func (p *Player) SendMessageFrom(other *Player, msg string) {
-	cMsg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cMsg))
+	cMsg := newCString(msg)
+	defer freeCString(cMsg)
 
-	C.player_sendChatMessage(p.handle, other.handle, C.String{
-		buf:    cMsg,
-		length: C.strlen(cMsg),
-	})
+	C.player_sendChatMessage(p.handle, other.handle, cMsg)
 }
 
 func (p *Player) ShowGameText(msg string, delay time.Duration, style int) {
-	cMsg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cMsg))
+	cMsg := newCString(msg)
+	defer freeCString(cMsg)
 
-	cstr := C.String{
-		buf:    cMsg,
-		length: C.strlen(cMsg),
-	}
-
-	C.player_sendGameText(p.handle, cstr, C.int(delay.Milliseconds()), C.int(style))
+	C.player_sendGameText(p.handle, cMsg, C.int(delay.Milliseconds()), C.int(style))
 }
 
 func (p *Player) HideGameText(style int) {
@@ -739,14 +690,14 @@ func (p *Player) IsGameTextShown(style int) {
 }
 
 func (p *Player) GameText(style int) *PlayerGameText {
-	var cTextStr C.String
+	var cText C.String
 	var delay C.int
 	var remaining C.int
 
-	C.player_getGameText(p.handle, C.int(style), &cTextStr, &delay, &remaining)
+	C.player_getGameText(p.handle, C.int(style), &cText, &delay, &remaining)
 
 	return &PlayerGameText{
-		Text:      C.GoStringN(cTextStr.buf, C.int(cTextStr.length)),
+		Text:      C.GoStringN(cText.buf, C.int(cText.length)),
 		Delay:     time.Duration(delay) * time.Millisecond,
 		Remaining: time.Duration(remaining) * time.Millisecond,
 	}
@@ -887,7 +838,7 @@ func (p *Player) IsCameraTargetingEnabled() bool {
 }
 
 func (p *Player) RemoveFromVehicle(force bool) {
-	C.player_removeFromVehicle(p.handle, boolToCUchar(force))
+	C.player_removeFromVehicle(p.handle, newCUchar(force))
 }
 
 func (p *Player) CameraTargetPlayer() *Player {

@@ -1,12 +1,7 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/config.h"
 import "C"
-import (
-	"unsafe"
-)
 
 const (
 	PlayerMarkerModeOff = iota
@@ -19,8 +14,8 @@ type configOptionValue interface {
 }
 
 func setConfigOption[T configOptionValue](key string, value T) {
-	cKey := stringToCString(key)
-	defer C.free(unsafe.Pointer(cKey.buf))
+	cKey := newCString(key)
+	defer freeCString(cKey)
 
 	switch v := any(value).(type) {
 	case float64:
@@ -28,13 +23,13 @@ func setConfigOption[T configOptionValue](key string, value T) {
 	case int:
 		C.config_setInt(cKey, C.int(v))
 	case bool:
-		C.config_setBool(cKey, boolToCUchar(v))
+		C.config_setBool(cKey, newCUchar(v))
 	}
 }
 
 func configOption[T configOptionValue](key string) T {
-	cKey := stringToCString(key)
-	defer C.free(unsafe.Pointer(cKey.buf))
+	cKey := newCString(key)
+	defer freeCString(cKey)
 
 	t := any(new(T))
 	var result any
@@ -140,7 +135,7 @@ func WorldTime() int {
 }
 
 func IsIPBanned(IP string) bool {
-	cIP := stringToCString(IP)
+	cIP := newCString(IP)
 
 	return C.config_isBanned(cIP) != 0
 }

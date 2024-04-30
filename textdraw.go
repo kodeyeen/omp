@@ -1,7 +1,5 @@
 package gomp
 
-// #include <stdlib.h>
-// #include <string.h>
 // #include "include/textdraw.h"
 import "C"
 import (
@@ -41,15 +39,10 @@ type Textdraw struct {
 }
 
 func NewTextdraw(pos Vector2, text string, plr *Player) (*Textdraw, error) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	cstr := C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	}
-
-	cTd := C.textDraw_create(C.float(pos.X), C.float(pos.Y), cstr)
+	cTd := C.textDraw_create(C.float(pos.X), C.float(pos.Y), cText)
 	if cTd == nil {
 		return nil, errors.New("textdraw limit reached")
 	}
@@ -88,13 +81,10 @@ func (td *Textdraw) Position() Vector2 {
 }
 
 func (td *Textdraw) SetText(text string) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	C.textDraw_setText(td.handle, C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	})
+	C.textDraw_setText(td.handle, cText)
 }
 
 func (td *Textdraw) Text() string {
@@ -277,11 +267,8 @@ func (td *Textdraw) IsShownFor(plr *Player) bool {
 }
 
 func (td *Textdraw) SetTextFor(plr *Player, text string) {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := newCString(text)
+	defer freeCString(cText)
 
-	C.textDraw_setTextForPlayer(td.handle, plr.handle, C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	})
+	C.textDraw_setTextForPlayer(td.handle, plr.handle, cText)
 }
