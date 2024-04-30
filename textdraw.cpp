@@ -228,9 +228,9 @@ extern "C"
         return call<void*>("playerTextDraw_create", player, posX, posY, text);
     }
 
-    void playerTextDraw_release(void* player, void* textdraw)
+    void playerTextDraw_release(void* textdraw, void* player)
     {
-        return call<void>("playerTextDraw_release", textdraw, player);
+        return call<void>("playerTextDraw_release", player, textdraw);
     }
 
     int playerTextDraw_getID(void* textdraw)

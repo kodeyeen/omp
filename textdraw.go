@@ -279,7 +279,7 @@ func NewPlayerTextdraw(plr *Player, text string, pos Vector2) (*PlayerTextdraw, 
 	return &PlayerTextdraw{handle: cTd}, nil
 }
 
-func FreePlayerTextdraw(plr *Player, td *PlayerTextdraw) {
+func FreePlayerTextdraw(td *PlayerTextdraw, plr *Player) {
 	C.playerTextDraw_release(td.handle, plr.handle)
 }
 
