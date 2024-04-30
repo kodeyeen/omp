@@ -35,10 +35,9 @@ const (
 
 type Textdraw struct {
 	handle unsafe.Pointer
-	player *Player
 }
 
-func NewTextdraw(pos Vector2, text string, plr *Player) (*Textdraw, error) {
+func NewTextdraw(text string, pos Vector2) (*Textdraw, error) {
 	cText := newCString(text)
 	defer freeCString(cText)
 
@@ -51,20 +50,11 @@ func NewTextdraw(pos Vector2, text string, plr *Player) (*Textdraw, error) {
 }
 
 func FreeTextdraw(td *Textdraw) {
-	if td.player == nil {
-		C.textDraw_release(td.handle)
-		return
-	}
-
-	C.playerTextDraw_release(td.handle, td.player.handle)
+	C.textDraw_release(td.handle)
 }
 
 func (td *Textdraw) ID() int {
-	if td.player == nil {
-		return int(C.textDraw_getID(td.handle))
-	}
-
-	return int(C.playerTextDraw_getID(td.handle))
+	return int(C.textDraw_getID(td.handle))
 }
 
 func (td *Textdraw) SetPosition(pos Vector2) {
@@ -271,4 +261,227 @@ func (td *Textdraw) SetTextFor(plr *Player, text string) {
 	defer freeCString(cText)
 
 	C.textDraw_setTextForPlayer(td.handle, plr.handle, cText)
+}
+
+type PlayerTextdraw struct {
+	handle unsafe.Pointer
+}
+
+func NewPlayerTextdraw(plr *Player, text string, pos Vector2) (*PlayerTextdraw, error) {
+	cText := newCString(text)
+	defer freeCString(cText)
+
+	cTd := C.playerTextDraw_create(plr.handle, C.float(pos.X), C.float(pos.Y), cText)
+	if cTd == nil {
+		return nil, errors.New("player textdraw limit reached")
+	}
+
+	return &PlayerTextdraw{handle: cTd}, nil
+}
+
+func FreePlayerTextdraw(plr *Player, td *PlayerTextdraw) {
+	C.playerTextDraw_release(td.handle, plr.handle)
+}
+
+func (td *PlayerTextdraw) ID() int {
+	return int(C.playerTextDraw_getID(td.handle))
+}
+
+func (td *PlayerTextdraw) SetPosition(pos Vector2) {
+	C.playerTextDraw_setPosition(td.handle, C.float(pos.X), C.float(pos.Y))
+}
+
+func (td *PlayerTextdraw) Position() Vector2 {
+	pos := C.playerTextDraw_getPosition(td.handle)
+
+	return Vector2{
+		X: float32(pos.x),
+		Y: float32(pos.y),
+	}
+}
+
+func (td *PlayerTextdraw) SetText(text string) {
+	cText := newCString(text)
+	defer freeCString(cText)
+
+	C.playerTextDraw_setText(td.handle, cText)
+}
+
+func (td *PlayerTextdraw) Text() string {
+	text := C.playerTextDraw_getText(td.handle)
+
+	return C.GoStringN(text.buf, C.int(text.length))
+}
+
+func (td *PlayerTextdraw) SetLetterSize(size Vector2) {
+	C.playerTextDraw_setLetterSize(td.handle, C.float(size.X), C.float(size.Y))
+}
+
+func (td *PlayerTextdraw) LetterSize() Vector2 {
+	size := C.playerTextDraw_getLetterSize(td.handle)
+
+	return Vector2{
+		X: float32(size.x),
+		Y: float32(size.y),
+	}
+}
+
+func (td *PlayerTextdraw) SetTextSize(size Vector2) {
+	C.playerTextDraw_setTextSize(td.handle, C.float(size.X), C.float(size.Y))
+}
+
+func (td *PlayerTextdraw) TextSize() Vector2 {
+	size := C.playerTextDraw_getTextSize(td.handle)
+
+	return Vector2{
+		X: float32(size.x),
+		Y: float32(size.y),
+	}
+}
+
+func (td *PlayerTextdraw) SetAlignment(alignment TextDrawAlignment) {
+	C.playerTextDraw_setAlignment(td.handle, C.int(alignment))
+}
+
+func (td *PlayerTextdraw) Alignment() TextDrawAlignment {
+	return TextDrawAlignment(C.playerTextDraw_getAlignment(td.handle))
+}
+
+func (td *PlayerTextdraw) SetColor(color Color) {
+	C.playerTextDraw_setColour(td.handle, C.uint(color))
+}
+
+func (td *PlayerTextdraw) Color() Color {
+	return Color(C.playerTextDraw_getLetterColour(td.handle))
+}
+
+func (td *PlayerTextdraw) EnableBox() {
+	C.playerTextDraw_useBox(td.handle, 1)
+}
+
+func (td *PlayerTextdraw) DisableBox() {
+	C.playerTextDraw_useBox(td.handle, 0)
+}
+
+func (td *PlayerTextdraw) IsBoxEnabled() bool {
+	return C.playerTextDraw_hasBox(td.handle) != 0
+}
+
+func (td *PlayerTextdraw) SetBoxColor(color Color) {
+	C.playerTextDraw_setBoxColour(td.handle, C.uint(color))
+}
+
+func (td *PlayerTextdraw) BoxColor() Color {
+	return Color(C.playerTextDraw_getBoxColour(td.handle))
+}
+
+func (td *PlayerTextdraw) SetShadow(shadow int) {
+	C.playerTextDraw_setShadow(td.handle, C.int(shadow))
+}
+
+func (td *PlayerTextdraw) Shadow() int {
+	return int(C.playerTextDraw_getShadow(td.handle))
+}
+
+func (td *PlayerTextdraw) SetOutline(outline int) {
+	C.playerTextDraw_setOutline(td.handle, C.int(outline))
+}
+
+func (td *PlayerTextdraw) Outline() int {
+	return int(C.playerTextDraw_getOutline(td.handle))
+}
+
+func (td *PlayerTextdraw) SetBackgroundColor(color Color) {
+	C.playerTextDraw_setBackgroundColour(td.handle, C.uint(color))
+}
+
+func (td *PlayerTextdraw) BackgroundColor() Color {
+	return Color(C.playerTextDraw_getBackgroundColour(td.handle))
+}
+
+func (td *PlayerTextdraw) SetStyle(style TextdrawStyle) {
+	C.playerTextDraw_setStyle(td.handle, C.int(style))
+}
+
+func (td *PlayerTextdraw) Style() TextdrawStyle {
+	return TextdrawStyle(C.playerTextDraw_getStyle(td.handle))
+}
+
+func (td *PlayerTextdraw) EnableProportionality() {
+	C.playerTextDraw_setProportional(td.handle, 1)
+}
+
+func (td *PlayerTextdraw) DisableProportionality() {
+	C.playerTextDraw_setProportional(td.handle, 0)
+}
+
+func (td *PlayerTextdraw) IsProportional() bool {
+	return C.playerTextDraw_isProportional(td.handle) != 0
+}
+
+func (td *PlayerTextdraw) EnableSelection() {
+	C.playerTextDraw_setSelectable(td.handle, 1)
+}
+
+func (td *PlayerTextdraw) DisableSelection() {
+	C.playerTextDraw_setSelectable(td.handle, 0)
+}
+
+func (td *PlayerTextdraw) IsSelectable() bool {
+	return C.playerTextDraw_isSelectable(td.handle) != 0
+}
+
+func (td *PlayerTextdraw) SetPreviewModel(model int) {
+	C.playerTextDraw_setPreviewModel(td.handle, C.int(model))
+}
+
+func (td *PlayerTextdraw) PreviewModel() int {
+	return int(C.playerTextDraw_getPreviewModel(td.handle))
+}
+
+func (td *PlayerTextdraw) SetPreviewRotation(rot Vector3) {
+	C.playerTextDraw_setPreviewRotation(td.handle, C.float(rot.X), C.float(rot.Y), C.float(rot.Z))
+}
+
+func (td *PlayerTextdraw) PreviewRotation() Vector3 {
+	rot := C.playerTextDraw_getPreviewRotation(td.handle)
+
+	return Vector3{
+		X: float32(rot.x),
+		Y: float32(rot.y),
+		Z: float32(rot.z),
+	}
+}
+
+func (td *PlayerTextdraw) SetPreviewVehicleColor(color VehicleColor) {
+	C.playerTextDraw_setPreviewVehicleColour(td.handle, C.int(color.Primary), C.int(color.Secondary))
+}
+
+func (td *PlayerTextdraw) PreviewVehicleColor() VehicleColor {
+	color := C.playerTextDraw_getPreviewVehicleColour(td.handle)
+
+	return VehicleColor{
+		Primary:   Color(color.primary),
+		Secondary: Color(color.secondary),
+	}
+}
+
+func (td *PlayerTextdraw) SetPreviewZoom(zoom float32) {
+	C.playerTextDraw_setPreviewZoom(td.handle, C.float(zoom))
+}
+
+func (td *PlayerTextdraw) PreviewZoom() float32 {
+	return float32(C.playerTextDraw_getPreviewZoom(td.handle))
+}
+
+func (td *PlayerTextdraw) Show() {
+	C.playerTextDraw_show(td.handle)
+}
+
+func (td *PlayerTextdraw) Hide() {
+	C.playerTextDraw_hide(td.handle)
+}
+
+func (td *PlayerTextdraw) IsShown() bool {
+	return C.playerTextDraw_isShown(td.handle) != 0
 }

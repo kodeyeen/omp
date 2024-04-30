@@ -51,7 +51,7 @@ extern "C"
 
     // PlayerTextDraw
     void* playerTextDraw_create(void* player, float posX, float posY, String text);
-    void playerTextDraw_release(void* textdraw, void* player);
+    void playerTextDraw_release(void* player, void* textdraw);
     int playerTextDraw_getID(void* textdraw);
     void playerTextDraw_setPosition(void* textdraw, float posX, float posY);
     Vector2 playerTextDraw_getPosition(void* textdraw);

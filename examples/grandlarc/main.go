@@ -65,7 +65,7 @@ func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
 	sfTd, _ = NewCityNameTextdraw("San Fierro")
 	lvTd, _ = NewCityNameTextdraw("Las Venturas")
 
-	classSelHelperTd, _ = gomp.NewTextdraw(gomp.Vector2{X: 10.0, Y: 415.0}, "Press ~b~~k~~GO_LEFT~ ~w~or ~b~~k~~GO_RIGHT~ ~w~to switch cities.~n~ Press ~r~~k~~PED_FIREWEAPON~ ~w~to select.", nil)
+	classSelHelperTd, _ = gomp.NewTextdraw("Press ~b~~k~~GO_LEFT~ ~w~or ~b~~k~~GO_RIGHT~ ~w~to switch cities.~n~ Press ~r~~k~~PED_FIREWEAPON~ ~w~to select.", gomp.Vector2{X: 10.0, Y: 415.0})
 	classSelHelperTd.EnableBox()
 	classSelHelperTd.SetBoxColor(0x222222BB)
 	classSelHelperTd.SetLetterSize(gomp.Vector2{X: 0.3, Y: 1.0})
@@ -289,7 +289,7 @@ func onPlayerDeath(evt *gomp.PlayerDeathEvent) bool {
 }
 
 func NewCityNameTextdraw(cityName string) (*gomp.Textdraw, error) {
-	td, err := gomp.NewTextdraw(gomp.Vector2{X: 10.0, Y: 380.0}, cityName, nil)
+	td, err := gomp.NewTextdraw(cityName, gomp.Vector2{X: 10.0, Y: 380.0})
 	if err != nil {
 		return nil, err
 	}
