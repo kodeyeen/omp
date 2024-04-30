@@ -23,13 +23,16 @@ type TextLabel struct {
 	handle unsafe.Pointer
 }
 
-func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) *TextLabel {
+func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) (*TextLabel, error) {
 	cText := stringToCString(text)
 	defer C.free(unsafe.Pointer(cText.buf))
 
-	tl := C.textLabel_create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), boolToCUchar(los))
+	cTl := C.textLabel_create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), boolToCUchar(los))
+	if cTl == nil {
+		return nil, errors.New("text label limit reached")
+	}
 
-	return &TextLabel{handle: tl}
+	return &TextLabel{handle: cTl}, nil
 }
 
 func FreeTextLabel(tl *TextLabel) {

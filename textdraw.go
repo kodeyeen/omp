@@ -4,7 +4,10 @@ package gomp
 // #include <string.h>
 // #include "include/textdraw.h"
 import "C"
-import "unsafe"
+import (
+	"errors"
+	"unsafe"
+)
 
 type TextDrawAlignment int
 
@@ -46,13 +49,12 @@ func NewTextdraw(pos Vector2, text string, plr *Player) (*Textdraw, error) {
 		length: C.strlen(cText),
 	}
 
-	if plr == nil {
-		td := C.textDraw_create(C.float(pos.X), C.float(pos.Y), cstr)
-		return &Textdraw{handle: td}, nil
+	cTd := C.textDraw_create(C.float(pos.X), C.float(pos.Y), cstr)
+	if cTd == nil {
+		return nil, errors.New("textdraw limit reached")
 	}
 
-	td := C.playerTextDraw_create(plr.handle, C.float(pos.X), C.float(pos.Y), cstr)
-	return &Textdraw{handle: td, player: plr}, nil
+	return &Textdraw{handle: cTd}, nil
 }
 
 func FreeTextdraw(td *Textdraw) {

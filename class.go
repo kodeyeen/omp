@@ -2,7 +2,10 @@ package gomp
 
 // #include "include/class.h"
 import "C"
-import "unsafe"
+import (
+	"errors"
+	"unsafe"
+)
 
 type Class struct {
 	handle unsafe.Pointer
@@ -20,7 +23,7 @@ func NewClass(
 	weapon3 Weapon,
 	ammo3 int,
 ) (*Class, error) {
-	class := C.class_create(&C.ClassData{
+	cClass := C.class_create(&C.ClassData{
 		team:    C.int(team),
 		skin:    C.int(skin),
 		spawnX:  C.float(spawnPos.X),
@@ -34,8 +37,11 @@ func NewClass(
 		weapon3: C.uchar(weapon3),
 		ammo3:   C.uint(ammo3),
 	})
+	if cClass == nil {
+		return nil, errors.New("class limit reached")
+	}
 
-	return &Class{handle: class}, nil
+	return &Class{handle: cClass}, nil
 }
 
 func (c *Class) ID() int {

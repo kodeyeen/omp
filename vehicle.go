@@ -47,9 +47,12 @@ type Vehicle struct {
 
 func NewVehicle(model VehicleModel, pos Vector3, angle float32) (*Vehicle, error) {
 	// TODO: error handling (invalid modelID and trains)
-	vehicle := C.vehicle_create(0, C.int(model), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), 0, 0, -1, 0)
+	cVeh := C.vehicle_create(0, C.int(model), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), 0, 0, -1, 0)
+	if cVeh == nil {
+		return nil, errors.New("vehicle limit reached")
+	}
 
-	return &Vehicle{handle: vehicle}, nil
+	return &Vehicle{handle: cVeh}, nil
 }
 
 func NewStaticVehicle(model VehicleModel, pos Vector3, angle float32) (*Vehicle, error) {

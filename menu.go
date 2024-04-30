@@ -4,13 +4,16 @@ package gomp
 // #include <string.h>
 // #include "include/menu.h"
 import "C"
-import "unsafe"
+import (
+	"errors"
+	"unsafe"
+)
 
 type Menu struct {
 	handle unsafe.Pointer
 }
 
-func NewMenu(title string, pos Vector2, columns int, col1Width, col2Width float32) *Menu {
+func NewMenu(title string, pos Vector2, columns int, col1Width, col2Width float32) (*Menu, error) {
 	cTitle := C.CString(title)
 	defer C.free(unsafe.Pointer(cTitle))
 
@@ -19,9 +22,12 @@ func NewMenu(title string, pos Vector2, columns int, col1Width, col2Width float3
 		length: C.strlen(cTitle),
 	}
 
-	menu := C.menu_create(cTitleStr, C.float(pos.X), C.float(pos.Y), C.uchar(columns), C.float(col1Width), C.float(col2Width))
+	cMenu := C.menu_create(cTitleStr, C.float(pos.X), C.float(pos.Y), C.uchar(columns), C.float(col1Width), C.float(col2Width))
+	if cMenu == nil {
+		return nil, errors.New("menu limit reached")
+	}
 
-	return &Menu{handle: menu}
+	return &Menu{handle: cMenu}, nil
 }
 
 func FreeMenu(menu *Menu) {

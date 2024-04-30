@@ -3,6 +3,7 @@ package gomp
 // #include "include/pickup.h"
 import "C"
 import (
+	"errors"
 	"unsafe"
 )
 
@@ -12,14 +13,17 @@ type Pickup struct {
 	handle unsafe.Pointer
 }
 
-func NewPickup(modelID int, _type PickupType, virtualWorld int, pos Vector3) *Pickup {
-	pickup := C.pickup_create(C.int(modelID), C.uchar(_type), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.uint(virtualWorld), 0)
+func NewPickup(modelID int, _type PickupType, virtualWorld int, pos Vector3) (*Pickup, error) {
+	cPickup := C.pickup_create(C.int(modelID), C.uchar(_type), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.uint(virtualWorld), 0)
+	if cPickup == nil {
+		return nil, errors.New("pickup limit reached")
+	}
 
-	return &Pickup{handle: pickup}
+	return &Pickup{handle: cPickup}, nil
 }
 
-func FreePickup(pick *Pickup) {
-	C.pickup_release(pick.handle)
+func FreePickup(pickup *Pickup) {
+	C.pickup_release(pickup.handle)
 }
 
 func (p *Pickup) ID() int {

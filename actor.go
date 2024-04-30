@@ -5,6 +5,7 @@ package gomp
 // #include "include/actor.h"
 import "C"
 import (
+	"errors"
 	"unsafe"
 )
 
@@ -18,10 +19,13 @@ type Actor struct {
 	handle unsafe.Pointer
 }
 
-func NewActor(skin int, pos Vector3, angle float32) *Actor {
+func NewActor(skin int, pos Vector3, angle float32) (*Actor, error) {
 	cActor := C.actor_create(C.int(skin), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle))
+	if cActor == nil {
+		return nil, errors.New("actor limit reached")
+	}
 
-	return &Actor{handle: cActor}
+	return &Actor{handle: cActor}, nil
 }
 
 func FreeActor(actor *Actor) {
