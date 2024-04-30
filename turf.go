@@ -2,7 +2,10 @@ package gomp
 
 // #include "include/turf.h"
 import "C"
-import "unsafe"
+import (
+	"errors"
+	"unsafe"
+)
 
 type TurfPosition struct {
 	Min Vector2
@@ -13,10 +16,14 @@ type Turf struct {
 	handle unsafe.Pointer
 }
 
-func NewTurf(pos TurfPosition) *Turf {
-	gz := C.turf_create(C.float(pos.Min.X), C.float(pos.Min.Y), C.float(pos.Max.X), C.float(pos.Max.Y))
+func NewTurf(pos TurfPosition) (*Turf, error) {
+	cTurf := C.turf_create(C.float(pos.Min.X), C.float(pos.Min.Y), C.float(pos.Max.X), C.float(pos.Max.Y))
 
-	return &Turf{handle: gz}
+	if cTurf == nil {
+		return nil, errors.New("turf limit reached")
+	}
+
+	return &Turf{handle: cTurf}, nil
 }
 
 func FreeTurf(turf *Turf) {

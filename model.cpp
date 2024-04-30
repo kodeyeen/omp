@@ -16,7 +16,7 @@ extern "C"
         return call<String>("model_getNameFromCheckSum", crc);
     }
 
-    unsigned char model_getPath(uint32_t modelId, String* dffPath, String* txdPath)
+    unsigned char model_getPath(int32_t modelId, String* dffPath, String* txdPath)
     {
         return call<unsigned char>("model_getPath", modelId, dffPath, txdPath);
     }

@@ -61,14 +61,14 @@ extern "C"
         return call<TextLabelAttachmentData>("textLabel_getAttachmentData", textLabel);
     }
 
-    void textLabel_detachFromPlayer(void* textLabel, void* player, float posX, float posY, float posZ)
+    void textLabel_detachFromPlayer(void* textLabel, float posX, float posY, float posZ)
     {
-        return call<void>("textLabel_detachFromPlayer", textLabel, player, posX, posY, posZ);
+        return call<void>("textLabel_detachFromPlayer", textLabel, posX, posY, posZ);
     }
 
-    void textLabel_detachFromVehicle(void* textLabel, void* vehicle, float posX, float posY, float posZ)
+    void textLabel_detachFromVehicle(void* textLabel, float posX, float posY, float posZ)
     {
-        return call<void>("textLabel_detachFromVehicle", textLabel, vehicle, posX, posY, posZ);
+        return call<void>("textLabel_detachFromVehicle", textLabel, posX, posY, posZ);
     }
 
     void textLabel_setTestLOS(void* textLabel, unsigned char status)

@@ -24,20 +24,10 @@ type TextLabel struct {
 }
 
 func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) *TextLabel {
-	cText := C.CString(text)
-	defer C.free(unsafe.Pointer(cText))
+	cText := stringToCString(text)
+	defer C.free(unsafe.Pointer(cText.buf))
 
-	cTextStr := C.String{
-		buf:    cText,
-		length: C.strlen(cText),
-	}
-
-	var cLos C.uchar
-	if los {
-		cLos = 1
-	}
-
-	tl := C.textLabel_create(cTextStr, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), cLos)
+	tl := C.textLabel_create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), boolToCUchar(los))
 
 	return &TextLabel{handle: tl}
 }
@@ -120,12 +110,12 @@ func (tl *TextLabel) AttachToVehicle(veh *Vehicle, offset Vector3) {
 	C.textLabel_attachToVehicle(tl.handle, veh.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
 }
 
-func (tl *TextLabel) DetachFromPlayer(plr *Player, pos Vector3) {
-	C.textLabel_detachFromPlayer(tl.handle, plr.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+func (tl *TextLabel) DetachFromPlayer(pos Vector3) {
+	C.textLabel_detachFromPlayer(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
 }
 
-func (tl *TextLabel) DetachFromVehicle(veh *Vehicle, pos Vector3) {
-	C.textLabel_detachFromVehicle(tl.handle, veh.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+func (tl *TextLabel) DetachFromVehicle(pos Vector3) {
+	C.textLabel_detachFromVehicle(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
 }
 
 func (tl *TextLabel) EnableLOSTest() {

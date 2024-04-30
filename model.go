@@ -67,7 +67,7 @@ func ModelPath(modelID int) (modelPath, error) {
 	var cDffPath C.String
 	var cTxdPath C.String
 
-	cOk := C.model_getPath(C.uint(modelID), &cDffPath, &cTxdPath)
+	cOk := C.model_getPath(C.int(modelID), &cDffPath, &cTxdPath)
 	if cOk == 0 {
 		return modelPath{}, errors.New("unable to get model path")
 	}

@@ -22,8 +22,8 @@ extern "C"
     void textLabel_attachToPlayer(void* textLabel, void* player, float offsetX, float offsetY, float offsetZ);
     void textLabel_attachToVehicle(void* textLabel, void* vehicle, float offsetX, float offsetY, float offsetZ);
     TextLabelAttachmentData textLabel_getAttachmentData(void* textLabel);
-    void textLabel_detachFromPlayer(void* textLabel, void* player, float posX, float posY, float posZ);
-    void textLabel_detachFromVehicle(void* textLabel, void* vehicle, float posX, float posY, float posZ);
+    void textLabel_detachFromPlayer(void* textLabel, float posX, float posY, float posZ);
+    void textLabel_detachFromVehicle(void* textLabel, float posX, float posY, float posZ);
     void textLabel_setTestLOS(void* textLabel, unsigned char status);
     unsigned char textLabel_getTestLOS(void* textLabel);
     unsigned char textLabel_isStreamedInForPlayer(void* textLabel, void* player);
