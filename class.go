@@ -38,7 +38,7 @@ func NewClass(
 		ammo3:   C.uint(ammo3),
 	})
 	if cClass == nil {
-		return nil, errors.New("class limit reached")
+		return nil, errors.New("class limit was reached")
 	}
 
 	return &Class{handle: cClass}, nil

@@ -47,7 +47,7 @@ func NewVehicle(model VehicleModel, pos Vector3, angle float32) (*Vehicle, error
 	// TODO: error handling (invalid modelID and trains)
 	cVeh := C.vehicle_create(0, C.int(model), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), 0, 0, -1, 0)
 	if cVeh == nil {
-		return nil, errors.New("vehicle limit reached")
+		return nil, errors.New("vehicle limit was reached")
 	}
 
 	return &Vehicle{handle: cVeh}, nil

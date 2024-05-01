@@ -79,7 +79,7 @@ type Object struct {
 func NewObject(modelID int, pos Vector3, rot Vector3, drawDist float32) (*Object, error) {
 	cObject := C.object_create(C.int(modelID), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(rot.X), C.float(rot.Y), C.float(rot.Z), C.float(drawDist))
 	if cObject == nil {
-		return nil, errors.New("object limit reached")
+		return nil, errors.New("object limit was reached")
 	}
 
 	return &Object{handle: cObject}, nil

@@ -20,7 +20,7 @@ type Actor struct {
 func NewActor(skin int, pos Vector3, angle float32) (*Actor, error) {
 	cActor := C.actor_create(C.int(skin), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle))
 	if cActor == nil {
-		return nil, errors.New("actor limit reached")
+		return nil, errors.New("actor limit was reached")
 	}
 
 	return &Actor{handle: cActor}, nil

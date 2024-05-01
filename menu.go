@@ -17,7 +17,7 @@ func NewMenu(title string, pos Vector2, columns int, col1Width, col2Width float3
 
 	cMenu := C.menu_create(cTitle, C.float(pos.X), C.float(pos.Y), C.uchar(columns), C.float(col1Width), C.float(col2Width))
 	if cMenu == nil {
-		return nil, errors.New("menu limit reached")
+		return nil, errors.New("menu limit was reached")
 	}
 
 	return &Menu{handle: cMenu}, nil

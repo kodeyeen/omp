@@ -43,7 +43,7 @@ func NewTextdraw(text string, pos Vector2) (*Textdraw, error) {
 
 	cTd := C.textDraw_create(C.float(pos.X), C.float(pos.Y), cText)
 	if cTd == nil {
-		return nil, errors.New("textdraw limit reached")
+		return nil, errors.New("textdraw limit was reached")
 	}
 
 	return &Textdraw{handle: cTd}, nil
@@ -273,7 +273,7 @@ func NewPlayerTextdraw(plr *Player, text string, pos Vector2) (*PlayerTextdraw, 
 
 	cTd := C.playerTextDraw_create(plr.handle, C.float(pos.X), C.float(pos.Y), cText)
 	if cTd == nil {
-		return nil, errors.New("player textdraw limit reached")
+		return nil, errors.New("player textdraw limit was reached")
 	}
 
 	return &PlayerTextdraw{handle: cTd}, nil
