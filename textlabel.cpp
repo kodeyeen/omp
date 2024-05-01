@@ -108,7 +108,7 @@ extern "C"
 
     // PlayerTextLabel
 
-    void* playerTextLabel_create(String text, uint32_t colour, float posX, float posY, float posZ, float drawDistance, unsigned char los)
+    void* playerTextLabel_create(void* player, String text, uint32_t colour, float posX, float posY, float posZ, float drawDistance, unsigned char los)
     {
         return call<void*>("playerTextLabel_create", text, colour, posX, posY, posZ, drawDistance, los);
     }

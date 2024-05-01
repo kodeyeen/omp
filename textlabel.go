@@ -161,7 +161,7 @@ func NewPlayerTextLabel(plr *Player, text string, clr Color, pos Vector3, drawDi
 	cText := newCString(text)
 	defer freeCString(cText)
 
-	cTl := C.playerTextLabel_create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), newCUchar(los))
+	cTl := C.playerTextLabel_create(plr.handle, cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), newCUchar(los))
 	if cTl == nil {
 		return nil, errors.New("player text label limit was reached")
 	}

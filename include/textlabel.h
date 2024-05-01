@@ -34,7 +34,7 @@ extern "C"
 
     // PlayerTextLabel
 
-    void* playerTextLabel_create(String text, uint32_t colour, float posX, float posY, float posZ, float drawDistance, unsigned char los);
+    void* playerTextLabel_create(void* player, String text, uint32_t colour, float posX, float posY, float posZ, float drawDistance, unsigned char los);
     void playerTextLabel_release(void* textLabel, void* player);
     void playerTextLabel_setText(void* textLabel, String text);
     String playerTextLabel_getText(void* textLabel);
