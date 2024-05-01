@@ -148,6 +148,145 @@ extern "C"
         return call<Vector3>("object_getRotation", object);
     }
 
+    // PlayerObject
+
+    void* playerObject_create(void* player, int modelId, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float drawDistance)
+    {
+        return call<void*>("playerObject_create", player, modelId, posX, posY, posZ, rotX, rotY, rotZ, drawDistance);
+    }
+
+    void playerObject_release(void* object, void* player)
+    {
+        return call<void>("playerObject_release", object, player);
+    }
+
+    void* playerObject_getByID(void* player, int id)
+    {
+        return call<void*>("playerObject_getByID", player, id);
+    }
+
+    void playerObject_setDrawDistance(void* object, float drawDistance)
+    {
+        return call<void>("playerObject_setDrawDistance", object, drawDistance);
+    }
+
+    float playerObject_getDrawDistance(void* object)
+    {
+        return call<float>("playerObject_getDrawDistance", object);
+    }
+
+    void playerObject_setModel(void* object, int model)
+    {
+        return call<void>("playerObject_setModel", object, model);
+    }
+
+    int playerObject_getModel(void* object)
+    {
+        return call<int>("playerObject_getModel", object);
+    }
+
+    void playerObject_setCameraCollision(void* object, unsigned char set)
+    {
+        return call<void>("playerObject_setCameraCollision", object, set);
+    }
+
+    unsigned char playerObject_getCameraCollision(void* object)
+    {
+        return call<unsigned char>("playerObject_getCameraCollision", object);
+    }
+
+    int playerObject_move(void* object, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float speed)
+    {
+        return call<int>("playerObject_move", object, posX, posY, posZ, rotX, rotY, rotZ, speed);
+    }
+
+    unsigned char playerObject_isMoving(void* object)
+    {
+        return call<unsigned char>("playerObject_isMoving", object);
+    }
+
+    void playerObject_stop(void* object)
+    {
+        return call<void>("playerObject_stop", object);
+    }
+
+    ObjectMoveData playerObject_getMovingData(void* object)
+    {
+        return call<ObjectMoveData>("playerObject_getMovingData", object);
+    }
+
+    void playerObject_attachToVehicle(void* object, void* vehicle, float offsetX, float offsetY, float offsetZ, float rotX, float rotY, float rotZ)
+    {
+        return call<void>("playerObject_attachToVehicle", object, vehicle, offsetX, offsetY, offsetZ, rotX, rotY, rotZ);
+    }
+
+    void playerObject_resetAttachment(void* object)
+    {
+        return call<void>("playerObject_resetAttachment", object);
+    }
+
+    ObjectAttachmentData playerObject_getAttachmentData(void* object)
+    {
+        return call<ObjectAttachmentData>("playerObject_getAttachmentData", object);
+    }
+
+    unsigned char playerObject_isMaterialSlotUsed(void* object, uint32_t materialIndex)
+    {
+        return call<unsigned char>("playerObject_isMaterialSlotUsed", object, materialIndex);
+    }
+
+    unsigned char playerObject_getMaterial(void* object, uint32_t materialIndex, ObjectMaterial* out)
+    {
+        return call<unsigned char>("playerObject_getMaterial", object, materialIndex, out);
+    }
+
+    unsigned char playerObject_getMaterialText(void* object, uint32_t materialIndex, ObjectMaterialText* out)
+    {
+        return call<unsigned char>("playerObject_getMaterialText", object, materialIndex, out);
+    }
+
+    void playerObject_setMaterial(void* object, uint32_t materialIndex, int model, String textureLibrary, String textureName, uint32_t colour)
+    {
+        return call<void>("playerObject_setMaterial", object, materialIndex, model, textureLibrary, textureName, colour);
+    }
+
+    void playerObject_setMaterialText(void* object, uint32_t materialIndex, String text, ObjectMaterialSize materialSize, String fontFace, int fontSize, unsigned char bold, uint32_t fontColour, uint32_t backgroundColour, ObjectMaterialTextAlign align)
+    {
+        return call<void>("playerObject_setMaterialText", object, materialIndex, text, materialSize, fontFace, fontSize, bold, fontColour, backgroundColour, align);
+    }
+
+    void playerObject_attachToPlayer(void* object, void* player, float offsetX, float offsetY, float offsetZ, float rotX, float rotY, float rotZ)
+    {
+        return call<void>("playerObject_attachToPlayer", object, player, offsetX, offsetY, offsetZ, rotX, rotY, rotZ);
+    }
+
+    void playerObject_attachToObject(void* object, void* other, float offsetX, float offsetY, float offsetZ, float rotX, float rotY, float rotZ)
+    {
+        return call<void>("playerObject_attachToObject", object, other, offsetX, offsetY, offsetZ, rotX, rotY, rotZ);
+    }
+
+    // entity
+
+    void playerObject_setPosition(void* object, float posX, float posY, float posZ)
+    {
+        return call<void>("playerObject_setPosition", object, posX, posY, posZ);
+    }
+
+    Vector3 playerObject_getPosition(void* object)
+    {
+        return call<Vector3>("playerObject_getPosition", object);
+    }
+
+    void playerObject_setRotation(void* object, float rotX, float rotY, float rotZ)
+    {
+        return call<void>("playerObject_setRotation", object, rotX, rotY, rotZ);
+    }
+
+    Vector3 playerObject_getRotation(void* object)
+    {
+        return call<Vector3>("playerObject_getRotation", object);
+    }
+
 #ifdef __cplusplus
 }
 #endif

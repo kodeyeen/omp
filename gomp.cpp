@@ -163,6 +163,34 @@ extern "C"
         funcs.emplace("object_setRotation", findFunc(handle, "object_setRotation"));
         funcs.emplace("object_getRotation", findFunc(handle, "object_getRotation"));
 
+        funcs.emplace("playerObject_create", findFunc(handle, "playerObject_create"));
+        funcs.emplace("playerObject_release", findFunc(handle, "playerObject_release"));
+        funcs.emplace("playerObject_getByID", findFunc(handle, "playerObject_getByID"));
+        funcs.emplace("playerObject_setDrawDistance", findFunc(handle, "playerObject_setDrawDistance"));
+        funcs.emplace("playerObject_getDrawDistance", findFunc(handle, "playerObject_getDrawDistance"));
+        funcs.emplace("playerObject_setModel", findFunc(handle, "playerObject_setModel"));
+        funcs.emplace("playerObject_getModel", findFunc(handle, "playerObject_getModel"));
+        funcs.emplace("playerObject_setCameraCollision", findFunc(handle, "playerObject_setCameraCollision"));
+        funcs.emplace("playerObject_getCameraCollision", findFunc(handle, "playerObject_getCameraCollision"));
+        funcs.emplace("playerObject_move", findFunc(handle, "playerObject_move"));
+        funcs.emplace("playerObject_isMoving", findFunc(handle, "playerObject_isMoving"));
+        funcs.emplace("playerObject_stop", findFunc(handle, "playerObject_stop"));
+        funcs.emplace("playerObject_getMovingData", findFunc(handle, "playerObject_getMovingData"));
+        funcs.emplace("playerObject_attachToVehicle", findFunc(handle, "playerObject_attachToVehicle"));
+        funcs.emplace("playerObject_resetAttachment", findFunc(handle, "playerObject_resetAttachment"));
+        funcs.emplace("playerObject_getAttachmentData", findFunc(handle, "playerObject_getAttachmentData"));
+        funcs.emplace("playerObject_isMaterialSlotUsed", findFunc(handle, "playerObject_isMaterialSlotUsed"));
+        funcs.emplace("playerObject_getMaterial", findFunc(handle, "playerObject_getMaterial"));
+        funcs.emplace("playerObject_getMaterialText", findFunc(handle, "playerObject_getMaterialText"));
+        funcs.emplace("playerObject_setMaterial", findFunc(handle, "playerObject_setMaterial"));
+        funcs.emplace("playerObject_setMaterialText", findFunc(handle, "playerObject_setMaterialText"));
+        funcs.emplace("playerObject_attachToPlayer", findFunc(handle, "playerObject_attachToPlayer"));
+        funcs.emplace("playerObject_attachToObject", findFunc(handle, "playerObject_attachToObject"));
+        funcs.emplace("playerObject_setPosition", findFunc(handle, "playerObject_setPosition"));
+        funcs.emplace("playerObject_getPosition", findFunc(handle, "playerObject_getPosition"));
+        funcs.emplace("playerObject_setRotation", findFunc(handle, "playerObject_setRotation"));
+        funcs.emplace("playerObject_getRotation", findFunc(handle, "playerObject_getRotation"));
+
         // Player
         funcs.emplace("player_getByID", findFunc(handle, "player_getByID"));
         funcs.emplace("player_getID", findFunc(handle, "player_getID"));
