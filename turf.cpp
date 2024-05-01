@@ -96,6 +96,18 @@ extern "C"
         return call<uint32_t>("gangZone_getColourForPlayer", turf, player);
     }
 
+    // Player Turf
+
+    void* playerTurf_create(void* player, float minX, float minY, float maxX, float maxY)
+    {
+        return call<void*>("playerGangZone_create", player, minX, minY, maxX, maxY);
+    }
+
+    void playerTurf_release(void* turf, void* player)
+    {
+        return call<void>("playerGangZone_release", turf, player);
+    }
+
 #ifdef __cplusplus
 }
 #endif

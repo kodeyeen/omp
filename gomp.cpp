@@ -106,6 +106,9 @@ extern "C"
         funcs.emplace("gangZone_getFlashingColourForPlayer", findFunc(handle, "gangZone_getFlashingColourForPlayer"));
         funcs.emplace("gangZone_getColourForPlayer", findFunc(handle, "gangZone_getColourForPlayer"));
 
+        funcs.emplace("playerGangZone_create", findFunc(handle, "playerGangZone_create"));
+        funcs.emplace("playerGangZone_release", findFunc(handle, "playerGangZone_release"));
+
         // Menu
         funcs.emplace("menu_create", findFunc(handle, "menu_create"));
         funcs.emplace("menu_release", findFunc(handle, "menu_release"));

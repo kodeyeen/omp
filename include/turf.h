@@ -29,6 +29,9 @@ extern "C"
     uint32_t turf_getFlashingColourForPlayer(void* turf, void* player);
     uint32_t turf_getColourForPlayer(void* turf, void* player);
 
+    void* playerTurf_create(void* player, float minX, float minY, float maxX, float maxY);
+    void playerTurf_release(void* gangZone, void* player);
+
 #ifdef __cplusplus
 }
 #endif
