@@ -341,6 +341,10 @@ func FreePlayerObject(obj *PlayerObject) {
 	C.playerObject_release(obj.handle, obj.player.handle)
 }
 
+func (o *PlayerObject) Player() *Player {
+	return o.player
+}
+
 func (o *PlayerObject) SetDrawDistance(drawDist float32) {
 	C.playerObject_setDrawDistance(o.handle, C.float(drawDist))
 }

@@ -178,6 +178,10 @@ func FreePlayerTextLabel(tl *PlayerTextLabel) {
 	C.playerTextLabel_release(tl.handle, tl.player.handle)
 }
 
+func (tl *PlayerTextLabel) Player() *Player {
+	return tl.player
+}
+
 // func TextLabelAttachedData[T TextLabelAttachmentTarget](tl *TextLabel) (TextLabelAttachmentData[T], error) {
 // 	data := C.textLabel_getAttachmentData(tl.handle)
 

@@ -111,6 +111,10 @@ func (p *PlayerPickup) ID() int {
 	return int(C.pickup_getID(p.handle))
 }
 
+func (p *PlayerPickup) Player() *Player {
+	return p.player
+}
+
 func (p *PlayerPickup) SetType(_type PickupType) {
 	C.pickup_setType(p.handle, C.uchar(_type))
 }

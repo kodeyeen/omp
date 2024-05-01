@@ -293,6 +293,10 @@ func (td *PlayerTextdraw) ID() int {
 	return int(C.playerTextDraw_getID(td.handle))
 }
 
+func (td *PlayerTextdraw) Player() *Player {
+	return td.player
+}
+
 func (td *PlayerTextdraw) SetPosition(pos Vector2) {
 	C.playerTextDraw_setPosition(td.handle, C.float(pos.X), C.float(pos.Y))
 }
