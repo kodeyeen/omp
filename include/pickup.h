@@ -23,6 +23,9 @@ extern "C"
     void pickup_setVirtualWorld(void* pickup, int vw);
     int pickup_getVirtualWorld(void* pickup);
 
+    void* playerPickup_create(void* player, int modelId, uint8_t type, float posX, float posY, float posZ, uint32_t virtualWorld, int isStatic);
+    void playerPickup_release(void* pickup, void* player);
+
 #ifdef __cplusplus
 }
 #endif

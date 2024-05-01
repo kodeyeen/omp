@@ -416,6 +416,9 @@ extern "C"
         funcs.emplace("pickup_setVirtualWorld", findFunc(handle, "pickup_setVirtualWorld"));
         funcs.emplace("pickup_getVirtualWorld", findFunc(handle, "pickup_getVirtualWorld"));
 
+        funcs.emplace("playerPickup_create", findFunc(handle, "playerPickup_create"));
+        funcs.emplace("playerPickup_release", findFunc(handle, "playerPickup_release"));
+
         // TextDraw
         funcs.emplace("textDraw_create", findFunc(handle, "textDraw_create"));
         funcs.emplace("textDraw_release", findFunc(handle, "textDraw_release"));

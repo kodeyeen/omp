@@ -77,6 +77,18 @@ extern "C"
         return call<int>("pickup_getVirtualWorld", pickup);
     }
 
+    // PlayerPickup
+
+    void* playerPickup_create(void* player, int modelId, uint8_t type, float posX, float posY, float posZ, uint32_t virtualWorld, int isStatic)
+    {
+        return call<void*>("playerPickup_create", player, modelId, type, posX, posY, posZ, virtualWorld, isStatic);
+    }
+
+    void playerPickup_release(void* pickup, void* player)
+    {
+        return call<void>("playerPickup_release", pickup, player);
+    }
+
 #ifdef __cplusplus
 }
 #endif
