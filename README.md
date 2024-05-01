@@ -1,5 +1,5 @@
-# Gomp
-Work in progress. Comeback later.
+# gomp
+gomp is a Go package that allows you to write open.mp gamemodes.
 
 ## Install
 
