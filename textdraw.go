@@ -265,6 +265,7 @@ func (td *Textdraw) SetTextFor(plr *Player, text string) {
 
 type PlayerTextdraw struct {
 	handle unsafe.Pointer
+	player *Player
 }
 
 func NewPlayerTextdraw(plr *Player, text string, pos Vector2) (*PlayerTextdraw, error) {
@@ -276,11 +277,16 @@ func NewPlayerTextdraw(plr *Player, text string, pos Vector2) (*PlayerTextdraw, 
 		return nil, errors.New("player textdraw limit was reached")
 	}
 
-	return &PlayerTextdraw{handle: cTd}, nil
+	td := &PlayerTextdraw{
+		handle: cTd,
+		player: plr,
+	}
+
+	return td, nil
 }
 
-func FreePlayerTextdraw(td *PlayerTextdraw, plr *Player) {
-	C.playerTextDraw_release(td.handle, plr.handle)
+func FreePlayerTextdraw(td *PlayerTextdraw) {
+	C.playerTextDraw_release(td.handle, td.player.handle)
 }
 
 func (td *PlayerTextdraw) ID() int {
