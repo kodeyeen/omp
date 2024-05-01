@@ -106,6 +106,105 @@ extern "C"
         return call<int>("textLabel_getVirtualWorld", textLabel);
     }
 
+    // PlayerTextLabel
+
+    void* playerTextLabel_create(String text, uint32_t colour, float posX, float posY, float posZ, float drawDistance, unsigned char los)
+    {
+        return call<void*>("playerTextLabel_create", text, colour, posX, posY, posZ, drawDistance, los);
+    }
+
+    void playerTextLabel_release(void* textLabel, void* player)
+    {
+        return call<void>("playerTextLabel_release", textLabel, player);
+    }
+
+    void playerTextLabel_setText(void* textLabel, String text)
+    {
+        return call<void>("playerTextLabel_setText", textLabel, text);
+    }
+
+    String playerTextLabel_getText(void* textLabel)
+    {
+        return call<String>("playerTextLabel_getText", textLabel);
+    }
+
+    void playerTextLabel_setColour(void* textLabel, uint32_t colour)
+    {
+        return call<void>("playerTextLabel_setColour", textLabel, colour);
+    }
+
+    uint32_t playerTextLabel_getColour(void* textLabel)
+    {
+        return call<uint32_t>("playerTextLabel_getColour", textLabel);
+    }
+
+    void playerTextLabel_setDrawDistance(void* textLabel, float drawDist)
+    {
+        return call<void>("playerTextLabel_setDrawDistance", textLabel, drawDist);
+    }
+
+    float playerTextLabel_getDrawDistance(void* textLabel)
+    {
+        return call<float>("playerTextLabel_getDrawDistance", textLabel);
+    }
+
+    void playerTextLabel_attachToPlayer(void* textLabel, void* player, float offsetX, float offsetY, float offsetZ)
+    {
+        return call<void>("playerTextLabel_attachToPlayer", textLabel, player, offsetX, offsetY, offsetZ);
+    }
+
+    void playerTextLabel_attachToVehicle(void* textLabel, void* vehicle, float offsetX, float offsetY, float offsetZ)
+    {
+        return call<void>("playerTextLabel_attachToVehicle", textLabel, vehicle, offsetX, offsetY, offsetZ);
+    }
+
+    TextLabelAttachmentData playerTextLabel_getAttachmentData(void* textLabel)
+    {
+        return call<TextLabelAttachmentData>("playerTextLabel_getAttachmentData", textLabel);
+    }
+
+    void playerTextLabel_detachFromPlayer(void* textLabel, float posX, float posY, float posZ)
+    {
+        return call<void>("playerTextLabel_detachFromPlayer", textLabel, posX, posY, posZ);
+    }
+
+    void playerTextLabel_detachFromVehicle(void* textLabel, float posX, float posY, float posZ)
+    {
+        return call<void>("playerTextLabel_detachFromVehicle", textLabel, posX, posY, posZ);
+    }
+
+    void playerTextLabel_setTestLOS(void* textLabel, unsigned char status)
+    {
+        return call<void>("playerTextLabel_setTestLOS", textLabel, status);
+    }
+
+    unsigned char playerTextLabel_getTestLOS(void* textLabel)
+    {
+        return call<unsigned char>("playerTextLabel_getTestLOS", textLabel);
+    }
+
+    // entity
+
+    void playerTextLabel_setPosition(void* textLabel, float posX, float posY, float posZ)
+    {
+        return call<void>("playerTextLabel_setPosition", textLabel, posX, posY, posZ);
+    }
+
+    Vector3 playerTextLabel_getPosition(void* textLabel)
+    {
+        return call<Vector3>("playerTextLabel_getPosition", textLabel);
+    }
+
+    void playerTextLabel_setVirtualWorld(void* textLabel, int vw)
+    {
+        return call<void>("playerTextLabel_setVirtualWorld", textLabel, vw);
+    }
+
+    int playerTextLabel_getVirtualWorld(void* textLabel)
+    {
+        return call<int>("playerTextLabel_getVirtualWorld", textLabel);
+    }
+
 #ifdef __cplusplus
 }
 #endif

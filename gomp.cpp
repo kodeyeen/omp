@@ -557,6 +557,27 @@ extern "C"
         funcs.emplace("textLabel_getPosition", findFunc(handle, "textLabel_getPosition"));
         funcs.emplace("textLabel_setVirtualWorld", findFunc(handle, "textLabel_setVirtualWorld"));
         funcs.emplace("textLabel_getVirtualWorld", findFunc(handle, "textLabel_getVirtualWorld"));
+
+        // PlayerTextLabel
+        funcs.emplace("playerTextLabel_create", findFunc(handle, "playerTextLabel_create"));
+        funcs.emplace("playerTextLabel_release", findFunc(handle, "playerTextLabel_release"));
+        funcs.emplace("playerTextLabel_setText", findFunc(handle, "playerTextLabel_setText"));
+        funcs.emplace("playerTextLabel_getText", findFunc(handle, "playerTextLabel_getText"));
+        funcs.emplace("playerTextLabel_setColour", findFunc(handle, "playerTextLabel_setColour"));
+        funcs.emplace("playerTextLabel_getColour", findFunc(handle, "playerTextLabel_getColour"));
+        funcs.emplace("playerTextLabel_setDrawDistance", findFunc(handle, "playerTextLabel_setDrawDistance"));
+        funcs.emplace("playerTextLabel_getDrawDistance", findFunc(handle, "playerTextLabel_getDrawDistance"));
+        funcs.emplace("playerTextLabel_attachToPlayer", findFunc(handle, "playerTextLabel_attachToPlayer"));
+        funcs.emplace("playerTextLabel_attachToVehicle", findFunc(handle, "playerTextLabel_attachToVehicle"));
+        funcs.emplace("playerTextLabel_getAttachmentData", findFunc(handle, "playerTextLabel_getAttachmentData"));
+        funcs.emplace("playerTextLabel_detachFromPlayer", findFunc(handle, "playerTextLabel_detachFromPlayer"));
+        funcs.emplace("playerTextLabel_detachFromVehicle", findFunc(handle, "playerTextLabel_detachFromVehicle"));
+        funcs.emplace("playerTextLabel_setTestLOS", findFunc(handle, "playerTextLabel_setTestLOS"));
+        funcs.emplace("playerTextLabel_getTestLOS", findFunc(handle, "playerTextLabel_getTestLOS"));
+        funcs.emplace("playerTextLabel_setPosition", findFunc(handle, "playerTextLabel_setPosition"));
+        funcs.emplace("playerTextLabel_getPosition", findFunc(handle, "playerTextLabel_getPosition"));
+        funcs.emplace("playerTextLabel_setVirtualWorld", findFunc(handle, "playerTextLabel_setVirtualWorld"));
+        funcs.emplace("playerTextLabel_getVirtualWorld", findFunc(handle, "playerTextLabel_getVirtualWorld"));
     }
 
     void freeArray(Array* arr)
