@@ -7,19 +7,21 @@ gomp is a Go package that allows you to write open.mp gamemodes.
 go get github.com/kodeyeen/gomp
 ```
 
-## Building on Windows
+## Building
+
+For Windows:
 
 ```bash
 go build -buildmode=c-shared -o build/gamemode.dll
 ```
 
-## Building on Mac
+For Mac:
 
 ```bash
 go build -buildmode=c-shared -o build/gamemode.dylib
 ```
 
-## Building on Linux
+For Linux:
 
 ```bash
 go build -buildmode=c-shared -o build/gamemode.so
