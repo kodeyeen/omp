@@ -1,6 +1,7 @@
 package gomp
 
 // #include "include/player.h"
+// #include "include/vehicle.h"
 import "C"
 import (
 	"errors"
@@ -196,6 +197,28 @@ const (
 	PlayerBoneNeck
 	PlayerBoneJaw
 )
+
+func Players() []*Player {
+	playerArr := C.player_getAll()
+	defer C.freeArray(playerArr)
+
+	players := make([]*Player, 0, playerArr.length)
+	handles := unsafe.Slice(playerArr.buf, int(playerArr.length))
+
+	for _, handle := range handles {
+		players = append(players, &Player{handle: handle})
+	}
+
+	return players
+}
+
+func SendDeathMessage(killer *Player, killee *Player, weapon int) {
+	if killee == nil {
+		C.player_sendEmptyDeathMessageToAll()
+	} else {
+		C.player_sendDeathMessageToAll(killer.handle, killee.handle, C.int(weapon))
+	}
+}
 
 type Player struct {
 	handle unsafe.Pointer
@@ -893,14 +916,29 @@ func (p *Player) SpectateVehicle(vehicle *Vehicle, mode PlayerSpectateMode) {
 	C.player_spectateVehicle(p.handle, vehicle.handle, C.int(mode))
 }
 
-// TODO
-// func (p *Player) SpectatingPlayer() *Player {
-// 	specData := C.player_getSpectateData(p.handle)
-// }
+func (p *Player) SpectatingPlayer() (*Player, error) {
+	specData := C.player_getSpectateData(p.handle)
 
-// func (p *Player) SpectatingVehicle() *Vehicle {
-// 	specData := C.player_getSpectateData(p.handle)
-// }
+	if specData._type != 2 {
+		return nil, errors.New("player is not spectating a player")
+	}
+
+	cPlayer := C.player_getByID(specData.spectateID)
+
+	return &Player{handle: cPlayer}, nil
+}
+
+func (p *Player) SpectatingVehicle() (*Vehicle, error) {
+	specData := C.player_getSpectateData(p.handle)
+
+	if specData._type != 1 {
+		return nil, errors.New("player is not spectating a vehicle")
+	}
+
+	cVehicle := C.vehicle_getByID(specData.spectateID)
+
+	return &Vehicle{handle: cVehicle}, nil
+}
 
 // TODO callback
 func (p *Player) SendClientCheck(actionType, address, offset, count int) {
@@ -1144,10 +1182,6 @@ func (p *Player) SetFacingAngle(angle float32) {
 
 func (p *Player) FacingAngle() float32 {
 	return float32(C.player_getFacingAngle(p.handle))
-}
-
-func (p *Player) CheckPoint() {
-	panic("not implemented")
 }
 
 func (p *Player) DialogID() {

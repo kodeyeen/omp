@@ -197,7 +197,7 @@ func (v *Vehicle) StopEngine() {
 func (v *Vehicle) IsEngineStarted() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.engine != 0
+	return params.engine != 0 && params.engine != -1
 }
 
 func (v *Vehicle) TurnOnLights() {
@@ -217,7 +217,7 @@ func (v *Vehicle) TurnOffLights() {
 func (v *Vehicle) AreLightsTurnedOn() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.lights != 0
+	return params.lights != 0 && params.lights != -1
 }
 
 func (v *Vehicle) TurnOnAlarm() {
@@ -237,7 +237,7 @@ func (v *Vehicle) TurnOffAlarm() {
 func (v *Vehicle) IsAlarmTurnedOn() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.alarm != 0
+	return params.alarm != 0 && params.alarm != -1
 }
 
 func (v *Vehicle) LockDoors() {
@@ -257,7 +257,21 @@ func (v *Vehicle) UnlockDoors() {
 func (v *Vehicle) AreDoorsLocked() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.doors != 0
+	return params.doors != 0 && params.doors != -1
+}
+
+func (v *Vehicle) LockDoorsFor(plr *Player) {
+	params := C.vehicle_getParams(v.handle)
+	params.doors = C.schar(1)
+
+	C.vehicle_setParamsForPlayer(v.handle, plr.handle, &params)
+}
+
+func (v *Vehicle) UnlockDoorsFor(plr *Player) {
+	params := C.vehicle_getParams(v.handle)
+	params.doors = C.schar(0)
+
+	C.vehicle_setParamsForPlayer(v.handle, plr.handle, &params)
 }
 
 func (v *Vehicle) OpenHood() {
@@ -277,7 +291,7 @@ func (v *Vehicle) CloseHood() {
 func (v *Vehicle) IsHoodOpen() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.bonnet != 0
+	return params.bonnet != 0 && params.bonnet != -1
 }
 
 func (v *Vehicle) OpenTrunk() {
@@ -297,7 +311,41 @@ func (v *Vehicle) CloseTrunk() {
 func (v *Vehicle) IsTrunkOpen() bool {
 	params := C.vehicle_getParams(v.handle)
 
-	return params.boot != 0
+	return params.boot != 0 && params.boot != -1
+}
+
+func (v *Vehicle) EnableObjective() {
+	params := C.vehicle_getParams(v.handle)
+	params.objective = C.schar(1)
+
+	C.vehicle_setParams(v.handle, &params)
+}
+
+func (v *Vehicle) DisableObjective() {
+	params := C.vehicle_getParams(v.handle)
+	params.objective = C.schar(0)
+
+	C.vehicle_setParams(v.handle, &params)
+}
+
+func (v *Vehicle) IsObjectiveEnabled() bool {
+	params := C.vehicle_getParams(v.handle)
+
+	return params.objective != 0 && params.objective != -1
+}
+
+func (v *Vehicle) EnableObjectiveFor(plr *Player) {
+	params := C.vehicle_getParams(v.handle)
+	params.objective = C.schar(1)
+
+	C.vehicle_setParamsForPlayer(v.handle, plr.handle, &params)
+}
+
+func (v *Vehicle) DisableObjectiveFor(plr *Player) {
+	params := C.vehicle_getParams(v.handle)
+	params.objective = C.schar(0)
+
+	C.vehicle_setParamsForPlayer(v.handle, plr.handle, &params)
 }
 
 // Allows you to open and close the doors of a vehicle.

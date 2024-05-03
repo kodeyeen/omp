@@ -53,10 +53,10 @@ extern "C"
 
     typedef struct
     {
-        int spectating;
+        unsigned char spectating;
         int spectateID;
         int type;
-    } PlayerSpectateData;
+    } CPlayerSpectateData;
 
     typedef enum
     {
@@ -77,6 +77,10 @@ extern "C"
     } PlayerAttachedObject;
 
     void* player_getByID(int id);
+    Array player_getAll();
+    void player_sendDeathMessageToAll(void* killer, void* killee, int weapon);
+    void player_sendEmptyDeathMessageToAll();
+
     int player_getID(void* player);
 
     void player_kick(void* player);
@@ -199,7 +203,7 @@ extern "C"
     void player_setRemoteVehicleCollisions(void* player, int collide);
     void player_spectatePlayer(void* player, void* target, int mode);
     void player_spectateVehicle(void* player, void* target, int mode);
-    const PlayerSpectateData* player_getSpectateData(void* player);
+    CPlayerSpectateData player_getSpectateData(void* player);
     void player_sendClientCheck(void* player, int actionType, int address, int offset, int count);
     void player_toggleGhostMode(void* player, int toggle);
     int player_isGhostModeEnabled(void* player);

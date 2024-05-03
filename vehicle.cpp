@@ -51,9 +51,9 @@ extern "C"
         return call<void*>("vehicle_getDriver", vehicle);
     }
 
-    Array* vehicle_getPassengers(void* vehicle)
+    Array vehicle_getPassengers(void* vehicle)
     {
-        return call<Array*>("vehicle_getPassengers", vehicle);
+        return call<Array>("vehicle_getPassengers", vehicle);
     }
 
     void vehicle_setPlate(void* vehicle, String plate)

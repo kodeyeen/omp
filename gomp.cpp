@@ -193,6 +193,9 @@ extern "C"
 
         // Player
         funcs.emplace("player_getByID", findFunc(handle, "player_getByID"));
+        funcs.emplace("player_getAll", findFunc(handle, "player_getAll"));
+        funcs.emplace("player_sendDeathMessageToAll", findFunc(handle, "player_sendDeathMessageToAll"));
+        funcs.emplace("player_sendEmptyDeathMessageToAll", findFunc(handle, "player_sendEmptyDeathMessageToAll"));
         funcs.emplace("player_getID", findFunc(handle, "player_getID"));
         funcs.emplace("player_kick", findFunc(handle, "player_kick"));
         funcs.emplace("player_ban", findFunc(handle, "player_ban"));
@@ -580,7 +583,7 @@ extern "C"
         funcs.emplace("playerTextLabel_getVirtualWorld", findFunc(handle, "playerTextLabel_getVirtualWorld"));
     }
 
-    void freeArray(Array* arr)
+    void freeArray(Array arr)
     {
         return call<void>("freeArray", arr);
     }

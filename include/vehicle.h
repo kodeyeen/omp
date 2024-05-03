@@ -34,7 +34,7 @@ extern "C"
     void vehicle_setHealth(void* vehicle, float health);
     float vehicle_getHealth(void* vehicle);
     void* vehicle_getDriver(void* vehicle);
-    Array* vehicle_getPassengers(void* vehicle);
+    Array vehicle_getPassengers(void* vehicle);
     void vehicle_setPlate(void* vehicle, String plate);
     String vehicle_getPlate(void* vehicle);
     void vehicle_setDamageStatus(void* vehicle, int PanelStatus, int DoorStatus, uint8_t LightStatus, uint8_t TyreStatus, void* vehicleUpdater);

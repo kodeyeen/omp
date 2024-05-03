@@ -11,6 +11,21 @@ extern "C"
         return call<void*>("player_getByID", id);
     }
 
+    Array player_getAll()
+    {
+        return call<Array>("player_getAll");
+    }
+
+    void player_sendDeathMessageToAll(void* killer, void* killee, int weapon)
+    {
+        return call<void>("player_sendDeathMessageToAll", killer, killee, weapon);
+    }
+
+    void player_sendEmptyDeathMessageToAll()
+    {
+        return call<void>("player_sendEmptyDeathMessageToAll");
+    }
+
     int player_getID(void* player)
     {
         return call<int>("player_getID", player);
@@ -616,9 +631,9 @@ extern "C"
         return call<void>("player_spectateVehicle", player, target, mode);
     }
 
-    const PlayerSpectateData* player_getSpectateData(void* player)
+    CPlayerSpectateData player_getSpectateData(void* player)
     {
-        return call<const PlayerSpectateData*>("player_getSpectateData", player);
+        return call<CPlayerSpectateData>("player_getSpectateData", player);
     }
 
     void player_sendClientCheck(void* player, int actionType, int address, int offset, int count)
