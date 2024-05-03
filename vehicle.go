@@ -10,8 +10,8 @@ import (
 )
 
 type VehicleColor struct {
-	Primary   Color
-	Secondary Color
+	Primary   int
+	Secondary int
 }
 
 func NewRandomVehicleColor() *VehicleColor {
@@ -81,8 +81,8 @@ func (v *Vehicle) Color() VehicleColor {
 	colour := C.vehicle_getColour(v.handle)
 
 	return VehicleColor{
-		Primary:   Color(colour.primary),
-		Secondary: Color(colour.secondary),
+		Primary:   int(colour.primary),
+		Secondary: int(colour.secondary),
 	}
 }
 

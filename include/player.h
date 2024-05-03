@@ -255,7 +255,7 @@ extern "C"
     float player_getDistanceFromPoint(void* player, float pX, float pY, float pZ);
     void player_setFacingAngle(void* player, float angle);
     float player_getFacingAngle(void* player);
-    int player_isInRangeOfPoint(void* player, float range, float pX, float pY, float pZ);
+    unsigned char player_isInRangeOfPoint(void* player, float range, float pX, float pY, float pZ);
 
 #ifdef __cplusplus
 }

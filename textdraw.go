@@ -231,8 +231,8 @@ func (td *Textdraw) PreviewVehicleColor() VehicleColor {
 	color := C.textDraw_getPreviewVehicleColour(td.handle)
 
 	return VehicleColor{
-		Primary:   Color(color.primary),
-		Secondary: Color(color.secondary),
+		Primary:   int(color.primary),
+		Secondary: int(color.secondary),
 	}
 }
 
@@ -471,8 +471,8 @@ func (td *PlayerTextdraw) PreviewVehicleColor() VehicleColor {
 	color := C.playerTextDraw_getPreviewVehicleColour(td.handle)
 
 	return VehicleColor{
-		Primary:   Color(color.primary),
-		Secondary: Color(color.secondary),
+		Primary:   int(color.primary),
+		Secondary: int(color.secondary),
 	}
 }
 

@@ -824,9 +824,9 @@ extern "C"
         return call<float>("player_getFacingAngle", player);
     }
 
-    int player_isInRangeOfPoint(void* player, float range, float pX, float pY, float pZ)
+    unsigned char player_isInRangeOfPoint(void* player, float range, float pX, float pY, float pZ)
     {
-        return call<int>("player_isInRangeOfPoint", player, range, pX, pY, pZ);
+        return call<unsigned char>("player_isInRangeOfPoint", player, range, pX, pY, pZ);
     }
 
 #ifdef __cplusplus

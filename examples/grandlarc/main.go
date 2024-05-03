@@ -357,14 +357,14 @@ func LoadStaticVehiclesFromFile(filename string) (int, error) {
 			continue
 		}
 
-		primaryColor, err := strconv.ParseInt(split[5], 10, 0)
+		primaryColor, err := strconv.Atoi(split[5])
 		if err != nil {
 			continue
 		}
 
 		secColAndName := strings.Split(split[6], ";")
 
-		secondaryColor, err := strconv.ParseInt(strings.TrimSpace(secColAndName[0]), 10, 0)
+		secondaryColor, err := strconv.Atoi(strings.TrimSpace(secColAndName[0]))
 		if err != nil {
 			continue
 		}
@@ -375,8 +375,8 @@ func LoadStaticVehiclesFromFile(filename string) (int, error) {
 		}
 
 		veh.SetColor(gomp.VehicleColor{
-			Primary:   gomp.Color(primaryColor),
-			Secondary: gomp.Color(secondaryColor),
+			Primary:   primaryColor,
+			Secondary: secondaryColor,
 		})
 
 		cnt++

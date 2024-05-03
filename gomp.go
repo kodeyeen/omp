@@ -427,7 +427,7 @@ func onVehicleRespray(player, vehicle unsafe.Pointer, color1, color2 int) {
 	event.Dispatch(evtDispatcher, EventTypeVehicleRespray, &VehicleResprayEvent{
 		Player:  &Player{handle: player},
 		Vehicle: &Vehicle{handle: vehicle},
-		Color:   VehicleColor{Primary: Color(color1), Secondary: Color(color2)},
+		Color:   VehicleColor{Primary: color1, Secondary: color2},
 	})
 }
 
