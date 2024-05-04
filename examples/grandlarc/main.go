@@ -185,7 +185,7 @@ func onPlayerConnect(evt *gomp.PlayerConnectEvent) bool {
 	chars[char.ID()] = char
 
 	char.ShowGameText("~w~Grand Larceny", 3*time.Second, 4)
-	char.SendMessage("Welcome to {88AA88}G{FFFFFF}rand {88AA88}L{FFFFFF}arceny", ColorWhite)
+	char.SendClientMessage("Welcome to {88AA88}G{FFFFFF}rand {88AA88}L{FFFFFF}arceny", ColorWhite)
 
 	return true
 }

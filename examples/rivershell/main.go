@@ -220,7 +220,7 @@ func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) bool {
 	char := chars[evt.Player.ID()]
 
 	if !char.LastDiedAt.IsZero() && time.Since(char.LastDiedAt) < RespawnDelay {
-		char.SendMessage("Waiting to respawn....", 0xFFAAEEEE)
+		char.SendClientMessage("Waiting to respawn....", 0xFFAAEEEE)
 		char.EnableSpectating()
 
 		if char.LastKiller.State() == gomp.PlayerStateOnFoot ||

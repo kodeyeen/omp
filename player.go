@@ -689,7 +689,7 @@ func (p *Player) SetChatBubble(text string, color Color, drawDist float32, expir
 	C.player_setChatBubble(p.handle, cText, C.uint(color), C.float(drawDist), C.int(expire.Milliseconds()))
 }
 
-func (p *Player) SendMessage(msg string, color Color) {
+func (p *Player) SendClientMessage(msg string, color Color) {
 	cMsg := newCString(msg)
 	defer freeCString(cMsg)
 

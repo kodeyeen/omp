@@ -22,7 +22,7 @@ func init() {
 
 		player.GiveWeapon(gomp.WeaponDeagle, 100)
 
-		player.SendMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
+		player.SendClientMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
 
 		gomp.NewVehicle(gomp.VehicleModelAlpha, gomp.Vector3{X: 2161.8389, Y: -1143.7473, Z: 24.6501}, 266.9070)
 
@@ -32,18 +32,18 @@ func init() {
 	})
 
 	gomp.AddCommand("getpos", func(cmd *gomp.Command) {
-		cmd.Sender.SendMessage(fmt.Sprintf("Your position is %+v", cmd.Sender.Position()), 0xFFFFFFFF)
+		cmd.Sender.SendClientMessage(fmt.Sprintf("Your position is %+v", cmd.Sender.Position()), 0xFFFFFFFF)
 	})
 
 	gomp.AddCommand("createveh", func(cmd *gomp.Command) {
 		if len(cmd.Args) != 1 {
-			cmd.Sender.SendMessage("Invalid command syntax", 0xFFFFFFFF)
+			cmd.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
 			return
 		}
 
 		modelID, err := strconv.Atoi(cmd.Args[0])
 		if err != nil {
-			cmd.Sender.SendMessage("Invalid command syntax", 0xFFFFFFFF)
+			cmd.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
 			return
 		}
 
@@ -52,7 +52,7 @@ func init() {
 
 	gomp.AddCommand("setname", func(cmd *gomp.Command) {
 		status := cmd.Sender.SetName("кириллица")
-		cmd.Sender.SendMessage(fmt.Sprintf("You changed %d your name to %s", status, cmd.Sender.Name()), 0xFFFFFFFF)
+		cmd.Sender.SendClientMessage(fmt.Sprintf("You changed %d your name to %s", status, cmd.Sender.Name()), 0xFFFFFFFF)
 	})
 
 	gomp.AddCommand("doors", func(cmd *gomp.Command) {
@@ -63,10 +63,10 @@ func init() {
 
 		if plrVeh.AreDoorsLocked() {
 			plrVeh.UnlockDoors()
-			cmd.Sender.SendMessage("Doors unlocked", 0xFFFFFFFF)
+			cmd.Sender.SendClientMessage("Doors unlocked", 0xFFFFFFFF)
 		} else {
 			plrVeh.LockDoors()
-			cmd.Sender.SendMessage("Doors locked", 0xFFFFFFFF)
+			cmd.Sender.SendClientMessage("Doors locked", 0xFFFFFFFF)
 		}
 	})
 
