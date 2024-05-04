@@ -213,10 +213,16 @@ func Players() []*Player {
 }
 
 func SendDeathMessage(killer *Player, killee *Player, weapon int) {
+	var cKiller unsafe.Pointer
+
+	if killer != nil {
+		cKiller = killer.handle
+	}
+
 	if killee == nil {
 		C.player_sendEmptyDeathMessageToAll()
 	} else {
-		C.player_sendDeathMessageToAll(killer.handle, killee.handle, C.int(weapon))
+		C.player_sendDeathMessageToAll(cKiller, killee.handle, C.int(weapon))
 	}
 }
 
