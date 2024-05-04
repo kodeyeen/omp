@@ -18,11 +18,11 @@ func init() {
 	})
 
 	gomp.On(gomp.EventTypePlayerConnect, func(evt *gomp.PlayerConnectEvent) bool {
-		plr := evt.Player
+		player := evt.Player
 
-		plr.GiveWeapon(gomp.WeaponDeagle, 100)
+		player.GiveWeapon(gomp.WeaponDeagle, 100)
 
-		plr.SendMessage(fmt.Sprintf("Hello, %s", plr.Name()), 0x00FF0000)
+		player.SendMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
 
 		gomp.NewVehicle(gomp.VehicleModelAlpha, gomp.Vector3{X: 2161.8389, Y: -1143.7473, Z: 24.6501}, 266.9070)
 
