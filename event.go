@@ -76,6 +76,7 @@ type UnoccupiedVehicleUpdate struct {
 
 const (
 	EventTypeGameModeInit event.Type = "gameModeInit"
+	EventTypeGameModeExit event.Type = "gameModeExit"
 
 	// Actor events
 	EventTypePlayerGiveDamageActor event.Type = "playerGiveDamageActor"
@@ -197,6 +198,9 @@ const (
 )
 
 type GameModeInitEvent struct {
+}
+
+type GameModeExitEvent struct {
 }
 
 // Actor events

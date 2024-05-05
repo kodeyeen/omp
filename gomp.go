@@ -70,9 +70,12 @@ func onGameModeInit() {
 
 	C.init(cLibPath)
 
-	C.initFuncs(handle)
-
 	event.Dispatch(evtDispatcher, EventTypeGameModeInit, &GameModeInitEvent{})
+}
+
+//export onGameModeExit
+func onGameModeExit() {
+	event.Dispatch(evtDispatcher, EventTypeGameModeExit, &GameModeExitEvent{})
 }
 
 // Actor events
