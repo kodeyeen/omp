@@ -18,16 +18,6 @@ extern "C"
 
     typedef struct
     {
-        Vector3 origin;
-        Vector3 hitPos;
-        Vector3 offset;
-        uint8_t weapon;
-        uint8_t hitType;
-        uint16_t hitID;
-    } PlayerBulletData;
-
-    typedef struct
-    {
         uint8_t id;
         uint32_t ammo;
     } WeaponSlotData;
@@ -64,17 +54,6 @@ extern "C"
         PlayerAnimationSyncType_Sync,
         PlayerAnimationSyncType_SyncOthers
     } PlayerAnimationSyncType;
-
-    typedef struct
-    {
-        int model;
-        int bone;
-        Vector3 offset;
-        Vector3 rotation;
-        Vector3 scale;
-        uint32_t colour1;
-        uint32_t colour2;
-    } PlayerAttachedObject;
 
     void* player_getByID(int id);
     Array player_getAll();
