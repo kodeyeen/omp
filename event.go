@@ -512,7 +512,7 @@ type PlayerGiveDamageEvent struct {
 	Player *Player
 	To     *Player
 	Amount float32
-	Weapon uint
+	Weapon Weapon
 	Part   BodyPart
 }
 

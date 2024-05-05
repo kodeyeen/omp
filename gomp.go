@@ -701,12 +701,12 @@ func onPlayerTakeDamage(player, from unsafe.Pointer, amount float32, weapon uint
 }
 
 //export onPlayerGiveDamage
-func onPlayerGiveDamage(player, to unsafe.Pointer, amount C.float, weapon C.uint, part int) {
+func onPlayerGiveDamage(player, to unsafe.Pointer, amount float32, weapon uint, part int) {
 	event.Dispatch(evtDispatcher, EventTypePlayerGiveDamage, &PlayerGiveDamageEvent{
 		Player: &Player{handle: player},
 		To:     &Player{handle: to},
-		Amount: float32(amount),
-		Weapon: uint(weapon),
+		Amount: amount,
+		Weapon: Weapon(weapon),
 		Part:   BodyPart(part),
 	})
 }
@@ -714,10 +714,14 @@ func onPlayerGiveDamage(player, to unsafe.Pointer, amount C.float, weapon C.uint
 // Player click events
 
 //export onPlayerClickMap
-func onPlayerClickMap(player unsafe.Pointer, x, y, z C.float) {
+func onPlayerClickMap(player unsafe.Pointer, pos C.Vector3) {
 	event.Dispatch(evtDispatcher, EventTypePlayerClickMap, &PlayerClickMapEvent{
-		Player:   &Player{handle: player},
-		Position: Vector3{X: float32(x), Y: float32(y), Z: float32(z)},
+		Player: &Player{handle: player},
+		Position: Vector3{
+			X: float32(pos.x),
+			Y: float32(pos.y),
+			Z: float32(pos.z),
+		},
 	})
 }
 
