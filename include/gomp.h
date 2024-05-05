@@ -71,40 +71,50 @@ typedef struct
 } UnoccupiedVehicleUpdate;
 
 #ifdef __cplusplus
+extern "C"
+{
+#endif
+
+    void init(const char* libPath);
+    void* openLib(const char* path);
+    void* findFunc(void* handle, const char* name);
+    void freeArray(Array arr);
+
+#ifdef __cplusplus
+}
 
 #include <string>
 #include <unordered_map>
 
+extern void* libHandle;
 extern std::unordered_map<std::string, void*> funcs;
 
 template <typename R, typename... Args>
 R call(const std::string& funcName, Args... args)
 {
     auto it = funcs.find(funcName);
+    void* funcAddr = nullptr;
 
-    // if (it == funcs.end())
-    // {
-    //     return;
+    if (it == funcs.end())
+    {
+        funcAddr = findFunc(libHandle, funcName.c_str());
+        funcs.emplace(funcName, funcAddr);
+    }
+    else
+    {
+        funcAddr = it->second;
+    }
+
+    // R ret;
+    // if funcAddr == nullptr {
+    //     return ret;
     // }
 
     typedef R (* FuncType)(Args...);
 
-    FuncType func = (FuncType)it->second;
+    FuncType func = (FuncType)funcAddr;
 
     return (*func)(std::forward<Args>(args)...);
-}
-
-
-extern "C"
-{
-#endif
-
-    void* openLib(const char* path);
-    void* findFunc(void* handle, const char* name);
-    void initFuncs(void* handle);
-    void freeArray(Array arr);
-
-#ifdef __cplusplus
 }
 #endif
 

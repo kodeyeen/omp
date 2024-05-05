@@ -68,7 +68,7 @@ func onGameModeInit() {
 	cLibPath := C.CString("./components/Gomponent.dll")
 	defer C.free(unsafe.Pointer(cLibPath))
 
-	handle := C.openLib(cLibPath)
+	C.init(cLibPath)
 
 	C.initFuncs(handle)
 
