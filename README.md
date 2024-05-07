@@ -9,22 +9,8 @@ go get github.com/kodeyeen/gomp
 
 ## Building
 
-For Windows:
-
 ```bash
 go build -buildmode=c-shared -o build/gamemode.dll
-```
-
-For Mac:
-
-```bash
-go build -buildmode=c-shared -o build/gamemode.dylib
-```
-
-For Linux:
-
-```bash
-go build -buildmode=c-shared -o build/gamemode.so
 ```
 
 ## Credits
