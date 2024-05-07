@@ -1,7 +1,7 @@
 # gomp
 gomp is a Go package that allows you to write open.mp gamemodes.
 
-## Install
+## Installation
 
 ```shell
 go get github.com/kodeyeen/gomp
