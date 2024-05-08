@@ -1,4 +1,3 @@
-#include "include/omp.h"
 #include "include/player.h"
 
 #ifdef __cplusplus

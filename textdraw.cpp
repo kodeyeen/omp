@@ -1,4 +1,3 @@
-#include "include/omp.h"
 #include "include/textdraw.h"
 
 #ifdef __cplusplus

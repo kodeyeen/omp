@@ -1,4 +1,3 @@
-#include "include/omp.h"
 #include "include/class.h"
 
 #ifdef __cplusplus

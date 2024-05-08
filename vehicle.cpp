@@ -1,4 +1,3 @@
-#include "include/omp.h"
 #include "include/vehicle.h"
 
 #ifdef __cplusplus

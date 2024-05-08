@@ -1,4 +1,3 @@
-#include "include/omp.h"
 #include "include/pickup.h"
 
 #ifdef __cplusplus

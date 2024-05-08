@@ -1,4 +1,3 @@
-#include "include/omp.h"
 #include "include/checkpoint.h"
 
 #ifdef __cplusplus
