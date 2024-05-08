@@ -1,4 +1,4 @@
-#include "include/gomp.h"
+#include "include/omp.h"
 #include "include/checkpoint.h"
 
 #ifdef __cplusplus

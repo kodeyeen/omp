@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 // #include "include/menu.h"
 import "C"

@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 // #include "include/textlabel.h"
 // #include "include/player.h"

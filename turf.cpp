@@ -1,4 +1,4 @@
-#include "include/gomp.h"
+#include "include/omp.h"
 #include "include/turf.h"
 
 #ifdef __cplusplus

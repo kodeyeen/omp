@@ -1,4 +1,4 @@
-#include "include/gomp.h"
+#include "include/omp.h"
 #include "include/actor.h"
 
 #ifdef __cplusplus

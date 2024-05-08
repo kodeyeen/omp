@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 // #include "include/object.h"
 // #include "include/player.h"

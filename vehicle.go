@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 // #include "include/player.h"
 // #include "include/vehicle.h"

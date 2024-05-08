@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 // #include "include/pickup.h"
 import "C"

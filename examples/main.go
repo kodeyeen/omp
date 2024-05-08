@@ -5,37 +5,37 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/kodeyeen/gomp"
+	"github.com/kodeyeen/omp"
 )
 
 // go build -buildmode=c-shared -o test.dll
 
 func init() {
-	gomp.On(gomp.EventTypeGameModeInit, func(evt *gomp.GameModeInitEvent) bool {
+	omp.On(omp.EventTypeGameModeInit, func(evt *omp.GameModeInitEvent) bool {
 		log.Println("GAME MODE INITIALIZED")
-		gomp.EnableManualEngineAndLights()
+		omp.EnableManualEngineAndLights()
 		return true
 	})
 
-	gomp.On(gomp.EventTypePlayerConnect, func(evt *gomp.PlayerConnectEvent) bool {
+	omp.On(omp.EventTypePlayerConnect, func(evt *omp.PlayerConnectEvent) bool {
 		player := evt.Player
 
-		player.GiveWeapon(gomp.WeaponDeagle, 100)
+		player.GiveWeapon(omp.WeaponDeagle, 100)
 
 		player.SendClientMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
 
-		gomp.NewVehicle(gomp.VehicleModelAlpha, gomp.Vector3{X: 2161.8389, Y: -1143.7473, Z: 24.6501}, 266.9070)
+		omp.NewVehicle(omp.VehicleModelAlpha, omp.Vector3{X: 2161.8389, Y: -1143.7473, Z: 24.6501}, 266.9070)
 
-		gomp.NewPickup(1273, 1, 0, gomp.Vector3{X: 3.9905, Y: 7.0804, Z: 3.1096})
+		omp.NewPickup(1273, 1, 0, omp.Vector3{X: 3.9905, Y: 7.0804, Z: 3.1096})
 
 		return true
 	})
 
-	gomp.AddCommand("getpos", func(cmd *gomp.Command) {
+	omp.AddCommand("getpos", func(cmd *omp.Command) {
 		cmd.Sender.SendClientMessage(fmt.Sprintf("Your position is %+v", cmd.Sender.Position()), 0xFFFFFFFF)
 	})
 
-	gomp.AddCommand("createveh", func(cmd *gomp.Command) {
+	omp.AddCommand("createveh", func(cmd *omp.Command) {
 		if len(cmd.Args) != 1 {
 			cmd.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
 			return
@@ -47,15 +47,15 @@ func init() {
 			return
 		}
 
-		gomp.NewVehicle(gomp.VehicleModel(modelID), cmd.Sender.Position(), 0.0)
+		omp.NewVehicle(omp.VehicleModel(modelID), cmd.Sender.Position(), 0.0)
 	})
 
-	gomp.AddCommand("setname", func(cmd *gomp.Command) {
+	omp.AddCommand("setname", func(cmd *omp.Command) {
 		status := cmd.Sender.SetName("кириллица")
 		cmd.Sender.SendClientMessage(fmt.Sprintf("You changed %d your name to %s", status, cmd.Sender.Name()), 0xFFFFFFFF)
 	})
 
-	gomp.AddCommand("doors", func(cmd *gomp.Command) {
+	omp.AddCommand("doors", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -70,7 +70,7 @@ func init() {
 		}
 	})
 
-	gomp.AddCommand("hood", func(cmd *gomp.Command) {
+	omp.AddCommand("hood", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -83,7 +83,7 @@ func init() {
 		}
 	})
 
-	gomp.AddCommand("trunk", func(cmd *gomp.Command) {
+	omp.AddCommand("trunk", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -96,7 +96,7 @@ func init() {
 		}
 	})
 
-	gomp.AddCommand("lights", func(cmd *gomp.Command) {
+	omp.AddCommand("lights", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -109,7 +109,7 @@ func init() {
 		}
 	})
 
-	gomp.AddCommand("engine", func(cmd *gomp.Command) {
+	omp.AddCommand("engine", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -122,7 +122,7 @@ func init() {
 		}
 	})
 
-	gomp.AddCommand("alarm", func(cmd *gomp.Command) {
+	omp.AddCommand("alarm", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return

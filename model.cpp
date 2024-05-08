@@ -1,4 +1,4 @@
-#include "include/gomp.h"
+#include "include/omp.h"
 #include "include/model.h"
 
 #ifdef __cplusplus

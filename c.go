@@ -1,8 +1,8 @@
-package gomp
+package omp
 
 // #include <stdlib.h>
 // #include <string.h>
-// #include "include/gomp.h"
+// #include "include/omp.h"
 import "C"
 import "unsafe"
 

@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 const (
 	WeaponFist Weapon = iota

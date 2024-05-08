@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include "include/gomp.h"
+#include "include/omp.h"
 
 void* libHandle;
 std::unordered_map<std::string, void*> funcs;

@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 import "fmt"
 

@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 const (
 	VehicleModelLandstalker VehicleModel = iota + 400

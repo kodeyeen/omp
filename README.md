@@ -1,10 +1,10 @@
-# gomp
-gomp is a Go package that allows you to write open.mp gamemodes.
+# omp
+omp is a Go package that allows you to write open.mp gamemodes.
 
 ## Installation
 
 ```shell
-go get github.com/kodeyeen/gomp
+go get github.com/kodeyeen/omp
 ```
 
 ## Building

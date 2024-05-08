@@ -1,4 +1,4 @@
-package gomp
+package omp
 
 // #include "include/turf.h"
 import "C"

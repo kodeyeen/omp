@@ -1,4 +1,4 @@
-#include "include/gomp.h"
+#include "include/omp.h"
 #include "include/textlabel.h"
 
 #ifdef __cplusplus
