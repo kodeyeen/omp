@@ -100,8 +100,6 @@ extern "C" {
         return call<void>("object_attachToObject", object, other, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, syncRotation);
     }
 
-    // entity
-
     void object_setPosition(void* object, float posX, float posY, float posZ) {
         return call<void>("object_setPosition", object, posX, posY, posZ);
     }
@@ -117,8 +115,6 @@ extern "C" {
     Vector3 object_getRotation(void* object) {
         return call<Vector3>("object_getRotation", object);
     }
-
-    // PlayerObject
 
     void* playerObject_create(void* player, int modelId, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float drawDistance) {
         return call<void*>("playerObject_create", player, modelId, posX, posY, posZ, rotX, rotY, rotZ, drawDistance);
@@ -211,8 +207,6 @@ extern "C" {
     void playerObject_attachToObject(void* object, void* other, float offsetX, float offsetY, float offsetZ, float rotX, float rotY, float rotZ) {
         return call<void>("playerObject_attachToObject", object, other, offsetX, offsetY, offsetZ, rotX, rotY, rotZ);
     }
-
-    // entity
 
     void playerObject_setPosition(void* object, float posX, float posY, float posZ) {
         return call<void>("playerObject_setPosition", object, posX, posY, posZ);

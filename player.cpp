@@ -63,7 +63,7 @@ extern "C" {
     void player_setPositionFindZ(void* player, float x, float y, float z) {
         return call<void>("player_setPositionFindZ", player, x, y, z);
     }
-    
+
     void player_setCameraPosition(void* player, float x, float y, float z) {
         return call<void>("player_setCameraPosition", player, x, y, z);
     }
@@ -228,7 +228,7 @@ extern "C" {
         return call<void>("player_sendDeathMessage", player, killee, killer, weapon);
     }
 
-	void player_sendEmptyDeathMessage(void* player) {
+    void player_sendEmptyDeathMessage(void* player) {
         return call<void>("player_sendEmptyDeathMessage", player);
     }
 
@@ -465,7 +465,7 @@ extern "C" {
     }
 
     unsigned char player_hasCameraTargeting(void* player) {
-        return call<int>("player_hasCameraTargeting", player);
+        return call<unsigned char>("player_hasCameraTargeting", player);
     }
 
     void player_removeFromVehicle(void* player, unsigned char force) {
@@ -552,8 +552,6 @@ extern "C" {
         return call<int>("player_isUsingOfficialClient", player);
     }
 
-    // entity
-
     void player_setPosition(void* player, float posX, float posY, float posZ) {
         return call<void>("player_setPosition", player, posX, posY, posZ);
     }
@@ -574,16 +572,6 @@ extern "C" {
         return call<int>("player_getVirtualWorld", player);
     }
 
-    // checkpoint data
-    void* player_getCheckpoint(void* player) {
-        return call<void*>("player_getCheckpoint", player);
-    }
-
-    void* player_getRaceCheckpoint(void* player) {
-        return call<void*>("player_getRaceCheckpoint", player);
-    }
-
-    // console data
     void player_setConsoleAccessibility(void* player, int set) {
         return call<void>("player_setConsoleAccessibility", player, set);
     }
@@ -592,12 +580,17 @@ extern "C" {
         return call<int>("player_hasConsoleAccess", player);
     }
 
-    // custom models data
+    void* player_getCheckpoint(void* player) {
+        return call<void*>("player_getCheckpoint", player);
+    }
+
+    void* player_getRaceCheckpoint(void* player) {
+        return call<void*>("player_getRaceCheckpoint", player);
+    }
+
     int player_getCustomSkin(void* player) {
         return call<int>("player_getCustomSkin", player);
     }
-
-    // network data
 
     String player_getIp(void* player) {
         return call<String>("player_getIp", player);
@@ -606,8 +599,6 @@ extern "C" {
     uint32_t player_getRawIp(void* player) {
         return call<uint32_t>("player_getRawIp", player);
     }
-
-    // vehicle data
 
     void* player_getVehicle(void* player) {
         return call<void*>("player_getVehicle", player);
@@ -620,8 +611,6 @@ extern "C" {
     int player_isInModShop(void* player) {
         return call<int>("player_isInModShop", player);
     }
-
-    // object data
 
     void player_beginObjectEditing(void* player, void* object) {
         return call<void>("player_beginObjectEditing", player, object);
@@ -662,8 +651,6 @@ extern "C" {
     unsigned char player_hasAttachedObject(void* player, int index) {
         return call<unsigned char>("player_hasAttachedObject", player, index);
     }
-
-    // misc
 
     float player_getDistanceFromPoint(void* player, float pX, float pY, float pZ) {
         return call<float>("player_getDistanceFromPoint", player, pX, pY, pZ);

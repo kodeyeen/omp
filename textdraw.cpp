@@ -176,14 +176,12 @@ extern "C" {
         return call<void>("textDraw_setTextForPlayer", textdraw, player, text);
     }
 
-    // Player textdraw
-
     void* playerTextDraw_create(void* player, float posX, float posY, String text) {
         return call<void*>("playerTextDraw_create", player, posX, posY, text);
     }
 
     void playerTextDraw_release(void* textdraw, void* player) {
-        return call<void>("playerTextDraw_release", player, textdraw);
+        return call<void>("playerTextDraw_release", textdraw, player);
     }
 
     int playerTextDraw_getID(void* textdraw) {

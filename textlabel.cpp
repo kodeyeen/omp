@@ -84,10 +84,8 @@ extern "C" {
         return call<int>("textLabel_getVirtualWorld", textLabel);
     }
 
-    // PlayerTextLabel
-
     void* playerTextLabel_create(void* player, String text, uint32_t colour, float posX, float posY, float posZ, float drawDistance, unsigned char los) {
-        return call<void*>("playerTextLabel_create", text, colour, posX, posY, posZ, drawDistance, los);
+        return call<void*>("playerTextLabel_create", player, text, colour, posX, posY, posZ, drawDistance, los);
     }
 
     void playerTextLabel_release(void* textLabel, void* player) {
@@ -145,8 +143,6 @@ extern "C" {
     unsigned char playerTextLabel_getTestLOS(void* textLabel) {
         return call<unsigned char>("playerTextLabel_getTestLOS", textLabel);
     }
-
-    // entity
 
     void playerTextLabel_setPosition(void* textLabel, float posX, float posY, float posZ) {
         return call<void>("playerTextLabel_setPosition", textLabel, posX, posY, posZ);

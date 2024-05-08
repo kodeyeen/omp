@@ -36,8 +36,6 @@ extern "C" {
         return call<unsigned char>("checkpoint_isEnabled", checkpoint);
     }
 
-    // race checkpoint
-
     void* raceCheckpoint_setPosition(void* checkpoint, float posX, float posY, float posZ) {
         return call<void*>("raceCheckpoint_setPosition", checkpoint, posX, posY, posZ);
     }

@@ -44,8 +44,6 @@ extern "C" {
         return call<unsigned char>("pickup_isPickupHiddenForPlayer", pickup, player);
     }
 
-    // entity
-
     void pickup_setPosition(void* pickup, float posX, float posY, float posZ) {
         return call<void>("pickup_setPosition", pickup, posX, posY, posZ);
     }
@@ -61,8 +59,6 @@ extern "C" {
     int pickup_getVirtualWorld(void* pickup) {
         return call<int>("pickup_getVirtualWorld", pickup);
     }
-
-    // PlayerPickup
 
     void* playerPickup_create(void* player, int modelId, uint8_t type, float posX, float posY, float posZ, uint32_t virtualWorld, int isStatic) {
         return call<void*>("playerPickup_create", player, modelId, type, posX, posY, posZ, virtualWorld, isStatic);

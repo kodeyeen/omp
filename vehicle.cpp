@@ -112,14 +112,14 @@ extern "C" {
         return call<void>("vehicle_respawn", vehicle);
     }
 
+    void vehicle_setRespawnDelay(void* vehicle, int delay) {
+        return call<void>("vehicle_setRespawnDelay", vehicle, delay);
+    }
+
     long long vehicle_getRespawnDelay(void* vehicle) {
         return call<long long>("vehicle_getRespawnDelay", vehicle);
     }
 
-    void vehicle_setRespawnDelay(void* vehicle, int delay) {
-        return call<void>("vehicle_setRespawnDelay", vehicle, delay);
-    }
-    
     int vehicle_isRespawning(void* vehicle) {
         return call<int>("vehicle_isRespawning", vehicle);
     }
@@ -169,7 +169,7 @@ extern "C" {
     }
 
     Vector3 vehicle_getAngularVelocity(void* vehicle) {
-        return call<Vector3>("vector_getAngularVelocity", vehicle);
+        return call<Vector3>("vehicle_getAngularVelocity", vehicle);
     }
 
     int vehicle_getModel(void* vehicle) {
@@ -215,8 +215,6 @@ extern "C" {
     int vehicle_getLastDriverPoolID(void* vehicle) {
         return call<int>("vehicle_getLastDriverPoolID", vehicle);
     }
-
-    // entity
 
     Vector3 vehicle_getPosition(void* vehicle) {
         return call<Vector3>("vehicle_getPosition", vehicle);

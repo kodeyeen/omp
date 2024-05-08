@@ -33,7 +33,7 @@ extern "C" {
     }
 
     unsigned char config_isBanned(String ip) {
-        return call<unsigned char>("config_isIPBanned", ip);
+        return call<unsigned char>("config_isBanned", ip);
     }
 
 #ifdef __cplusplus
