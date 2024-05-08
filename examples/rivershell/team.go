@@ -1,14 +1,12 @@
 package main
 
+type Team = int
+
 const (
-	CapturesToWin = 5
+	CapturesToWin = 1
+
+	TeamGreen Team = 1
+	TeamBlue  Team = 2
 )
 
-var (
-	TeamGreen = Team{ID: 1}
-	TeamBlue  = Team{ID: 2}
-)
-
-type Team struct {
-	ID, VehicleCapturedCount int
-}
+var captures = make(map[Team]int, 2)

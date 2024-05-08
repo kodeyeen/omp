@@ -16,7 +16,6 @@ const (
 
 var (
 	chars              = make(map[int]*Character, 1000)
-	teams              = make(map[int]*Team, 2)
 	objectiveVehGreen  gomp.Vehicle
 	objectiveVehBlue   gomp.Vehicle
 	isObjectiveReached bool
@@ -48,8 +47,8 @@ func onGameModeInit(evt *gomp.GameModeInitEvent) bool {
 	greenReefer, _ := NewVehicle(gomp.VehicleModelReefer, gomp.Vector3{X: 2184.7156, Y: -188.5401, Z: -0.0239}, 0.0000, gomp.VehicleColor{Primary: 114, Secondary: 1}, 100*time.Second) // gr reefer
 	blueReefer, _ := NewVehicle(gomp.VehicleModelReefer, gomp.Vector3{X: 2380.0542, Y: 535.2582, Z: -0.0272}, 178.4999, gomp.VehicleColor{Primary: 79, Secondary: 7}, 100*time.Second)  // bl reefer
 
-	objectiveVehGreen = *greenReefer
-	objectiveVehBlue = *blueReefer
+	objectiveVehGreen = *blueReefer
+	objectiveVehBlue = *greenReefer
 
 	// Green Dhingys
 	NewVehicle(gomp.VehicleModelDinghy, gomp.Vector3{X: 2096.0833, Y: -168.7771, Z: 0.3528}, 4.5000, gomp.VehicleColor{Primary: 114, Secondary: 1}, 100*time.Second)
@@ -226,6 +225,10 @@ func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) bool {
 		char.SendClientMessage("Waiting to respawn....", 0xFFAAEEEE)
 		char.EnableSpectating()
 
+		if char.LastKiller == nil {
+			return true
+		}
+
 		if char.LastKiller.State() == gomp.PlayerStateOnFoot ||
 			char.LastKiller.State() == gomp.PlayerStateDriver ||
 			char.LastKiller.State() == gomp.PlayerStatePassenger {
@@ -239,9 +242,9 @@ func onPlayerSpawn(evt *gomp.PlayerSpawnEvent) bool {
 
 	char.SetColorFromTeam()
 
-	if char.Team() == TeamGreen.ID {
+	if char.Team() == TeamGreen {
 		char.ShowGameText("Defend the ~g~GREEN ~w~team's ~y~Reefer~n~~w~Capture the ~b~BLUE ~w~team's ~y~Reefer", 6*time.Second, 5)
-	} else if char.Team() == TeamBlue.ID {
+	} else if char.Team() == TeamBlue {
 		char.ShowGameText("Defend the ~b~BLUE ~w~team's ~y~Reefer~n~~w~Capture the ~g~GREEN ~w~team's ~y~Reefer", 6*time.Second, 5)
 	}
 
@@ -266,32 +269,32 @@ func onPlayerEnterCheckpoint(evt *gomp.PlayerEnterCheckpointEvent) bool {
 		return true
 	}
 
-	if *charVeh == objectiveVehGreen && char.Team() == TeamGreen.ID {
+	if *charVeh == objectiveVehGreen && char.Team() == TeamGreen {
 		// Green OBJECTIVE REACHED.
-		teams[TeamGreen.ID].VehicleCapturedCount++
+		captures[TeamGreen]++
 		char.SetScore(char.Score() + 5)
 
-		if TeamGreen.VehicleCapturedCount == CapturesToWin {
-			// gomp.ShowGameTextForAll("~g~GREEN ~w~team wins!", 3*time.Second, 5)
+		if captures[TeamGreen] == CapturesToWin {
+			gomp.ShowGameTextForAll("~g~GREEN ~w~team wins!", 3*time.Second, 5)
 			isObjectiveReached = true
 			PlaySoundForAll(1185, gomp.Vector3{})
 			time.AfterFunc(6*time.Second, ExitTheGameMode) // Set up a timer to exit this mode.
 		} else {
-			// gomp.ShowGameTextForAll("~g~GREEN ~w~team captured the ~y~boat!", 3*time.Second, 5)
+			gomp.ShowGameTextForAll("~g~GREEN ~w~team captured the ~y~boat!", 3*time.Second, 5)
 			objectiveVehGreen.Respawn()
 		}
-	} else if *charVeh == objectiveVehBlue && char.Team() == TeamBlue.ID {
+	} else if *charVeh == objectiveVehBlue && char.Team() == TeamBlue {
 		// Blue OBJECTIVE REACHED.
-		teams[TeamBlue.ID].VehicleCapturedCount++
+		captures[TeamBlue]++
 		char.SetScore(char.Score() + 5)
 
-		if TeamBlue.VehicleCapturedCount == CapturesToWin {
-			// gomp.ShowGameTextForAll("~b~BLUE ~w~team wins!", 3*time.Second, 5)
+		if captures[TeamBlue] == CapturesToWin {
+			gomp.ShowGameTextForAll("~b~BLUE ~w~team wins!", 3*time.Second, 5)
 			isObjectiveReached = true
 			PlaySoundForAll(1185, gomp.Vector3{})
 			time.AfterFunc(6*time.Second, ExitTheGameMode) // Set up a timer to exit this mode.
 		} else {
-			// gomp.ShowGameTextForAll("~b~BLUE ~w~team captured the ~y~boat!", 3*time.Second, 5)
+			gomp.ShowGameTextForAll("~b~BLUE ~w~team captured the ~y~boat!", 3*time.Second, 5)
 			objectiveVehBlue.Respawn()
 		}
 	}
@@ -330,18 +333,18 @@ func onVehicleStreamIn(evt *gomp.VehicleStreamInEvent) bool {
 	char := chars[evt.ForPlayer.ID()]
 
 	if *evt.Vehicle == objectiveVehBlue {
-		if char.Team() == TeamGreen.ID {
+		if char.Team() == TeamGreen {
 			objectiveVehBlue.EnableObjectiveFor(char.Player)
 			objectiveVehBlue.LockDoorsFor(char.Player)
-		} else if char.Team() == TeamBlue.ID {
+		} else if char.Team() == TeamBlue {
 			objectiveVehBlue.EnableObjectiveFor(char.Player)
 			objectiveVehBlue.UnlockDoorsFor(char.Player)
 		}
 	} else if *evt.Vehicle == objectiveVehGreen {
-		if char.Team() == TeamBlue.ID {
+		if char.Team() == TeamBlue {
 			objectiveVehGreen.EnableObjectiveFor(char.Player)
 			objectiveVehGreen.LockDoorsFor(char.Player)
-		} else if char.Team() == TeamGreen.ID {
+		} else if char.Team() == TeamGreen {
 			objectiveVehGreen.EnableObjectiveFor(char.Player)
 			objectiveVehGreen.UnlockDoorsFor(char.Player)
 		}
@@ -394,7 +397,7 @@ func onPlayerStateChange(evt *gomp.PlayerStateChangeEvent) bool {
 			return true
 		}
 
-		if char.Team() == TeamGreen.ID && *veh == objectiveVehGreen {
+		if char.Team() == TeamGreen && *veh == objectiveVehGreen {
 			// It's the objective vehicle
 			char.SetColor(ColorObjective)
 			char.ShowGameText("~w~Take the ~y~boat ~w~back to the ~r~spawn!", 3*time.Second, 5)
@@ -405,7 +408,7 @@ func onPlayerStateChange(evt *gomp.PlayerStateChangeEvent) bool {
 			cp.Enable()
 
 			objectiveGreenChar = *char
-		} else if char.Team() == TeamBlue.ID && *veh == objectiveVehBlue {
+		} else if char.Team() == TeamBlue && *veh == objectiveVehBlue {
 			// It's the objective vehicle
 			char.SetColor(ColorObjective)
 			char.ShowGameText("~w~Take the ~y~boat ~w~back to the ~r~spawn!", 3*time.Second, 5)

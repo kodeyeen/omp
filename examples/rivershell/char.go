@@ -49,9 +49,9 @@ func (c *Character) SetTeamFromClass(cls *gomp.Class) {
 	clsID := cls.ID()
 
 	if clsID == 0 || clsID == 1 {
-		c.SetTeam(TeamGreen.ID)
+		c.SetTeam(TeamGreen)
 	} else if clsID == 2 || clsID == 3 {
-		c.SetTeam(TeamBlue.ID)
+		c.SetTeam(TeamBlue)
 	}
 }
 
@@ -88,7 +88,7 @@ func (c *Character) SpectateCharacter(target *Character) {
 }
 
 func (c *Character) SpectateFixedPosition() {
-	if c.Team() == TeamGreen.ID {
+	if c.Team() == TeamGreen {
 		c.SetCameraPosition(gomp.Vector3{X: 2221.5820, Y: -273.9985, Z: 61.7806})
 		c.SetCameraLookAt(gomp.Vector3{X: 2220.9978, Y: -273.1861, Z: 61.4606}, gomp.PlayerCameraCutTypeCut)
 	} else {
@@ -112,9 +112,9 @@ func (c *Character) DoResupply() {
 }
 
 func (c *Character) SetColorFromTeam() {
-	if c.Team() == TeamGreen.ID {
+	if c.Team() == TeamGreen {
 		c.SetColor(ColorGreen)
-	} else if c.Team() == TeamBlue.ID {
+	} else if c.Team() == TeamBlue {
 		c.SetColor(ColorBlue)
 	}
 }
