@@ -1,12 +1,10 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    typedef struct
-    {
+    typedef struct {
         Vector3 camFrontVector;
         Vector3 camPos;
         float aimZ;
@@ -16,40 +14,34 @@ extern "C"
         uint8_t camMode;
     } PlayerAimData;
 
-    typedef struct
-    {
+    typedef struct {
         uint8_t id;
         uint32_t ammo;
     } WeaponSlotData;
 
-    typedef struct
-    {
+    typedef struct {
         int hours;
         int minutes;
     } Time;
 
-    typedef struct
-    {
+    typedef struct {
         uint16_t ID;
         uint16_t flags;
     } PlayerAnimationData;
 
-    typedef struct
-    {
+    typedef struct {
         uint32_t keys;
         int16_t upDown;
         int16_t leftRight;
     } PlayerKeyData;
 
-    typedef struct
-    {
+    typedef struct {
         unsigned char spectating;
         int spectateID;
         int type;
     } CPlayerSpectateData;
 
-    typedef enum
-    {
+    typedef enum {
         PlayerAnimationSyncType_NoSync,
         PlayerAnimationSyncType_Sync,
         PlayerAnimationSyncType_SyncOthers

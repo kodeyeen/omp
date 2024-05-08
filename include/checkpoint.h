@@ -1,8 +1,7 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
     void* checkpoint_setPosition(void* checkpoint, float posX, float posY, float posZ);

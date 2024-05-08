@@ -1,8 +1,7 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
     void* menu_create(String title, float posX, float posY, uint8_t columns, float col1Width, float col2Width);

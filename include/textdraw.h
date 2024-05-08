@@ -1,8 +1,7 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
     void* textDraw_create(float posX, float posY, String text);

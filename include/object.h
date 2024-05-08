@@ -1,19 +1,16 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    typedef struct
-    {
+    typedef struct {
         Vector3 targetPos;
         Vector3 targetRot;
         float speed;
     } ObjectMoveData;
 
-    typedef struct
-    {
+    typedef struct {
         uint8_t type;
         unsigned char syncRotation;
         int ID;
@@ -21,8 +18,7 @@ extern "C"
         Vector3 rotation;
     } ObjectAttachmentData;
 
-    typedef enum
-    {
+    typedef enum {
         ObjectMaterialSize_32x32 = 10,
         ObjectMaterialSize_64x32 = 20,
         ObjectMaterialSize_64x64 = 30,
@@ -39,23 +35,20 @@ extern "C"
         ObjectMaterialSize_512x512 = 140
     } ObjectMaterialSize;
 
-    typedef enum
-    {
+    typedef enum {
         ObjectMaterialTextAlign_Left,
         ObjectMaterialTextAlign_Center,
         ObjectMaterialTextAlign_Right
     } ObjectMaterialTextAlign;
 
-    typedef struct
-    {
+    typedef struct {
         int model;
         String textureLibrary;
         String textureName;
         uint32_t colour;
     } ObjectMaterial;
 
-    typedef struct
-    {
+    typedef struct {
         String text;
         uint8_t materialSize;
         String fontFace;

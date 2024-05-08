@@ -1,12 +1,10 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    typedef struct
-    {
+    typedef struct {
         float delta;
         unsigned char loop;
         unsigned char lockX;
@@ -17,8 +15,7 @@ extern "C"
         String name;
     } CAnimationData;
 
-    typedef struct
-    {
+    typedef struct {
         Vector3 position;
         float facingAngle;
         int skin;

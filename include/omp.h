@@ -71,8 +71,7 @@ typedef struct
 } UnoccupiedVehicleUpdate;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
     void init(const char* libPath);
@@ -95,13 +94,10 @@ R call(const std::string& funcName, Args... args)
     auto it = funcs.find(funcName);
     void* funcAddr = nullptr;
 
-    if (it == funcs.end())
-    {
+    if (it == funcs.end()) {
         funcAddr = findFunc(libHandle, funcName.c_str());
         funcs.emplace(funcName, funcAddr);
-    }
-    else
-    {
+    } else {
         funcAddr = it->second;
     }
 

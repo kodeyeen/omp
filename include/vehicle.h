@@ -1,12 +1,10 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    typedef struct
-    {
+    typedef struct {
         int8_t engine;
         int8_t lights;
         int8_t alarm;

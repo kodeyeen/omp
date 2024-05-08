@@ -1,12 +1,10 @@
 #include "omp.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    typedef struct
-    {
+    typedef struct {
         int playerID;
         int vehicleID;
     } TextLabelAttachmentData;
