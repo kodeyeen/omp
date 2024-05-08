@@ -22,7 +22,7 @@ extern "C" {
     }
 
     void actor_applyAnimation(void* actor, float delta, unsigned char loop, unsigned char lockX, unsigned char lockY, unsigned char freeze, uint32_t time, String lib, String name) {
-        return call<void>("actor_getSkin", actor, delta, loop, lockX, lockY, freeze, time, lib, name);
+        return call<void>("actor_applyAnimation", actor, delta, loop, lockX, lockY, freeze, time, lib, name);
     }
 
     CAnimationData actor_getAnimation(void* actor) {
