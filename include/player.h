@@ -59,6 +59,7 @@ extern "C"
     Array player_getAll();
     void player_sendDeathMessageToAll(void* killer, void* killee, int weapon);
     void player_sendEmptyDeathMessageToAll();
+    void player_sendGameTextToAll(String msg, int time, int style);
 
     int player_getID(void* player);
 

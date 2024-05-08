@@ -226,6 +226,13 @@ func SendDeathMessage(killer *Player, killee *Player, weapon int) {
 	}
 }
 
+func ShowGameTextForAll(msg string, delay time.Duration, style int) {
+	cMsg := newCString(msg)
+	defer freeCString(cMsg)
+
+	C.player_sendGameTextToAll(cMsg, C.int(delay.Milliseconds()), C.int(style))
+}
+
 type Player struct {
 	handle unsafe.Pointer
 }

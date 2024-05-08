@@ -26,6 +26,11 @@ extern "C"
         return call<void>("player_sendEmptyDeathMessageToAll");
     }
 
+    void player_sendGameTextToAll(String msg, int time, int style)
+    {
+        return call<void>("player_sendGameTextToAll", msg, time, style);
+    }
+
     int player_getID(void* player)
     {
         return call<int>("player_getID", player);
