@@ -4,6 +4,14 @@
 extern "C" {
 #endif
 
+    void server_printLnU8(const char* fmt) {
+        return call<void>("server_printLnU8", fmt);
+    }
+
+    void server_logLnU8(int logLevel, const char* fmt) {
+        return call<void>("server_logLnU8", logLevel, fmt);
+    }
+
     void server_setModeText(String text) {
         return call<void>("server_setModeText", text);
     }

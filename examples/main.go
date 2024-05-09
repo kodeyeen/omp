@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/kodeyeen/omp"
@@ -12,7 +11,8 @@ import (
 
 func init() {
 	omp.On(omp.EventTypeGameModeInit, func(evt *omp.GameModeInitEvent) bool {
-		log.Println("GAME MODE INITIALIZED")
+		omp.Println("GAME MODE INIT")
+
 		omp.EnableManualEngineAndLights()
 		return true
 	})
