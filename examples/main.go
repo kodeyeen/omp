@@ -8,7 +8,7 @@ import (
 	"github.com/kodeyeen/omp"
 )
 
-// go build -buildmode=c-shared -o test.dll
+// GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o test.dll
 
 func init() {
 	omp.On(omp.EventTypeGameModeInit, func(evt *omp.GameModeInitEvent) bool {

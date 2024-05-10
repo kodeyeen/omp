@@ -11,8 +11,6 @@ import (
 	"github.com/kodeyeen/event"
 )
 
-// go build -o test.dll -buildmode=c-shared
-
 type Animation struct {
 	Lib, Name                  string
 	Delta                      float32
