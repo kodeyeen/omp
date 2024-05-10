@@ -1071,6 +1071,35 @@ func (p *Player) CustomSkin() int {
 	return int(C.player_getCustomSkin(p.handle))
 }
 
+func (p *Player) showDialog(style dialogStyle, title, body, button1, button2 string) {
+	cTitle := newCString(title)
+	defer freeCString(cTitle)
+
+	cBody := newCString(body)
+	defer freeCString(cBody)
+
+	cButton1 := newCString(button1)
+	defer freeCString(cButton1)
+
+	cButton2 := newCString(button2)
+	defer freeCString(cButton2)
+
+	C.player_showDialog(p.handle, C.int(999), C.int(style), cTitle, cBody, cButton1, cButton2)
+}
+
+func (p *Player) hideDialog() {
+	C.player_hideDialog(p.handle)
+}
+
+func (p *Player) Dialog() (dialog, error) {
+	dlg, ok := activeDialogs[p.ID()]
+	if !ok {
+		return nil, errors.New("player has no active dialog")
+	}
+
+	return dlg, nil
+}
+
 // network data
 
 func (p *Player) IP() string {

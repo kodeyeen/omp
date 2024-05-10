@@ -592,6 +592,14 @@ extern "C" {
         return call<int>("player_getCustomSkin", player);
     }
 
+    void player_showDialog(void* player, int id, int style, String title, String body, String button1, String button2) {
+        return call<void>("player_showDialog", player, id, style, title, body, button1, button2);
+    }
+
+    void player_hideDialog(void* player) {
+        return call<void>("player_hideDialog", player);
+    }
+
     String player_getIp(void* player) {
         return call<String>("player_getIp", player);
     }

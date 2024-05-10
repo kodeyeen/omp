@@ -205,6 +205,10 @@ extern "C" {
     // custom models data
     int player_getCustomSkin(void* player);
 
+    // dialog data
+    void player_showDialog(void* player, int id, int style, String title, String body, String button1, String button2);
+    void player_hideDialog(void* player);
+
     // network data
     String player_getIp(void* player);
     uint32_t player_getRawIp(void* player);

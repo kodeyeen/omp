@@ -188,13 +188,55 @@ func onPlayerRequestDownload(player unsafe.Pointer, _type uint8, checksum uint32
 
 //export onDialogResponse
 func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, inputText C.String) {
-	event.Dispatch(evtDispatcher, EventTypeDialogResponse, &DialogResponseEvent{
-		Player:    &Player{handle: player},
-		DialogID:  dialogID,
-		Response:  DialogResponse(response),
-		ListItem:  listItem,
-		InputText: C.GoStringN(inputText.buf, C.int(inputText.length)),
-	})
+	evtPlayer := &Player{handle: player}
+
+	dialog := activeDialogs[evtPlayer.ID()]
+
+	switch dialog := dialog.(type) {
+	case *MessageDialog:
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &MessageDialogResponseEvent{
+			Player:   evtPlayer,
+			Response: DialogResponse(response),
+		})
+
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
+			Player: evtPlayer,
+		})
+	case *InputDialog:
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &InputDialogResponseEvent{
+			Player:    evtPlayer,
+			Response:  DialogResponse(response),
+			InputText: C.GoStringN(inputText.buf, C.int(inputText.length)),
+		})
+
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
+			Player: evtPlayer,
+		})
+	case *ListDialog:
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &ListDialogResponseEvent{
+			Player:     evtPlayer,
+			Response:   DialogResponse(response),
+			ItemNumber: listItem,
+			Item:       C.GoStringN(inputText.buf, C.int(inputText.length)),
+		})
+
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
+			Player: evtPlayer,
+		})
+	case *TabListDialog:
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &TabListDialogResponseEvent{
+			Player:     evtPlayer,
+			Response:   DialogResponse(response),
+			ItemNumber: listItem,
+			Item:       dialog.items[listItem],
+		})
+
+		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
+			Player: evtPlayer,
+		})
+	}
+
+	delete(activeDialogs, evtPlayer.ID())
 }
 
 // GangZone events
@@ -431,10 +473,14 @@ func onPlayerConnect(player unsafe.Pointer) {
 
 //export onPlayerDisconnect
 func onPlayerDisconnect(player unsafe.Pointer, reason int) {
+	evtPlayer := &Player{handle: player}
+
 	event.Dispatch(evtDispatcher, EventTypePlayerDisconnect, &PlayerDisconnectEvent{
-		Player: &Player{handle: player},
+		Player: evtPlayer,
 		Reason: DisconnectReason(reason),
 	})
+
+	delete(activeDialogs, evtPlayer.ID())
 }
 
 //export onPlayerClientInit

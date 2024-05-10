@@ -102,6 +102,8 @@ const (
 
 	// Player dialog event
 	EventTypeDialogResponse event.Type = "dialogResponse"
+	EventTypeDialogShow     event.Type = "dialogShow"
+	EventTypeDialogHide     event.Type = "dialogHide"
 
 	// Turf events
 	EventTypePlayerEnterTurf       event.Type = "playerEnterTurf"
@@ -274,12 +276,37 @@ type PlayerRequestDownloadEvent struct {
 
 // Dialog events
 
-type DialogResponseEvent struct {
+type MessageDialogResponseEvent struct {
+	Player   *Player
+	Response DialogResponse
+}
+
+type InputDialogResponseEvent struct {
 	Player    *Player
-	DialogID  int
 	Response  DialogResponse
-	ListItem  int
 	InputText string
+}
+
+type ListDialogResponseEvent struct {
+	Player     *Player
+	Response   DialogResponse
+	ItemNumber int
+	Item       string
+}
+
+type TabListDialogResponseEvent struct {
+	Player     *Player
+	Response   DialogResponse
+	ItemNumber int
+	Item       TabListItem
+}
+
+type DialogShowEvent struct {
+	Player *Player
+}
+
+type DialogHideEvent struct {
+	Player *Player
 }
 
 // Turf events
