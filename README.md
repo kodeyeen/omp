@@ -7,18 +7,33 @@ omp is a Go package that allows you to write open.mp gamemodes.
 go get github.com/kodeyeen/omp
 ```
 
-## Building on Windows
+## Requirements
 
-```bash
-go build -buildmode=c-shared -o build/gamemode.dll
+- `Go`
+- `GCC/G++ 32 bit compilers` go build will require you to have C and C++ compilers available
+
+## Building
+
+On Windows:
+
+```powershell
+$env:GOARCH=386; $env:CGO_ENABLED=1; go build -buildmode=c-shared -o build/gmname.dll
 ```
 
-
-## Building on Linux
+On Linux:
 
 ```bash
-go build -buildmode=c-shared -o build/gamemode.so
+GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o build/gmname.so
 ```
+
+You'll need to have `gcc` and `g++` available on your system.
+Type `gcc -v` and `g++ -v` and you should see this line:
+
+```
+Target: i686-w64-mingw32
+```
+
+Otherwise it won't build
 
 ## Credits
 
