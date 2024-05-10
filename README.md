@@ -10,7 +10,7 @@ go get github.com/kodeyeen/omp
 ## Requirements
 
 - `Go`
-- `GCC/G++ 32 bit compilers` go build will require you to have C and C++ compilers available
+- `GCC/G++` go build will require you to have C and C++ 32 bit compilers available
 
 ## Building
 
@@ -26,7 +26,7 @@ On Linux:
 GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o build/gmname.so
 ```
 
-You'll need to have `gcc` and `g++` available on your system.
+You'll need to have `gcc` and `g++` available on your system.  
 Type `gcc -v` and `g++ -v` and you should see this line:
 
 ```
