@@ -7,10 +7,17 @@ omp is a Go package that allows you to write open.mp gamemodes.
 go get github.com/kodeyeen/omp
 ```
 
-## Building
+## Building on Windows
 
 ```bash
 go build -buildmode=c-shared -o build/gamemode.dll
+```
+
+
+## Building on Windows
+
+```bash
+go build -buildmode=c-shared -o build/gamemode.so
 ```
 
 ## Credits
