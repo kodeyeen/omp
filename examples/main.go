@@ -11,15 +11,15 @@ import (
 // GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o test.dll
 
 func init() {
-	omp.On(omp.EventTypeGameModeInit, func(evt *omp.GameModeInitEvent) bool {
+	omp.On(omp.EventTypeGameModeInit, func(event *omp.GameModeInitEvent) bool {
 		omp.Println("GAME MODE INIT")
 
 		omp.EnableManualEngineAndLights()
 		return true
 	})
 
-	omp.On(omp.EventTypePlayerConnect, func(evt *omp.PlayerConnectEvent) bool {
-		player := evt.Player
+	omp.On(omp.EventTypePlayerConnect, func(event *omp.PlayerConnectEvent) bool {
+		player := event.Player
 
 		player.SendClientMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
 
@@ -30,8 +30,8 @@ func init() {
 		return true
 	})
 
-	omp.On(omp.EventTypePlayerSpawn, func(evt *omp.PlayerSpawnEvent) bool {
-		player := evt.Player
+	omp.On(omp.EventTypePlayerSpawn, func(event *omp.PlayerSpawnEvent) bool {
+		player := event.Player
 
 		player.GiveWeapon(omp.WeaponDeagle, 100)
 
@@ -41,8 +41,8 @@ func init() {
 	omp.AddCommand("msgdlg", func(cmd *omp.Command) {
 		dialog := omp.NewMessageDialog("Message Dialog", "Message", "Ok", "Cancel")
 
-		dialog.On(omp.EventTypeDialogHide, func(evt *omp.DialogHideEvent) bool {
-			evt.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
+		dialog.On(omp.EventTypeDialogHide, func(event *omp.DialogHideEvent) bool {
+			event.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
 			return true
 		})
 
@@ -52,11 +52,11 @@ func init() {
 	omp.AddCommand("inputdlg", func(cmd *omp.Command) {
 		dialog := omp.NewInputDialog("Input Dialog", "Enter something:", "Ok", "Cancel")
 
-		dialog.On(omp.EventTypeDialogResponse, func(evt *omp.InputDialogResponseEvent) bool {
-			if evt.Response == omp.DialogResponseLeft {
-				evt.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", evt.InputText), 0xFF0FFFFF)
-			} else if evt.Response == omp.DialogResponseRight {
-				evt.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", evt.InputText), 0xFF0FFFFF)
+		dialog.On(omp.EventTypeDialogResponse, func(event *omp.InputDialogResponseEvent) bool {
+			if event.Response == omp.DialogResponseLeft {
+				event.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", event.InputText), 0xFF0FFFFF)
+			} else if event.Response == omp.DialogResponseRight {
+				event.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", event.InputText), 0xFF0FFFFF)
 			}
 
 			return true
@@ -136,8 +136,8 @@ func init() {
 
 		dialog.ShowFor(cmd.Sender)
 
-		dialog.On(omp.EventTypeDialogResponse, func(evt *omp.TabListDialogResponseEvent) bool {
-			evt.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
+		dialog.On(omp.EventTypeDialogResponse, func(event *omp.TabListDialogResponseEvent) bool {
+			event.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
 
 			return true
 		})
