@@ -14,7 +14,7 @@ go build -buildmode=c-shared -o build/gamemode.dll
 ```
 
 
-## Building on Windows
+## Building on Linux
 
 ```bash
 go build -buildmode=c-shared -o build/gamemode.so
