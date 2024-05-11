@@ -31,6 +31,10 @@ extern "C" {
         return call<void>("freeArray", arr);
     }
 
+    uint8_t getWeaponSlotIndex(uint8_t weapon) {
+        return call<uint8_t>("getWeaponSlotIndex", weapon);
+    }
+
 #ifdef __cplusplus
 }
 #endif
