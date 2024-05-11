@@ -78,6 +78,7 @@ extern "C" {
     void* openLib(const char* path);
     void* findFunc(void* handle, const char* name);
     void freeArray(Array arr);
+    uint8_t getWeaponSlotIndex(uint8_t weapon);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,8 @@
 package omp
 
+// #include "include/omp.h"
+import "C"
+
 const (
 	WeaponFist Weapon = iota
 	WeaponBrassKnuckle
@@ -65,7 +68,8 @@ const (
 type Weapon int
 
 func (w Weapon) SlotIndex() WeaponSlotIndex {
-	panic("not implemented")
+	idx := C.getWeaponSlotIndex(C.uchar(w))
+	return WeaponSlotIndex(idx)
 }
 
 const (
