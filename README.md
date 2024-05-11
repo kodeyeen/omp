@@ -79,6 +79,9 @@ You can set them permanently to be 386 and 1 respectively by typing:
 
 ```shell
 go env -w GOARCH=386
+```
+
+```shell
 go env -w CGO_ENABLED=1
 ```
 
