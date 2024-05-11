@@ -22,7 +22,7 @@ Note the i686. Otherwise it won't build
 ## Quickstart
 
 1. Install the latest [Gomponent](https://github.com/kodeyeen/gomponent).
-2. Initialize a go module with `go mod init modname`.
+2. Initialize a go module with `go mod init <YOUR MODULE NAME>`.
 3. Write some basic gamemode.
 
 ```go
