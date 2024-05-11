@@ -21,9 +21,8 @@ Note the i686. Otherwise it won't build
 
 ## Quickstart
 
-1. Install the latest [Gomponent](https://github.com/kodeyeen/gomponent).
-2. Initialize a go module with `go mod init <YOUR MODULE NAME>`.
-3. Write some basic gamemode.
+1. Initialize a go module with `go mod init <YOUR MODULE NAME>`.
+2. Write some basic gamemode.
 
 ```go
 package main
@@ -48,15 +47,9 @@ func main() {}
 
 ```
 
-4. Build it depending on your system (see the section below).
-5. Add the compiled file to the `gamemodes` folder of your server.
-6. Add this to your server's `config.json`:
-
-```json
-"go": {
-    "gamemode": "<YOUR GAMEMODE NAME>"
-}
-```
+3. Build it depending on your system (see the section below).
+4. Add the compiled file to the `gamemodes` folder of your server.
+5. Install and configure the latest [Gomponent](https://github.com/kodeyeen/gomponent).
 
 Now if you run the server and connect to it you should see the message "Hello, world!"
 
@@ -72,6 +65,24 @@ On Linux:
 
 ```bash
 GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o build/gamemode.so
+```
+
+If you're using Visual Studio Code and seeing error messages during development, this is because of your GOARCH and CGO_ENABLED env variable values.
+You can check their values by typing:
+
+```shell
+go env
+```
+
+If GOARCH value is something different than 386 and CGO_ENABLED is 0 this is the cause of those error messages.
+You can set them permanently to be 386 and 1 respectively by typing:
+
+```shell
+go env -w GOARCH=386
+```
+
+```shell
+go env -w CGO_ENABLED=1
 ```
 
 ## Credits
