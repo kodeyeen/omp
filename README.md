@@ -49,7 +49,7 @@ func main() {}
 ```
 
 4. Build it depending on your system (see the section below).
-5. Add the compiled file to `gamemodes` folder of your server.
+5. Add the compiled file to the `gamemodes` folder of your server.
 6. Add this to your server's `config.json`:
 
 ```json
