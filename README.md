@@ -49,7 +49,7 @@ func main() {}
 
 3. Build it depending on your system (see the section below).
 4. Add the compiled file to the `gamemodes` folder of your server.
-5. Install and configure the latest [Gomponent](https://github.com/kodeyeen/gomponent).
+5. Install and configure the [Gomponent](https://github.com/kodeyeen/gomponent).
 
 Now if you run the server and connect to it you should see the message "Hello, world!"
 
