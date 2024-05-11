@@ -9,29 +9,69 @@ go get github.com/kodeyeen/omp
 
 ## Requirements
 
-- `Go`
-- `GCC/G++` go build will require you to have C and C++ 32 bit compilers available on your system.
+- `GCC/G++` go build tool will require you to have C and C++ 32 bit compilers available on your system.
 
-Type `gcc -v` and `g++ -v` and you should see this line:
+Type `gcc -v` and `g++ -v` in your terminal and you should see something like this:
 
 ```
 Target: i686-w64-mingw32
 ```
 
-Otherwise it won't build
+Note the i686. Otherwise it won't build
+
+## Quckstart
+
+1. Install the latest [Gomponent](https://github.com/kodeyeen/gomponent/releases/latest).
+2. Initialize a go module with `go mod init modname`.
+3. Write some basic gamemode.
+
+```go
+package main
+
+import (
+	"github.com/kodeyeen/omp"
+)
+
+// Gamemode entry point
+func init() {
+	// Listen to some predefined event
+	omp.On(omp.EventTypePlayerConnect, func(e *omp.PlayerConnectEvent) bool {
+		// Send client message to the connected player
+		e.Player.SendClientMessage("Hello, world!", 0xFFFF00FF)
+		return true
+	})
+}
+
+// you MUST declare the main function, otherwise it fails to build
+// you shouldn't write any code here
+func main() {}
+
+```
+
+4. Build it depending on your system (see the section below).
+5. Add the compiled file to `gamemodes` folder of your server.
+6. Add this to your server's `config.json`:
+
+```json
+"go": {
+    "gamemode": "<YOUR GAMEMODE NAME>"
+}
+```
+
+Now if you run the server and connect to it you should see the message "Hello, world!"
 
 ## Building
 
 On Windows:
 
 ```powershell
-$env:GOARCH=386; $env:CGO_ENABLED=1; go build -buildmode=c-shared -o build/gmname.dll
+$env:GOARCH=386; $env:CGO_ENABLED=1; go build -buildmode=c-shared -o build/gamemode.dll
 ```
 
 On Linux:
 
 ```bash
-GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o build/gmname.so
+GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o build/gamemode.so
 ```
 
 ## Credits
