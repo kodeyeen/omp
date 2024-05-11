@@ -458,8 +458,6 @@ func ExitTheGameMode() {
 	// omp.ExitGameMode()
 }
 
-func main() {}
-
 func init() {
 	omp.Events.Listen(omp.EventTypeGameModeInit, onGameModeInit)
 	omp.Events.Listen(omp.EventTypePlayerConnect, onPlayerConnect)
@@ -472,3 +470,5 @@ func init() {
 	omp.Events.Listen(omp.EventTypePlayerStateChange, onPlayerStateChange)
 	omp.Events.Listen(omp.EventTypeVehicleStreamIn, onVehicleStreamIn)
 }
+
+func main() {}
