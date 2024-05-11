@@ -17,7 +17,7 @@ Type `gcc -v` and `g++ -v` in your terminal and you should see something like th
 Target: i686-w64-mingw32
 ```
 
-Note the i686. Otherwise it won't build
+Note the i686. Otherwise it won't build.
 
 ## Quickstart
 
