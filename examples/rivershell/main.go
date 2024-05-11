@@ -461,14 +461,14 @@ func ExitTheGameMode() {
 func main() {}
 
 func init() {
-	omp.On(omp.EventTypeGameModeInit, onGameModeInit)
-	omp.On(omp.EventTypePlayerConnect, onPlayerConnect)
-	omp.On(omp.EventTypePlayerDisconnect, onPlayerDisconnect)
-	omp.On(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	omp.On(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	omp.On(omp.EventTypePlayerDeath, onPlayerDeath)
-	omp.On(omp.EventTypePlayerEnterCheckpoint, onPlayerEnterCheckpoint)
-	omp.On(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	omp.On(omp.EventTypePlayerStateChange, onPlayerStateChange)
-	omp.On(omp.EventTypeVehicleStreamIn, onVehicleStreamIn)
+	omp.Events.Listen(omp.EventTypeGameModeInit, onGameModeInit)
+	omp.Events.Listen(omp.EventTypePlayerConnect, onPlayerConnect)
+	omp.Events.Listen(omp.EventTypePlayerDisconnect, onPlayerDisconnect)
+	omp.Events.Listen(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
+	omp.Events.Listen(omp.EventTypePlayerSpawn, onPlayerSpawn)
+	omp.Events.Listen(omp.EventTypePlayerDeath, onPlayerDeath)
+	omp.Events.Listen(omp.EventTypePlayerEnterCheckpoint, onPlayerEnterCheckpoint)
+	omp.Events.Listen(omp.EventTypePlayerUpdate, onPlayerUpdate)
+	omp.Events.Listen(omp.EventTypePlayerStateChange, onPlayerStateChange)
+	omp.Events.Listen(omp.EventTypeVehicleStreamIn, onVehicleStreamIn)
 }

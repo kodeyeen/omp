@@ -11,7 +11,7 @@ import (
 // GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o test.dll
 
 func init() {
-	omp.On(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
+	omp.Events.Listen(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
 		omp.Println("GAME MODE INIT 2")
 
 		return true
@@ -19,14 +19,14 @@ func init() {
 }
 
 func init() {
-	omp.On(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
+	omp.Events.Listen(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
 		omp.Println("GAME MODE INIT")
 
 		omp.EnableManualEngineAndLights()
 		return true
 	})
 
-	omp.On(omp.EventTypePlayerConnect, func(e *omp.PlayerConnectEvent) bool {
+	omp.Events.Listen(omp.EventTypePlayerConnect, func(e *omp.PlayerConnectEvent) bool {
 		player := e.Player
 
 		player.SendClientMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
@@ -38,7 +38,7 @@ func init() {
 		return true
 	})
 
-	omp.On(omp.EventTypePlayerSpawn, func(e *omp.PlayerSpawnEvent) bool {
+	omp.Events.Listen(omp.EventTypePlayerSpawn, func(e *omp.PlayerSpawnEvent) bool {
 		player := e.Player
 
 		player.GiveWeapon(omp.WeaponDeagle, 100)
@@ -46,7 +46,7 @@ func init() {
 		return true
 	})
 
-	omp.AddCommand("msgdlg", func(cmd *omp.Command) {
+	omp.Commands.Add("msgdlg", func(cmd *omp.Command) {
 		dialog := omp.NewMessageDialog("Message Dialog", "Message", "Ok", "Cancel")
 
 		dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
@@ -57,7 +57,7 @@ func init() {
 		dialog.ShowFor(cmd.Sender)
 	})
 
-	omp.AddCommand("inputdlg", func(cmd *omp.Command) {
+	omp.Commands.Add("inputdlg", func(cmd *omp.Command) {
 		dialog := omp.NewInputDialog("Input Dialog", "Enter something:", "Ok", "Cancel")
 
 		dialog.On(omp.EventTypeDialogResponse, func(e *omp.InputDialogResponseEvent) bool {
@@ -73,7 +73,7 @@ func init() {
 		dialog.ShowFor(cmd.Sender)
 	})
 
-	omp.AddCommand("listdlg", func(cmd *omp.Command) {
+	omp.Commands.Add("listdlg", func(cmd *omp.Command) {
 		dialog := omp.NewListDialog("List Dialog", "Ok", "Cancel")
 
 		dialog.SetItems([]string{"Item 0", "Item 1", "Item 2"})
@@ -83,12 +83,12 @@ func init() {
 		dialog.ShowFor(cmd.Sender)
 	})
 
-	omp.AddCommand("pwddlg", func(cmd *omp.Command) {
+	omp.Commands.Add("pwddlg", func(cmd *omp.Command) {
 		dialog := omp.NewPasswordDialog("Password Dialog", "Enter password:", "Ok", "Cancel")
 		dialog.ShowFor(cmd.Sender)
 	})
 
-	omp.AddCommand("hidedlg", func(cmd *omp.Command) {
+	omp.Commands.Add("hidedlg", func(cmd *omp.Command) {
 		time.AfterFunc(5*time.Second, func() {
 			dialog, err := cmd.Sender.Dialog()
 			if err != nil {
@@ -101,7 +101,7 @@ func init() {
 		})
 	})
 
-	omp.AddCommand("tablistdlg", func(cmd *omp.Command) {
+	omp.Commands.Add("tablistdlg", func(cmd *omp.Command) {
 		dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
 
 		dialog.SetItems([]omp.TabListItem{
@@ -133,7 +133,7 @@ func init() {
 		dialog.ShowFor(cmd.Sender)
 	})
 
-	omp.AddCommand("tablistheadersdlg", func(cmd *omp.Command) {
+	omp.Commands.Add("tablistheadersdlg", func(cmd *omp.Command) {
 		dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
 
 		dialog.SetHeader(omp.TabListItem{"Weapon", "Price", "Ammo"})
@@ -151,11 +151,11 @@ func init() {
 		})
 	})
 
-	omp.AddCommand("getpos", func(cmd *omp.Command) {
+	omp.Commands.Add("getpos", func(cmd *omp.Command) {
 		cmd.Sender.SendClientMessage(fmt.Sprintf("Your position is %+v", cmd.Sender.Position()), 0xFFFFFFFF)
 	})
 
-	omp.AddCommand("createveh", func(cmd *omp.Command) {
+	omp.Commands.Add("createveh", func(cmd *omp.Command) {
 		if len(cmd.Args) != 1 {
 			cmd.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
 			return
@@ -170,12 +170,12 @@ func init() {
 		omp.NewVehicle(omp.VehicleModel(modelID), cmd.Sender.Position(), 0.0)
 	})
 
-	omp.AddCommand("setname", func(cmd *omp.Command) {
+	omp.Commands.Add("setname", func(cmd *omp.Command) {
 		status := cmd.Sender.SetName("кириллица")
 		cmd.Sender.SendClientMessage(fmt.Sprintf("You changed %d your name to %s", status, cmd.Sender.Name()), 0xFFFFFFFF)
 	})
 
-	omp.AddCommand("doors", func(cmd *omp.Command) {
+	omp.Commands.Add("doors", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -190,7 +190,7 @@ func init() {
 		}
 	})
 
-	omp.AddCommand("hood", func(cmd *omp.Command) {
+	omp.Commands.Add("hood", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -203,7 +203,7 @@ func init() {
 		}
 	})
 
-	omp.AddCommand("trunk", func(cmd *omp.Command) {
+	omp.Commands.Add("trunk", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -216,7 +216,7 @@ func init() {
 		}
 	})
 
-	omp.AddCommand("lights", func(cmd *omp.Command) {
+	omp.Commands.Add("lights", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -229,7 +229,7 @@ func init() {
 		}
 	})
 
-	omp.AddCommand("engine", func(cmd *omp.Command) {
+	omp.Commands.Add("engine", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return
@@ -242,7 +242,7 @@ func init() {
 		}
 	})
 
-	omp.AddCommand("alarm", func(cmd *omp.Command) {
+	omp.Commands.Add("alarm", func(cmd *omp.Command) {
 		plrVeh, err := cmd.Sender.Vehicle()
 		if err != nil {
 			return

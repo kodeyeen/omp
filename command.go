@@ -21,8 +21,8 @@ func newCommandManager() *commandManager {
 	}
 }
 
-func (m *commandManager) add(name string, handler CommandHandler) {
-	if m.has(name) {
+func (m *commandManager) Add(name string, handler CommandHandler) {
+	if m.Has(name) {
 		panic(fmt.Sprintf("Command %s is already registered", name))
 	}
 
@@ -34,7 +34,7 @@ func (m *commandManager) run(name string, cmd *Command) {
 	handler(cmd)
 }
 
-func (m *commandManager) has(name string) bool {
+func (m *commandManager) Has(name string) bool {
 	_, ok := m.commands[name]
 	return ok
 }

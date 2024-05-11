@@ -494,10 +494,10 @@ func setupCharSelection(char *Character) {
 func main() {}
 
 func init() {
-	omp.On(omp.EventTypeGameModeInit, onGameModeInit)
-	omp.On(omp.EventTypePlayerConnect, onPlayerConnect)
-	omp.On(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	omp.On(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	omp.On(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	omp.On(omp.EventTypePlayerDeath, onPlayerDeath)
+	omp.Events.Listen(omp.EventTypeGameModeInit, onGameModeInit)
+	omp.Events.Listen(omp.EventTypePlayerConnect, onPlayerConnect)
+	omp.Events.Listen(omp.EventTypePlayerSpawn, onPlayerSpawn)
+	omp.Events.Listen(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
+	omp.Events.Listen(omp.EventTypePlayerUpdate, onPlayerUpdate)
+	omp.Events.Listen(omp.EventTypePlayerDeath, onPlayerDeath)
 }

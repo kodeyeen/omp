@@ -34,7 +34,7 @@ import (
 // Gamemode entry point
 func init() {
 	// Listen to some predefined event
-	omp.On(omp.EventTypePlayerConnect, func(e *omp.PlayerConnectEvent) bool {
+	omp.Events.Listen(omp.EventTypePlayerConnect, func(e *omp.PlayerConnectEvent) bool {
 		// Send client message to the connected player
 		e.Player.SendClientMessage("Hello, world!", 0xFFFF00FF)
 		return true
