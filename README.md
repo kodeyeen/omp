@@ -58,7 +58,7 @@ Now if you run the server and connect to it you should see the message "Hello, w
 On Windows:
 
 ```powershell
-$env:GOARCH=386; $env:CGO_ENABLED=1; go build -buildmode=c-shared -o build/gamemode.dll
+$env:GOARCH=386; $env:CGO_ENABLED=1; go build -buildmode=c-shared -o build\gamemode.dll
 ```
 
 On Linux:
