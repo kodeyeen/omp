@@ -19,7 +19,7 @@ Target: i686-w64-mingw32
 
 Note the i686. Otherwise it won't build
 
-## Quckstart
+## Quickstart
 
 1. Install the latest [Gomponent](https://github.com/kodeyeen/gomponent).
 2. Initialize a go module with `go mod init modname`.
