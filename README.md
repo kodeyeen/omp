@@ -87,6 +87,8 @@ go env -w CGO_ENABLED=1
 
 ## Credits
 
+These people helped me a lot during the development of the package:
+
 * [Sreyas-Sreelal](https://github.com/Sreyas-Sreelal)
 * [Hual](https://github.com/Hual)
 * [AmyrAhmady](https://github.com/AmyrAhmady)
