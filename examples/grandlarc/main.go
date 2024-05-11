@@ -491,8 +491,6 @@ func setupCharSelection(char *Character) {
 	}
 }
 
-func main() {}
-
 func init() {
 	omp.Events.Listen(omp.EventTypeGameModeInit, onGameModeInit)
 	omp.Events.Listen(omp.EventTypePlayerConnect, onPlayerConnect)
@@ -501,3 +499,5 @@ func init() {
 	omp.Events.Listen(omp.EventTypePlayerUpdate, onPlayerUpdate)
 	omp.Events.Listen(omp.EventTypePlayerDeath, onPlayerDeath)
 }
+
+func main() {}
