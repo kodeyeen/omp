@@ -1,5 +1,8 @@
 package omp
 
+// #include "include/omp.h"
+import "C"
+
 const (
 	VehicleModelLandstalker VehicleModel = iota + 400
 	VehicleModelBravura
@@ -218,55 +221,101 @@ const (
 type VehicleModel int
 
 // Get the number of used vehicle models on the server.
-func VehicleModelsUsed() int {
+func UsedVehicleModelCount() int {
 	panic("not implemented")
 }
 
-func VehicleCountForModel(model VehicleModel) int {
+func VehicleCountByModel(model VehicleModel) int {
 	panic("not implemented")
 }
 
 func (m VehicleModel) Size() Vector3 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cSize C.Vector3
+	C.getVehicleModelInfo(C.int(m), 1, &cSize)
+
+	return Vector3{
+		X: float32(cSize.x),
+		Y: float32(cSize.y),
+		Z: float32(cSize.z),
+	}
 }
 
 func (m VehicleModel) FrontSeatPosition() Vector3 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 2, &cPos)
+
+	return Vector3{
+		X: float32(cPos.x),
+		Y: float32(cPos.y),
+		Z: float32(cPos.z),
+	}
 }
 
 func (m VehicleModel) RearSeatPosition() Vector3 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 3, &cPos)
+
+	return Vector3{
+		X: float32(cPos.x),
+		Y: float32(cPos.y),
+		Z: float32(cPos.z),
+	}
 }
 
 func (m VehicleModel) PetrolCapPosition() Vector3 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 4, &cPos)
+
+	return Vector3{
+		X: float32(cPos.x),
+		Y: float32(cPos.y),
+		Z: float32(cPos.z),
+	}
 }
 
 func (m VehicleModel) FrontWheelsPosition() Vector3 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 5, &cPos)
+
+	return Vector3{
+		X: float32(cPos.x),
+		Y: float32(cPos.y),
+		Z: float32(cPos.z),
+	}
 }
 
 func (m VehicleModel) RearWheelsPosition() Vector3 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 6, &cPos)
+
+	return Vector3{
+		X: float32(cPos.x),
+		Y: float32(cPos.y),
+		Z: float32(cPos.z),
+	}
 }
 
 func (m VehicleModel) MiddleWheelsPosition() Vector3 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 7, &cPos)
+
+	return Vector3{
+		X: float32(cPos.x),
+		Y: float32(cPos.y),
+		Z: float32(cPos.z),
+	}
 }
 
-func (m VehicleModel) FrontBumperHeight() float32 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+func (m VehicleModel) FrontBumperZ() float32 {
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 8, &cPos)
+
+	return float32(cPos.z)
 }
 
 func (m VehicleModel) RearBumperHeight() float32 {
-	// use GetVehicleModelInfo
-	panic("not implemented")
+	var cPos C.Vector3
+	C.getVehicleModelInfo(C.int(m), 9, &cPos)
+
+	return float32(cPos.z)
 }

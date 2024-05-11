@@ -35,6 +35,10 @@ extern "C" {
         return call<uint8_t>("getWeaponSlotIndex", weapon);
     }
 
+    unsigned char getVehicleModelInfo(int model, int type, Vector3* out) {
+        return call<unsigned char>("getVehicleModelInfo", model, type, out);
+    }
+
 #ifdef __cplusplus
 }
 #endif

@@ -70,6 +70,7 @@ extern "C" {
     void* findFunc(void* handle, const char* name);
     void freeArray(Array arr);
     uint8_t getWeaponSlotIndex(uint8_t weapon);
+    unsigned char getVehicleModelInfo(int model, int type, Vector3* out);
 
 #ifdef __cplusplus
 }
