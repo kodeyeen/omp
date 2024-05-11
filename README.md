@@ -42,8 +42,8 @@ func init() {
 	})
 }
 
-// you MUST declare the main function, otherwise it fails to build
-// you shouldn't write any code here
+// You MUST declare the main function, otherwise it fails to build
+// You shouldn't write any code here
 func main() {}
 
 ```
