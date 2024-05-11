@@ -51,7 +51,7 @@ var lsSpawns = losSantosSpawns()
 var sfSpawns = sanFierroSpawns()
 var lvSpawns = lasVenturasSpawns()
 
-func onGameModeInit(event *omp.GameModeInitEvent) bool {
+func onGameModeInit(e *omp.GameModeInitEvent) bool {
 	omp.SetGameModeText("Grand Larceny")
 	// omp.SetPlayerMarkerMode(omp.PlayerMarkerModeGlobal)
 	// omp.EnableNametags()
@@ -174,9 +174,9 @@ func onGameModeInit(event *omp.GameModeInitEvent) bool {
 	return true
 }
 
-func onPlayerConnect(event *omp.PlayerConnectEvent) bool {
+func onPlayerConnect(e *omp.PlayerConnectEvent) bool {
 	char := &Character{
-		Player:             event.Player,
+		Player:             e.Player,
 		citySelection:      -1,
 		hasCitySelected:    false,
 		lastCitySelectedAt: time.Now(),
@@ -190,8 +190,8 @@ func onPlayerConnect(event *omp.PlayerConnectEvent) bool {
 	return true
 }
 
-func onPlayerSpawn(event *omp.PlayerSpawnEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerSpawn(e *omp.PlayerSpawnEvent) bool {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return true
@@ -224,8 +224,8 @@ func onPlayerSpawn(event *omp.PlayerSpawnEvent) bool {
 	return true
 }
 
-func onPlayerRequestClass(event *omp.PlayerRequestClassEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerRequestClass(e *omp.PlayerRequestClassEvent) bool {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return true
@@ -245,8 +245,8 @@ func onPlayerRequestClass(event *omp.PlayerRequestClassEvent) bool {
 	return false
 }
 
-func onPlayerUpdate(event *omp.PlayerUpdateEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerUpdate(e *omp.PlayerUpdateEvent) bool {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return true
@@ -265,14 +265,14 @@ func onPlayerUpdate(event *omp.PlayerUpdateEvent) bool {
 	return true
 }
 
-func onPlayerDeath(event *omp.PlayerDeathEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerDeath(e *omp.PlayerDeathEvent) bool {
+	char := chars[e.Player.ID()]
 
 	char.hasCitySelected = false
 
 	var killer *Character
-	if event.Killer != nil {
-		killer = chars[event.Killer.ID()]
+	if e.Killer != nil {
+		killer = chars[e.Killer.ID()]
 	}
 
 	if killer == nil {

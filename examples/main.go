@@ -11,15 +11,23 @@ import (
 // GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o test.dll
 
 func init() {
-	omp.On(omp.EventTypeGameModeInit, func(event *omp.GameModeInitEvent) bool {
+	omp.On(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
+		omp.Println("GAME MODE INIT 2")
+
+		return true
+	})
+}
+
+func init() {
+	omp.On(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
 		omp.Println("GAME MODE INIT")
 
 		omp.EnableManualEngineAndLights()
 		return true
 	})
 
-	omp.On(omp.EventTypePlayerConnect, func(event *omp.PlayerConnectEvent) bool {
-		player := event.Player
+	omp.On(omp.EventTypePlayerConnect, func(e *omp.PlayerConnectEvent) bool {
+		player := e.Player
 
 		player.SendClientMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
 
@@ -30,8 +38,8 @@ func init() {
 		return true
 	})
 
-	omp.On(omp.EventTypePlayerSpawn, func(event *omp.PlayerSpawnEvent) bool {
-		player := event.Player
+	omp.On(omp.EventTypePlayerSpawn, func(e *omp.PlayerSpawnEvent) bool {
+		player := e.Player
 
 		player.GiveWeapon(omp.WeaponDeagle, 100)
 
@@ -41,8 +49,8 @@ func init() {
 	omp.AddCommand("msgdlg", func(cmd *omp.Command) {
 		dialog := omp.NewMessageDialog("Message Dialog", "Message", "Ok", "Cancel")
 
-		dialog.On(omp.EventTypeDialogHide, func(event *omp.DialogHideEvent) bool {
-			event.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
+		dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
+			e.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
 			return true
 		})
 
@@ -52,11 +60,11 @@ func init() {
 	omp.AddCommand("inputdlg", func(cmd *omp.Command) {
 		dialog := omp.NewInputDialog("Input Dialog", "Enter something:", "Ok", "Cancel")
 
-		dialog.On(omp.EventTypeDialogResponse, func(event *omp.InputDialogResponseEvent) bool {
-			if event.Response == omp.DialogResponseLeft {
-				event.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", event.InputText), 0xFF0FFFFF)
-			} else if event.Response == omp.DialogResponseRight {
-				event.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", event.InputText), 0xFF0FFFFF)
+		dialog.On(omp.EventTypeDialogResponse, func(e *omp.InputDialogResponseEvent) bool {
+			if e.Response == omp.DialogResponseLeft {
+				e.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", e.InputText), 0xFF0FFFFF)
+			} else if e.Response == omp.DialogResponseRight {
+				e.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", e.InputText), 0xFF0FFFFF)
 			}
 
 			return true
@@ -107,18 +115,18 @@ func init() {
 			omp.TabListItem{"AK47", "$12000", "150"},
 		)
 
-		dialog.On(omp.EventTypeDialogResponse, func(event *omp.TabListDialogResponseEvent) bool {
-			event.Player.SendClientMessage(fmt.Sprintf("Response: %d, itemno: %d, item: %+v", event.Response, event.ItemNumber, event.Item), 0xFFFF00FF)
+		dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
+			e.Player.SendClientMessage(fmt.Sprintf("Response: %d, itemno: %d, item: %+v", e.Response, e.ItemNumber, e.Item), 0xFFFF00FF)
 			return true
 		})
 
-		dialog.On(omp.EventTypeDialogShow, func(event *omp.DialogShowEvent) bool {
-			event.Player.SendClientMessage("Dialog shown", 0xFFFF00FF)
+		dialog.On(omp.EventTypeDialogShow, func(e *omp.DialogShowEvent) bool {
+			e.Player.SendClientMessage("Dialog shown", 0xFFFF00FF)
 			return true
 		})
 
-		dialog.On(omp.EventTypeDialogHide, func(event *omp.DialogHideEvent) bool {
-			event.Player.SendClientMessage("Dialog hidden", 0xFFFF00FF)
+		dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
+			e.Player.SendClientMessage("Dialog hidden", 0xFFFF00FF)
 			return true
 		})
 
@@ -136,8 +144,8 @@ func init() {
 
 		dialog.ShowFor(cmd.Sender)
 
-		dialog.On(omp.EventTypeDialogResponse, func(event *omp.TabListDialogResponseEvent) bool {
-			event.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
+		dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
+			e.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
 
 			return true
 		})

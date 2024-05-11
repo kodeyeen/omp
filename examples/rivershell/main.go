@@ -23,7 +23,7 @@ var (
 	objectiveBlueChar  Character
 )
 
-func onGameModeInit(event *omp.GameModeInitEvent) bool {
+func onGameModeInit(e *omp.GameModeInitEvent) bool {
 	omp.SetGameModeText("Rivershell")
 
 	omp.SetPlayerMarkerMode(omp.PlayerMarkerModeOff)
@@ -182,9 +182,9 @@ func onGameModeInit(event *omp.GameModeInitEvent) bool {
 	return true
 }
 
-func onPlayerConnect(event *omp.PlayerConnectEvent) bool {
+func onPlayerConnect(e *omp.PlayerConnectEvent) bool {
 	char := &Character{
-		Player: event.Player,
+		Player: e.Player,
 	}
 
 	chars[char.ID()] = char
@@ -196,18 +196,18 @@ func onPlayerConnect(event *omp.PlayerConnectEvent) bool {
 	return true
 }
 
-func onPlayerDisconnect(event *omp.PlayerDisconnectEvent) bool {
-	delete(chars, event.Player.ID())
+func onPlayerDisconnect(e *omp.PlayerDisconnectEvent) bool {
+	delete(chars, e.Player.ID())
 	return true
 }
 
-func onPlayerRequestClass(event *omp.PlayerRequestClassEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerRequestClass(e *omp.PlayerRequestClassEvent) bool {
+	char := chars[e.Player.ID()]
 
 	char.SetupForClassSelection()
-	char.SetTeamFromClass(event.Class)
+	char.SetTeamFromClass(e.Class)
 
-	clsID := event.Class.ID()
+	clsID := e.Class.ID()
 
 	if clsID == 0 || clsID == 1 {
 		char.ShowGameText("~g~GREEN ~w~TEAM", 1*time.Second, 5)
@@ -218,8 +218,8 @@ func onPlayerRequestClass(event *omp.PlayerRequestClassEvent) bool {
 	return true
 }
 
-func onPlayerSpawn(event *omp.PlayerSpawnEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerSpawn(e *omp.PlayerSpawnEvent) bool {
+	char := chars[e.Player.ID()]
 
 	if !char.LastDiedAt.IsZero() && time.Since(char.LastDiedAt) < RespawnDelay {
 		char.SendClientMessage("Waiting to respawn....", 0xFFAAEEEE)
@@ -257,12 +257,12 @@ func onPlayerSpawn(event *omp.PlayerSpawnEvent) bool {
 	return true
 }
 
-func onPlayerEnterCheckpoint(event *omp.PlayerEnterCheckpointEvent) bool {
+func onPlayerEnterCheckpoint(e *omp.PlayerEnterCheckpointEvent) bool {
 	if isObjectiveReached {
 		return true
 	}
 
-	char := chars[event.Player.ID()]
+	char := chars[e.Player.ID()]
 
 	charVeh, err := char.Vehicle()
 	if err != nil {
@@ -302,22 +302,22 @@ func onPlayerEnterCheckpoint(event *omp.PlayerEnterCheckpointEvent) bool {
 	return true
 }
 
-func onPlayerDeath(event *omp.PlayerDeathEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerDeath(e *omp.PlayerDeathEvent) bool {
+	char := chars[e.Player.ID()]
 	var killer *Character
 
-	if event.Killer == nil {
-		omp.SendDeathMessage(nil, char.Player, event.Reason)
+	if e.Killer == nil {
+		omp.SendDeathMessage(nil, char.Player, e.Reason)
 	} else {
-		killer = chars[event.Killer.ID()]
+		killer = chars[e.Killer.ID()]
 
 		if killer.Team() != char.Team() {
 			// Valid kill
-			omp.SendDeathMessage(killer.Player, char.Player, event.Reason)
+			omp.SendDeathMessage(killer.Player, char.Player, e.Reason)
 			killer.SetScore(killer.Score() + 1)
 		} else {
 			// Team kill
-			omp.SendDeathMessage(killer.Player, char.Player, event.Reason)
+			omp.SendDeathMessage(killer.Player, char.Player, e.Reason)
 		}
 	}
 
@@ -327,12 +327,12 @@ func onPlayerDeath(event *omp.PlayerDeathEvent) bool {
 	return true
 }
 
-func onVehicleStreamIn(event *omp.VehicleStreamInEvent) bool {
+func onVehicleStreamIn(e *omp.VehicleStreamInEvent) bool {
 	// As the vehicle streams in, player team dependant params are applied. They can't be
 	// applied to vehicles that don't exist in the player's world.
-	char := chars[event.ForPlayer.ID()]
+	char := chars[e.ForPlayer.ID()]
 
-	if *event.Vehicle == objectiveVehBlue {
+	if *e.Vehicle == objectiveVehBlue {
 		if char.Team() == TeamGreen {
 			objectiveVehBlue.EnableObjectiveFor(char.Player)
 			objectiveVehBlue.LockDoorsFor(char.Player)
@@ -340,7 +340,7 @@ func onVehicleStreamIn(event *omp.VehicleStreamInEvent) bool {
 			objectiveVehBlue.EnableObjectiveFor(char.Player)
 			objectiveVehBlue.UnlockDoorsFor(char.Player)
 		}
-	} else if *event.Vehicle == objectiveVehGreen {
+	} else if *e.Vehicle == objectiveVehGreen {
 		if char.Team() == TeamBlue {
 			objectiveVehGreen.EnableObjectiveFor(char.Player)
 			objectiveVehGreen.LockDoorsFor(char.Player)
@@ -353,8 +353,8 @@ func onVehicleStreamIn(event *omp.VehicleStreamInEvent) bool {
 	return true
 }
 
-func onPlayerUpdate(event *omp.PlayerUpdateEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerUpdate(e *omp.PlayerUpdateEvent) bool {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return true
@@ -388,10 +388,10 @@ func onPlayerUpdate(event *omp.PlayerUpdateEvent) bool {
 	return true
 }
 
-func onPlayerStateChange(event *omp.PlayerStateChangeEvent) bool {
-	char := chars[event.Player.ID()]
+func onPlayerStateChange(e *omp.PlayerStateChangeEvent) bool {
+	char := chars[e.Player.ID()]
 
-	if event.NewState == omp.PlayerStateDriver {
+	if e.NewState == omp.PlayerStateDriver {
 		veh, err := char.Vehicle()
 		if err != nil {
 			return true
@@ -420,7 +420,7 @@ func onPlayerStateChange(event *omp.PlayerStateChangeEvent) bool {
 
 			objectiveBlueChar = *char
 		}
-	} else if event.NewState == omp.PlayerStateOnFoot {
+	} else if e.NewState == omp.PlayerStateOnFoot {
 		if *char == objectiveGreenChar {
 			objectiveGreenChar = Character{}
 			char.SetColorFromTeam()
