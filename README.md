@@ -68,7 +68,7 @@ GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o build/gamemode.so
 ```
 
 If you're using Visual Studio Code and seeing error messages during development, this is because of your GOARCH and CGO_ENABLED env variable values.
-You can check their values by typing:
+You can check them by typing:
 
 ```shell
 go env
