@@ -3,47 +3,40 @@
 
 #include <stdint.h>
 
-typedef struct
-{
+typedef struct {
     const char* buf;
     size_t length;
 } String;
 
-typedef struct
-{
+typedef struct {
 	void** buf;
 	size_t length;
 } Array;
 
-typedef struct
-{
+typedef struct {
     float x;
     float y;
     float z;
     float w;
 } Vector4;
 
-typedef struct
-{
+typedef struct {
     float x;
     float y;
     float z;
 } Vector3;
 
-typedef struct
-{
+typedef struct {
     float x;
     float y;
 } Vector2;
 
-typedef struct
-{
+typedef struct {
     int primary;
     int secondary;
 } VehicleColour;
 
-typedef struct
-{
+typedef struct {
     int model;
     int bone;
     Vector3 offset;
@@ -53,8 +46,7 @@ typedef struct
     uint32_t colour2;
 } PlayerAttachedObject;
 
-typedef struct
-{
+typedef struct {
 	Vector3 origin;
 	Vector3 hitPos;
 	Vector3 offset;
@@ -63,8 +55,7 @@ typedef struct
 	uint16_t hitID;
 } PlayerBulletData;
 
-typedef struct
-{
+typedef struct {
 	uint8_t seat;
 	Vector3 position;
 	Vector3 velocity;
