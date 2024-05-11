@@ -4,6 +4,8 @@ package omp
 // #include "include/omp.h"
 import "C"
 import (
+	"fmt"
+	"runtime/debug"
 	"strings"
 	"time"
 	"unsafe"
@@ -42,11 +44,24 @@ var Events = event.NewDispatcher()
 var Commands = newCommandManager()
 
 func DispatchEvent[T any](_type event.Type, data T) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, _type, data)
+}
+
+func handlePanic() {
+	if r := recover(); r != nil {
+		stackTrace := strings.TrimSuffix(string(debug.Stack()), "\n")
+
+		Log(LogLevelError, fmt.Sprint(r))
+		Log(LogLevelError, stackTrace)
+	}
 }
 
 //export onGameModeInit
 func onGameModeInit() {
+	defer handlePanic()
+
 	cLibPath := C.CString("./components/Gomponent.dll")
 	defer C.free(unsafe.Pointer(cLibPath))
 
@@ -57,6 +72,8 @@ func onGameModeInit() {
 
 //export onGameModeExit
 func onGameModeExit() {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeGameModeExit, &GameModeExitEvent{})
 }
 
@@ -64,6 +81,8 @@ func onGameModeExit() {
 
 //export onPlayerGiveDamageActor
 func onPlayerGiveDamageActor(player, actor unsafe.Pointer, amount float32, weapon uint, part int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerGiveDamageActor, &PlayerGiveDamageActorEvent{
 		Player: &Player{handle: player},
 		Actor:  &Player{handle: actor},
@@ -75,6 +94,8 @@ func onPlayerGiveDamageActor(player, actor unsafe.Pointer, amount float32, weapo
 
 //export onActorStreamOut
 func onActorStreamOut(actor, forPlayer unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeActorStreamOut, &ActorStreamOutEvent{
 		Actor:     &Player{handle: actor},
 		ForPlayer: &Player{handle: forPlayer},
@@ -83,6 +104,8 @@ func onActorStreamOut(actor, forPlayer unsafe.Pointer) {
 
 //export onActorStreamIn
 func onActorStreamIn(actor, forPlayer unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeActorStreamIn, &ActorStreamInEvent{
 		Actor:     &Player{handle: actor},
 		ForPlayer: &Player{handle: forPlayer},
@@ -93,6 +116,8 @@ func onActorStreamIn(actor, forPlayer unsafe.Pointer) {
 
 //export onPlayerEnterCheckpoint
 func onPlayerEnterCheckpoint(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerEnterCheckpoint, &PlayerEnterCheckpointEvent{
 		Player: &Player{handle: player},
 	})
@@ -100,6 +125,8 @@ func onPlayerEnterCheckpoint(player unsafe.Pointer) {
 
 //export onPlayerLeaveCheckpoint
 func onPlayerLeaveCheckpoint(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerLeaveCheckpoint, &PlayerLeaveCheckpointEvent{
 		Player: &Player{handle: player},
 	})
@@ -107,6 +134,8 @@ func onPlayerLeaveCheckpoint(player unsafe.Pointer) {
 
 //export onPlayerEnterRaceCheckpoint
 func onPlayerEnterRaceCheckpoint(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerEnterRaceCheckpoint, &PlayerEnterRaceCheckpointEvent{
 		Player: &Player{handle: player},
 	})
@@ -114,6 +143,8 @@ func onPlayerEnterRaceCheckpoint(player unsafe.Pointer) {
 
 //export onPlayerLeaveRaceCheckpoint
 func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerLeaveRaceCheckpoint, &PlayerLeaveRaceCheckpointEvent{
 		Player: &Player{handle: player},
 	})
@@ -123,6 +154,8 @@ func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) {
 
 //export onPlayerRequestClass
 func onPlayerRequestClass(player, class unsafe.Pointer) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
 		Player: &Player{handle: player},
 		Class:  &Class{handle: class},
@@ -133,6 +166,8 @@ func onPlayerRequestClass(player, class unsafe.Pointer) bool {
 
 //export onConsoleText
 func onConsoleText(command C.String, parameters C.String) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypeConsoleText, &ConsoleTextEvent{
 		Command:    C.GoStringN(command.buf, C.int(command.length)),
 		Parameters: C.GoStringN(parameters.buf, C.int(parameters.length)),
@@ -141,6 +176,8 @@ func onConsoleText(command C.String, parameters C.String) bool {
 
 //export onRconLoginAttempt
 func onRconLoginAttempt(player unsafe.Pointer, password C.String, success bool) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeRconLoginAttempt, &RconLoginAttemptEvent{
 		Player:   &Player{handle: player},
 		Password: C.GoStringN(password.buf, C.int(password.length)),
@@ -152,6 +189,8 @@ func onRconLoginAttempt(player unsafe.Pointer, password C.String, success bool) 
 
 //export onPlayerFinishedDownloading
 func onPlayerFinishedDownloading(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerFinishedDownloading, &PlayerFinishedDownloadingEvent{
 		Player: &Player{handle: player},
 	})
@@ -159,6 +198,8 @@ func onPlayerFinishedDownloading(player unsafe.Pointer) {
 
 //export onPlayerRequestDownload
 func onPlayerRequestDownload(player unsafe.Pointer, _type uint8, checksum uint32) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerRequestDownload, &PlayerRequestDownloadEvent{
 		Player:   &Player{handle: player},
 		Type:     int(_type),
@@ -170,6 +211,8 @@ func onPlayerRequestDownload(player unsafe.Pointer, _type uint8, checksum uint32
 
 //export onDialogResponse
 func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, inputText C.String) {
+	defer handlePanic()
+
 	eventPlayer := &Player{handle: player}
 
 	dialog := activeDialogs[eventPlayer.ID()]
@@ -225,6 +268,8 @@ func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, i
 
 //export onPlayerEnterGangZone
 func onPlayerEnterGangZone(player, gangzone unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerEnterTurf, &PlayerEnterTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &Turf{handle: gangzone},
@@ -233,6 +278,8 @@ func onPlayerEnterGangZone(player, gangzone unsafe.Pointer) {
 
 //export onPlayerEnterPlayerGangZone
 func onPlayerEnterPlayerGangZone(player, gangzone unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerEnterPlayerTurf, &PlayerEnterPlayerTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &PlayerTurf{handle: gangzone},
@@ -241,6 +288,8 @@ func onPlayerEnterPlayerGangZone(player, gangzone unsafe.Pointer) {
 
 //export onPlayerLeaveGangZone
 func onPlayerLeaveGangZone(player, gangzone unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerLeaveTurf, &PlayerLeaveTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &Turf{handle: gangzone},
@@ -249,6 +298,8 @@ func onPlayerLeaveGangZone(player, gangzone unsafe.Pointer) {
 
 //export onPlayerLeavePlayerGangZone
 func onPlayerLeavePlayerGangZone(player, gangzone unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerLeavePlayerTurf, &PlayerLeavePlayerTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &PlayerTurf{handle: gangzone},
@@ -257,6 +308,8 @@ func onPlayerLeavePlayerGangZone(player, gangzone unsafe.Pointer) {
 
 //export onPlayerClickGangZone
 func onPlayerClickGangZone(player, gangzone unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerClickTurf, &PlayerClickTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &Turf{handle: gangzone},
@@ -265,6 +318,8 @@ func onPlayerClickGangZone(player, gangzone unsafe.Pointer) {
 
 //export onPlayerClickPlayerGangZone
 func onPlayerClickPlayerGangZone(player, gangzone unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerClickPlayerTurf, &PlayerClickPlayerTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &PlayerTurf{handle: gangzone},
@@ -275,6 +330,8 @@ func onPlayerClickPlayerGangZone(player, gangzone unsafe.Pointer) {
 
 //export onPlayerSelectedMenuRow
 func onPlayerSelectedMenuRow(player unsafe.Pointer, menuRow uint8) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerSelectedMenuRow, &PlayerSelectedMenuRowEvent{
 		Player:  &Player{handle: player},
 		MenuRow: menuRow,
@@ -283,6 +340,8 @@ func onPlayerSelectedMenuRow(player unsafe.Pointer, menuRow uint8) {
 
 //export onPlayerExitedMenu
 func onPlayerExitedMenu(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerExitedMenu, &PlayerExitedMenuEvent{
 		Player: &Player{handle: player},
 	})
@@ -292,6 +351,8 @@ func onPlayerExitedMenu(player unsafe.Pointer) {
 
 //export onObjectMoved
 func onObjectMoved(object unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeObjectMoved, &ObjectMovedEvent{
 		Object: &Object{handle: object},
 	})
@@ -299,6 +360,8 @@ func onObjectMoved(object unsafe.Pointer) {
 
 //export onPlayerObjectMoved
 func onPlayerObjectMoved(player, object unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerObjectMoved, &PlayerObjectMovedEvent{
 		Player: &Player{handle: player},
 		Object: &PlayerObject{handle: object},
@@ -307,6 +370,8 @@ func onPlayerObjectMoved(player, object unsafe.Pointer) {
 
 //export onObjectSelected
 func onObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeObjectSelected, &ObjectSelectedEvent{
 		Player: &Player{handle: player},
 		Object: &Object{handle: object},
@@ -321,6 +386,8 @@ func onObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) {
 
 //export onPlayerObjectSelected
 func onPlayerObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerObjectSelected, &PlayerObjectSelectedEvent{
 		Player: &Player{handle: player},
 		Object: &PlayerObject{handle: object},
@@ -335,6 +402,8 @@ func onPlayerObjectSelected(player, object unsafe.Pointer, model int, pos C.Vect
 
 //export onObjectEdited
 func onObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.Vector3) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeObjectEdited, &ObjectEditedEvent{
 		Player:   &Player{handle: player},
 		Object:   &Object{handle: object},
@@ -354,6 +423,8 @@ func onObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.V
 
 //export onPlayerObjectEdited
 func onPlayerObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.Vector3) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerObjectEdited, &PlayerObjectEditedEvent{
 		Player:   &Player{handle: player},
 		Object:   &PlayerObject{handle: object},
@@ -373,6 +444,8 @@ func onPlayerObjectEdited(player, object unsafe.Pointer, response int, offset, r
 
 //export onPlayerAttachedObjectEdited
 func onPlayerAttachedObjectEdited(player unsafe.Pointer, index int, saved bool, data C.PlayerAttachedObject) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerAttachmentEdited, &PlayerAttachmentEdited{
 		Player: &Player{handle: player},
 		Index:  index,
@@ -405,6 +478,8 @@ func onPlayerAttachedObjectEdited(player unsafe.Pointer, index int, saved bool, 
 
 //export onPlayerPickUpPickup
 func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerPickUpPickup, &PlayerPickUpPickupEvent{
 		Player: &Player{handle: player},
 		Pickup: &Pickup{handle: pickup},
@@ -413,6 +488,8 @@ func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
 
 //export onPlayerPickUpPlayerPickup
 func onPlayerPickUpPlayerPickup(player, pickup unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerPickUpPlayerPickup, &PlayerPickUpPlayerPickupEvent{
 		Player: &Player{handle: player},
 		Pickup: &PlayerPickup{handle: pickup},
@@ -423,6 +500,8 @@ func onPlayerPickUpPlayerPickup(player, pickup unsafe.Pointer) {
 
 //export onPlayerRequestSpawn
 func onPlayerRequestSpawn(player unsafe.Pointer) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerRequestSpawn, &PlayerRequestSpawnEvent{
 		Player: &Player{handle: player},
 	})
@@ -430,6 +509,8 @@ func onPlayerRequestSpawn(player unsafe.Pointer) bool {
 
 //export onPlayerSpawn
 func onPlayerSpawn(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerSpawn, &PlayerSpawnEvent{
 		Player: &Player{handle: player},
 	})
@@ -439,6 +520,8 @@ func onPlayerSpawn(player unsafe.Pointer) {
 
 //export onIncomingConnection
 func onIncomingConnection(player unsafe.Pointer, ipAddress C.String, port C.ushort) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeIncomingConnection, &IncomingConnectionEvent{
 		Player:    &Player{handle: player},
 		IPAddress: C.GoStringN(ipAddress.buf, C.int(ipAddress.length)),
@@ -448,6 +531,8 @@ func onIncomingConnection(player unsafe.Pointer, ipAddress C.String, port C.usho
 
 //export onPlayerConnect
 func onPlayerConnect(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerConnect, &PlayerConnectEvent{
 		Player: &Player{handle: player},
 	})
@@ -455,6 +540,8 @@ func onPlayerConnect(player unsafe.Pointer) {
 
 //export onPlayerDisconnect
 func onPlayerDisconnect(player unsafe.Pointer, reason int) {
+	defer handlePanic()
+
 	eventPlayer := &Player{handle: player}
 
 	event.Dispatch(Events, EventTypePlayerDisconnect, &PlayerDisconnectEvent{
@@ -467,6 +554,8 @@ func onPlayerDisconnect(player unsafe.Pointer, reason int) {
 
 //export onPlayerClientInit
 func onPlayerClientInit(player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerClientInit, &PlayerClientInitEvent{
 		Player: &Player{handle: player},
 	})
@@ -476,6 +565,8 @@ func onPlayerClientInit(player unsafe.Pointer) {
 
 //export onPlayerStreamIn
 func onPlayerStreamIn(player, forPlayer unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerStreamIn, &PlayerStreamInEvent{
 		Player:    &Player{handle: player},
 		ForPlayer: &Player{handle: forPlayer},
@@ -484,6 +575,8 @@ func onPlayerStreamIn(player, forPlayer unsafe.Pointer) {
 
 //export onPlayerStreamOut
 func onPlayerStreamOut(player, forPlayer unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerStreamOut, &PlayerStreamOutEvent{
 		Player:    &Player{handle: player},
 		ForPlayer: &Player{handle: forPlayer},
@@ -494,6 +587,8 @@ func onPlayerStreamOut(player, forPlayer unsafe.Pointer) {
 
 //export onPlayerText
 func onPlayerText(player unsafe.Pointer, message *C.char) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerText, &PlayerTextEvent{
 		Player:  &Player{handle: player},
 		Message: C.GoString(message),
@@ -502,6 +597,8 @@ func onPlayerText(player unsafe.Pointer, message *C.char) {
 
 //export onPlayerCommandText
 func onPlayerCommandText(player unsafe.Pointer, message C.String) bool {
+	defer handlePanic()
+
 	rawCmd := C.GoStringN(message.buf, C.int(message.length))
 
 	tmp := strings.Fields(rawCmd)
@@ -527,6 +624,8 @@ func onPlayerCommandText(player unsafe.Pointer, message C.String) bool {
 
 //export onPlayerShotMissed
 func onPlayerShotMissed(player unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerShotMissed, &PlayerShotMissedEvent{
 		Player: &Player{handle: player},
 		Bullet: PlayerBullet{
@@ -552,6 +651,8 @@ func onPlayerShotMissed(player unsafe.Pointer, bulletData C.PlayerBulletData) bo
 
 //export onPlayerShotPlayer
 func onPlayerShotPlayer(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerShotPlayer, &PlayerShotPlayerEvent{
 		Player: &Player{handle: player},
 		Target: &Player{handle: target},
@@ -578,6 +679,8 @@ func onPlayerShotPlayer(player, target unsafe.Pointer, bulletData C.PlayerBullet
 
 //export onPlayerShotVehicle
 func onPlayerShotVehicle(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerShotVehicle, &PlayerShotVehicleEvent{
 		Player: &Player{handle: player},
 		Target: &Vehicle{handle: target},
@@ -604,6 +707,8 @@ func onPlayerShotVehicle(player, target unsafe.Pointer, bulletData C.PlayerBulle
 
 //export onPlayerShotObject
 func onPlayerShotObject(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerShotObject, &PlayerShotObjectEvent{
 		Player: &Player{handle: player},
 		Target: &Object{handle: target},
@@ -630,6 +735,8 @@ func onPlayerShotObject(player, target unsafe.Pointer, bulletData C.PlayerBullet
 
 //export onPlayerShotPlayerObject
 func onPlayerShotPlayerObject(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerShotPlayerObject, &PlayerShotPlayerObjectEvent{
 		Player: &Player{handle: player},
 		Target: &PlayerObject{handle: target},
@@ -658,6 +765,8 @@ func onPlayerShotPlayerObject(player, target unsafe.Pointer, bulletData C.Player
 
 //export onPlayerScoreChange
 func onPlayerScoreChange(player unsafe.Pointer, score int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerScoreChange, &PlayerScoreChangeEvent{
 		Player: &Player{handle: player},
 		Score:  score,
@@ -666,6 +775,8 @@ func onPlayerScoreChange(player unsafe.Pointer, score int) {
 
 //export onPlayerNameChange
 func onPlayerNameChange(player unsafe.Pointer, oldName C.String) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerNameChange, &PlayerNameChangeEvent{
 		Player:  &Player{handle: player},
 		OldName: C.GoStringN(oldName.buf, C.int(oldName.length)),
@@ -674,6 +785,8 @@ func onPlayerNameChange(player unsafe.Pointer, oldName C.String) {
 
 //export onPlayerInteriorChange
 func onPlayerInteriorChange(player unsafe.Pointer, newInterior, oldInterior uint) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerInteriorChange, &PlayerInteriorChangeEvent{
 		Player:      &Player{handle: player},
 		NewInterior: newInterior,
@@ -683,6 +796,8 @@ func onPlayerInteriorChange(player unsafe.Pointer, newInterior, oldInterior uint
 
 //export onPlayerStateChange
 func onPlayerStateChange(player unsafe.Pointer, newState, oldState int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerStateChange, &PlayerStateChangeEvent{
 		Player:   &Player{handle: player},
 		NewState: PlayerState(newState),
@@ -692,6 +807,8 @@ func onPlayerStateChange(player unsafe.Pointer, newState, oldState int) {
 
 //export onPlayerKeyStateChange
 func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys uint) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerKeyStateChange, &PlayerKeyStateChangeEvent{
 		Player:  &Player{handle: player},
 		NewKeys: newKeys,
@@ -703,6 +820,8 @@ func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys uint) {
 
 //export onPlayerDeath
 func onPlayerDeath(player, killer unsafe.Pointer, reason int) {
+	defer handlePanic()
+
 	eventKiller := &Player{handle: killer}
 	if killer == nil {
 		eventKiller = nil
@@ -717,6 +836,8 @@ func onPlayerDeath(player, killer unsafe.Pointer, reason int) {
 
 //export onPlayerTakeDamage
 func onPlayerTakeDamage(player, from unsafe.Pointer, amount float32, weapon uint, part int) {
+	defer handlePanic()
+
 	eventFrom := &Player{handle: from}
 	if from == nil {
 		eventFrom = nil
@@ -733,6 +854,8 @@ func onPlayerTakeDamage(player, from unsafe.Pointer, amount float32, weapon uint
 
 //export onPlayerGiveDamage
 func onPlayerGiveDamage(player, to unsafe.Pointer, amount float32, weapon uint, part int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerGiveDamage, &PlayerGiveDamageEvent{
 		Player: &Player{handle: player},
 		To:     &Player{handle: to},
@@ -746,6 +869,8 @@ func onPlayerGiveDamage(player, to unsafe.Pointer, amount float32, weapon uint, 
 
 //export onPlayerClickMap
 func onPlayerClickMap(player unsafe.Pointer, pos C.Vector3) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerClickMap, &PlayerClickMapEvent{
 		Player: &Player{handle: player},
 		Position: Vector3{
@@ -758,6 +883,8 @@ func onPlayerClickMap(player unsafe.Pointer, pos C.Vector3) {
 
 //export onPlayerClickPlayer
 func onPlayerClickPlayer(player, clicked unsafe.Pointer, source int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerClickPlayer, &PlayerClickPlayerEvent{
 		Player:  &Player{handle: player},
 		Clicked: &Player{handle: clicked},
@@ -769,6 +896,8 @@ func onPlayerClickPlayer(player, clicked unsafe.Pointer, source int) {
 
 //export onClientCheckResponse
 func onClientCheckResponse(player unsafe.Pointer, actionType, address, results int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeClientCheckResponse, &ClientCheckResponseEvent{
 		Player:     &Player{handle: player},
 		ActionType: actionType,
@@ -781,6 +910,8 @@ func onClientCheckResponse(player unsafe.Pointer, actionType, address, results i
 
 //export onPlayerUpdate
 func onPlayerUpdate(player unsafe.Pointer, now C.longlong) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerUpdate, &PlayerUpdateEvent{
 		Player: &Player{handle: player},
 		Now:    time.Unix(0, int64(now)*int64(time.Millisecond)),
@@ -791,6 +922,8 @@ func onPlayerUpdate(player unsafe.Pointer, now C.longlong) bool {
 
 //export onPlayerClickTextDraw
 func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerClickTextDraw, &PlayerClickTextDrawEvent{
 		Player:   &Player{handle: player},
 		Textdraw: &Textdraw{handle: textdraw},
@@ -799,6 +932,8 @@ func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
 
 //export onPlayerClickPlayerTextDraw
 func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerClickPlayerTextDraw, &PlayerClickPlayerTextDrawEvent{
 		Player:   &Player{handle: player},
 		Textdraw: &PlayerTextdraw{handle: textdraw},
@@ -807,6 +942,8 @@ func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) {
 
 //export onPlayerCancelTextDrawSelection
 func onPlayerCancelTextDrawSelection(player unsafe.Pointer) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerCancelTextDrawSelection, &PlayerCancelTextDrawSelectionEvent{
 		Player: &Player{handle: player},
 	})
@@ -814,6 +951,8 @@ func onPlayerCancelTextDrawSelection(player unsafe.Pointer) bool {
 
 //export onPlayerCancelPlayerTextDrawSelection
 func onPlayerCancelPlayerTextDrawSelection(player unsafe.Pointer) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypePlayerCancelPlayerTextDrawSelection, &PlayerCancelPlayerTextDrawSelectionEvent{
 		Player: &Player{handle: player},
 	})
@@ -823,6 +962,8 @@ func onPlayerCancelPlayerTextDrawSelection(player unsafe.Pointer) bool {
 
 //export onVehicleStreamIn
 func onVehicleStreamIn(vehicle, player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehicleStreamIn, &VehicleStreamInEvent{
 		Vehicle:   &Vehicle{handle: vehicle},
 		ForPlayer: &Player{handle: player},
@@ -831,6 +972,8 @@ func onVehicleStreamIn(vehicle, player unsafe.Pointer) {
 
 //export onVehicleStreamOut
 func onVehicleStreamOut(vehicle, player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehicleStreamOut, &VehicleStreamOutEvent{
 		Vehicle:   &Vehicle{handle: vehicle},
 		ForPlayer: &Player{handle: player},
@@ -839,6 +982,8 @@ func onVehicleStreamOut(vehicle, player unsafe.Pointer) {
 
 //export onVehicleDeath
 func onVehicleDeath(vehicle, killer unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehicleDeath, &VehicleDeathEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 		Killer:  &Player{handle: killer},
@@ -847,6 +992,8 @@ func onVehicleDeath(vehicle, killer unsafe.Pointer) {
 
 //export onPlayerEnterVehicle
 func onPlayerEnterVehicle(player, vehicle unsafe.Pointer, isPassenger int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerEnterVehicle, &PlayerEnterVehicleEvent{
 		Player:      &Player{handle: player},
 		Vehicle:     &Vehicle{handle: vehicle},
@@ -856,6 +1003,8 @@ func onPlayerEnterVehicle(player, vehicle unsafe.Pointer, isPassenger int) {
 
 //export onPlayerExitVehicle
 func onPlayerExitVehicle(player, vehicle unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypePlayerExitVehicle, &PlayerExitVehicleEvent{
 		Player:  &Player{handle: player},
 		Vehicle: &Vehicle{handle: vehicle},
@@ -864,6 +1013,8 @@ func onPlayerExitVehicle(player, vehicle unsafe.Pointer) {
 
 //export onVehicleDamageStatusUpdate
 func onVehicleDamageStatusUpdate(vehicle, player unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehicleDamageStatusUpdate, &VehicleDamageStatusUpdateEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 		Player:  &Player{handle: player},
@@ -872,6 +1023,8 @@ func onVehicleDamageStatusUpdate(vehicle, player unsafe.Pointer) {
 
 //export onVehiclePaintJob
 func onVehiclePaintJob(player, vehicle unsafe.Pointer, paintJob int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehiclePaintJob, &VehiclePaintJobEvent{
 		Player:   &Player{handle: player},
 		Vehicle:  &Vehicle{handle: vehicle},
@@ -881,6 +1034,8 @@ func onVehiclePaintJob(player, vehicle unsafe.Pointer, paintJob int) {
 
 //export onVehicleMod
 func onVehicleMod(player, vehicle unsafe.Pointer, component int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehicleMod, &VehicleModEvent{
 		Player:    &Player{handle: player},
 		Vehicle:   &Vehicle{handle: vehicle},
@@ -890,6 +1045,8 @@ func onVehicleMod(player, vehicle unsafe.Pointer, component int) {
 
 //export onVehicleRespray
 func onVehicleRespray(player, vehicle unsafe.Pointer, color1, color2 int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehicleRespray, &VehicleResprayEvent{
 		Player:  &Player{handle: player},
 		Vehicle: &Vehicle{handle: vehicle},
@@ -899,6 +1056,8 @@ func onVehicleRespray(player, vehicle unsafe.Pointer, color1, color2 int) {
 
 //export onEnterExitModShop
 func onEnterExitModShop(player unsafe.Pointer, enterexit bool, interiorID int) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeEnterExitModShop, &EnterExitModShopEvent{
 		Player:     &Player{handle: player},
 		EnterExit:  enterexit,
@@ -908,6 +1067,8 @@ func onEnterExitModShop(player unsafe.Pointer, enterexit bool, interiorID int) {
 
 //export onVehicleSpawn
 func onVehicleSpawn(vehicle unsafe.Pointer) {
+	defer handlePanic()
+
 	event.Dispatch(Events, EventTypeVehicleSpawn, &VehicleSpawnEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 	})
@@ -915,6 +1076,8 @@ func onVehicleSpawn(vehicle unsafe.Pointer) {
 
 //export onUnoccupiedVehicleUpdate
 func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, updateData C.UnoccupiedVehicleUpdate) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypeUnoccupiedVehicleUpdate, &UnoccupiedVehicleUpdateEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 		Player:  &Player{handle: player},
@@ -936,6 +1099,8 @@ func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, updateData C.Unoc
 
 //export onTrailerUpdate
 func onTrailerUpdate(player, vehicle unsafe.Pointer) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypeTrailerUpdate, &TrailerUpdateEvent{
 		Player:  &Player{handle: player},
 		Vehicle: &Vehicle{handle: vehicle},
@@ -944,6 +1109,8 @@ func onTrailerUpdate(player, vehicle unsafe.Pointer) bool {
 
 //export onVehicleSirenStateChange
 func onVehicleSirenStateChange(player, vehicle unsafe.Pointer, sirenState uint8) bool {
+	defer handlePanic()
+
 	return event.Dispatch(Events, EventTypeVehicleSirenStateChange, &VehicleSirenStateChangeEvent{
 		Player:     &Player{handle: player},
 		Vehicle:    &Vehicle{handle: vehicle},
