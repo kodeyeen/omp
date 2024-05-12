@@ -62,10 +62,7 @@ func handlePanic() {
 func onGameModeInit() {
 	defer handlePanic()
 
-	cLibPath := C.CString("./components/Go.dll")
-	defer C.free(unsafe.Pointer(cLibPath))
-
-	C.init(cLibPath)
+	C.loadComponent()
 
 	event.Dispatch(Events, EventTypeGameModeInit, &GameModeInitEvent{})
 }

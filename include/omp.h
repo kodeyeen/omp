@@ -66,9 +66,10 @@ typedef struct {
 extern "C" {
 #endif
 
-    void init(const char* libPath);
-    void* openLib(const char* path);
-    void* findFunc(void* handle, const char* name);
+    void loadComponent();
+    void unloadComponent();
+    void* findFunc(const char* name);
+
     void freeArray(Array arr);
     uint8_t getWeaponSlotIndex(uint8_t weapon);
     unsigned char getVehicleModelInfo(int model, int type, Vector3* out);
@@ -89,7 +90,7 @@ R call(const std::string& funcName, Args... args)
     void* funcAddr = nullptr;
 
     if (it == funcs.end()) {
-        funcAddr = findFunc(libHandle, funcName.c_str());
+        funcAddr = findFunc(funcName.c_str());
         funcs.emplace(funcName, funcAddr);
     } else {
         funcAddr = it->second;

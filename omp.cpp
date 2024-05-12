@@ -13,31 +13,27 @@ std::unordered_map<std::string, void*> funcs;
 extern "C" {
 #endif
 
-    void init(const char* libPath) {
-        libHandle = openLib(libPath);
-    }
-
-    void* openLib(const char* path) {
+    void loadComponent() {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-        return LoadLibrary((LPCTSTR)path);
+        libHandle = LoadLibrary("./components/Go.dll");
 #else
-        return dlopen(path, RTLD_GLOBAL | RTLD_NOW);
+        libHandle = dlopen("./components/Go.so", RTLD_GLOBAL | RTLD_NOW);
 #endif
     }
 
-    void closeLib(void* handle) {
+    void unloadComponent() {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-        FreeLibrary((HMODULE)handle);
+        FreeLibrary((HMODULE)libHandle);
 #else
-        dlclose(handle);
+        dlclose(libHandle);
 #endif
     }
 
-    void* findFunc(void* handle, const char* name) {
+    void* findFunc(const char* name) {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-        return (void*)GetProcAddress((HMODULE)handle, name);
+        return (void*)GetProcAddress((HMODULE)libHandle, name);
 #else
-        return dlsym(handle, name);
+        return dlsym(libHandle, name);
 #endif
     }
 
