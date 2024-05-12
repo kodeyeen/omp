@@ -1,4 +1,8 @@
-#include <Windows.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+	#include <Windows.h>
+#else
+	#include <dlfcn.h>
+#endif
 
 #include "include/omp.h"
 
@@ -14,17 +18,27 @@ extern "C" {
     }
 
     void* openLib(const char* path) {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
         return LoadLibrary((LPCTSTR)path);
+#else
+        return dlopen(path, RTLD_GLOBAL | RTLD_NOW);
+#endif
     }
 
     void closeLib(void* handle) {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
         FreeLibrary((HMODULE)handle);
+#else
+        dlclose(handle);
+#endif
     }
 
     void* findFunc(void* handle, const char* name) {
-        FARPROC func = GetProcAddress((HMODULE)handle, name);
-
-        return (void*)func;
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+        return (void*)GetProcAddress((HMODULE)handle, name);
+#else
+        return dlsym(handle, name);
+#endif
     }
 
     void freeArray(Array arr) {
