@@ -28,6 +28,22 @@ extern "C" {
         return call<void>("server_enableStuntBonuses");
     }
 
+    void server_setServerName(String name) {
+        return call<void>("server_setServerName", name);
+    }
+
+    void server_setMapName(String name) {
+        return call<void>("server_setMapName", name);
+    }
+
+    void server_setLanguage(String language) {
+        return call<void>("server_setLanguage", language);
+    }
+
+    void server_setURL(String url) {
+        return call<void>("server_setURL", url);
+    }
+
 #ifdef __cplusplus
 }
 #endif
