@@ -46,6 +46,17 @@ func init() {
 		return true
 	})
 
+	omp.Events.Listen(omp.EventTypeConsoleText, func(e *omp.ConsoleTextEvent) bool {
+		fmt.Println(e.Command, e.Parameters)
+		return true
+	})
+
+	omp.Commands.Add("rcontest", func(cmd *omp.Command) {
+		fmt.Println(cmd)
+
+		omp.SendRCONCommand("weather 20")
+	})
+
 	omp.Commands.Add("msgdlg", func(cmd *omp.Command) {
 		dialog := omp.NewMessageDialog("Message Dialog", "Message", "Ok", "Cancel")
 
