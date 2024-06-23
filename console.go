@@ -5,7 +5,7 @@ import "C"
 
 func SendRCONCommand(command string) {
 	cCommand := newCString(command)
-	freeCString(cCommand)
+	defer freeCString(cCommand)
 
 	C.console_send(cCommand)
 }
