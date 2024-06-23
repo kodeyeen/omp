@@ -47,8 +47,8 @@ func init() {
 	})
 
 	omp.Events.Listen(omp.EventTypeConsoleText, func(e *omp.ConsoleTextEvent) bool {
-		fmt.Println(e.Command, e.Parameters)
-		return true
+		fmt.Println("onConsoleText", e.Command, e.Parameters)
+		return false
 	})
 
 	omp.Commands.Add("rcontest", func(cmd *omp.Command) {
