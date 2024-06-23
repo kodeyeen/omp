@@ -136,6 +136,7 @@ func WorldTime() int {
 
 func IsIPBanned(IP string) bool {
 	cIP := newCString(IP)
+	defer freeCString(cIP)
 
 	return C.config_isBanned(cIP) != 0
 }
