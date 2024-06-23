@@ -17,6 +17,18 @@ const (
 	LogLevelError
 )
 
+type settableCoreDataType int
+
+const (
+	settableCoreDataTypeServerName settableCoreDataType = iota
+	settableCoreDataTypeModeText
+	settableCoreDataTypeMapName
+	settableCoreDataTypeLanguage
+	settableCoreDataTypeURL
+	settableCoreDataTypePassword
+	settableCoreDataTypeAdminPassword
+)
+
 func Println(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 
@@ -35,17 +47,6 @@ func Log(level LogLevel, format string, a ...any) {
 	C.server_logLnU8(C.int(level), cMsg)
 }
 
-func SetGameModeText(text string) {
-	cText := newCString(text)
-	defer freeCString(cText)
-
-	C.server_setModeText(cText)
-}
-
-func SetGameModeTextf(format string, a ...any) {
-	SetGameModeText(fmt.Sprintf(format, a...))
-}
-
 func SetWeather(weather int) {
 	C.server_setWeather(C.int(weather))
 }
@@ -62,42 +63,33 @@ func SetServerName(name string) {
 	cName := newCString(name)
 	defer freeCString(cName)
 
-	C.server_setServerName(cName)
+	C.server_setData(C.int(settableCoreDataTypeServerName), cName)
 }
 
-func SetServerNamef(format string, a ...any) {
-	SetServerName(fmt.Sprintf(format, a...))
+func SetGameModeText(text string) {
+	cText := newCString(text)
+	defer freeCString(cText)
+
+	C.server_setData(C.int(settableCoreDataTypeModeText), cText)
 }
 
 func SetMapName(name string) {
 	cName := newCString(name)
 	defer freeCString(cName)
 
-	C.server_setMapName(cName)
-}
-
-func SetMapNamef(format string, a ...any) {
-	SetMapName(fmt.Sprintf(format, a...))
+	C.server_setData(C.int(settableCoreDataTypeMapName), cName)
 }
 
 func SetLanguage(language string) {
 	cLanguage := newCString(language)
 	defer freeCString(cLanguage)
 
-	C.server_setLanguage(cLanguage)
-}
-
-func SetLanguagef(format string, a ...any) {
-	SetLanguage(fmt.Sprintf(format, a...))
+	C.server_setData(C.int(settableCoreDataTypeLanguage), cLanguage)
 }
 
 func SetURL(url string) {
-	cUrl := newCString(url)
-	defer freeCString(cUrl)
+	cURL := newCString(url)
+	defer freeCString(cURL)
 
-	C.server_setURL(cUrl)
-}
-
-func SetURLf(format string, a ...any) {
-	SetURL(fmt.Sprintf(format, a...))
+	C.server_setData(C.int(settableCoreDataTypeURL), cURL)
 }
