@@ -211,9 +211,13 @@ func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, i
 	defer handlePanic()
 
 	eventPlayer := &Player{handle: player}
+	playerID := eventPlayer.ID()
 
-	dialog := activeDialogs[eventPlayer.ID()]
-	delete(activeDialogs, eventPlayer.ID())
+	dialog, ok := activeDialogs[playerID]
+	if !ok {
+		panic("active dialog is not set")
+	}
+	delete(activeDialogs, playerID)
 
 	switch dialog := dialog.(type) {
 	case *MessageDialog:
@@ -257,6 +261,8 @@ func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, i
 		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
 			Player: eventPlayer,
 		})
+	default:
+		panic("unknown dialog type")
 	}
 }
 
