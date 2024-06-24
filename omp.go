@@ -213,6 +213,7 @@ func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, i
 	eventPlayer := &Player{handle: player}
 
 	dialog := activeDialogs[eventPlayer.ID()]
+	delete(activeDialogs, eventPlayer.ID())
 
 	switch dialog := dialog.(type) {
 	case *MessageDialog:
@@ -257,8 +258,6 @@ func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, i
 			Player: eventPlayer,
 		})
 	}
-
-	delete(activeDialogs, eventPlayer.ID())
 }
 
 // GangZone events
