@@ -31,16 +31,16 @@ func configOption[T configOptionValue](key string) T {
 	cKey := newCString(key)
 	defer freeCString(cKey)
 
-	t := any(new(T))
+	var t T
 	var result any
 
-	switch t.(type) {
+	switch any(t).(type) {
 	case float64:
-		result = C.config_getFloat(cKey)
+		result = float64(C.config_getFloat(cKey))
 	case int:
-		result = C.config_getInt(cKey)
+		result = int(C.config_getInt(cKey))
 	case bool:
-		result = C.config_getBool(cKey)
+		result = bool(C.config_getBool(cKey) > 0)
 	}
 
 	return result.(T)
