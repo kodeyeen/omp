@@ -9,11 +9,11 @@ const (
 	PlayerMarkerModeStreamed
 )
 
-type configOptionValue interface {
+type ConfigOptionValue interface {
 	float64 | int | bool
 }
 
-func setConfigOption[T configOptionValue](key string, value T) {
+func SetConfigOption[T ConfigOptionValue](key string, value T) {
 	cKey := newCString(key)
 	defer freeCString(cKey)
 
@@ -27,7 +27,7 @@ func setConfigOption[T configOptionValue](key string, value T) {
 	}
 }
 
-func configOption[T configOptionValue](key string) T {
+func ConfigOption[T ConfigOptionValue](key string) T {
 	cKey := newCString(key)
 	defer freeCString(cKey)
 
@@ -40,98 +40,98 @@ func configOption[T configOptionValue](key string) T {
 	case int:
 		result = int(C.config_getInt(cKey))
 	case bool:
-		result = bool(C.config_getBool(cKey) > 0)
+		result = bool(C.config_getBool(cKey) != 0)
 	}
 
 	return result.(T)
 }
 
 func AllowAdminTeleport() {
-	setConfigOption("rcon.allow_teleport", true)
+	SetConfigOption("rcon.allow_teleport", true)
 }
 
 func DisallowAdminTeleport() {
-	setConfigOption("rcon.allow_teleport", false)
+	SetConfigOption("rcon.allow_teleport", false)
 }
 
 func IsAdminTeleportAllowed() bool {
-	return configOption[bool]("rcon.allow_teleport")
+	return ConfigOption[bool]("rcon.allow_teleport")
 }
 
 func AreInteriorWeaponsAllowed() bool {
-	return configOption[bool]("game.allow_interior_weapons")
+	return ConfigOption[bool]("game.allow_interior_weapons")
 }
 
 func EnableInteriorEnterExits() {
-	setConfigOption("game.use_entry_exit_markers", true)
+	SetConfigOption("game.use_entry_exit_markers", true)
 }
 
 func DisableInteriorEnterExits() {
-	setConfigOption("game.use_entry_exit_markers", false)
+	SetConfigOption("game.use_entry_exit_markers", false)
 }
 
 func AreInteriorEnterExitsEnabled() bool {
-	return configOption[bool]("game.use_entry_exit_markers")
+	return ConfigOption[bool]("game.use_entry_exit_markers")
 }
 
 func EnableNametagLOS() {
-	setConfigOption("game.use_nametag_los", true)
+	SetConfigOption("game.use_nametag_los", true)
 }
 
 func DisableNametagLOS() {
-	setConfigOption("game.use_nametag_los", false)
+	SetConfigOption("game.use_nametag_los", false)
 }
 
 func IsNametagLOSEnabled() bool {
-	return configOption[bool]("game.use_nametag_los")
+	return ConfigOption[bool]("game.use_nametag_los")
 }
 
 func EnableAllAnimations() {
-	setConfigOption("game.use_all_animations", true)
+	SetConfigOption("game.use_all_animations", true)
 }
 
 func DisableAllAnimations() {
-	setConfigOption("game.use_all_animations", false)
+	SetConfigOption("game.use_all_animations", false)
 }
 
 func AreAllAnimationsEnabled() bool {
-	return configOption[bool]("game.use_all_animations")
+	return ConfigOption[bool]("game.use_all_animations")
 }
 
 func EnableVehicleFriendlyFire() {
-	setConfigOption("game.use_vehicle_friendly_fire", true)
+	SetConfigOption("game.use_vehicle_friendly_fire", true)
 }
 
 func DisableVehicleFriendlyFire() {
-	setConfigOption("game.use_vehicle_friendly_fire", false)
+	SetConfigOption("game.use_vehicle_friendly_fire", false)
 }
 
 func IsVehicleFriendlyFireEnabled() bool {
-	return configOption[bool]("game.use_vehicle_friendly_fire")
+	return ConfigOption[bool]("game.use_vehicle_friendly_fire")
 }
 
 func EnableZoneNames() {
-	setConfigOption("game.use_zone_names", true)
+	SetConfigOption("game.use_zone_names", true)
 }
 
 func DisableZoneNames() {
-	setConfigOption("game.use_zone_names", false)
+	SetConfigOption("game.use_zone_names", false)
 }
 
 func AreZoneNamesEnabled() bool {
-	return configOption[bool]("game.use_zone_names")
+	return ConfigOption[bool]("game.use_zone_names")
 }
 
 func MaxPlayers() int {
-	return configOption[int]("max_players")
+	return ConfigOption[int]("max_players")
 }
 
 func Weather() int {
-	return configOption[int]("game.weather")
+	return ConfigOption[int]("game.weather")
 }
 
 func WorldTime() int {
-	return configOption[int]("game.time")
+	return ConfigOption[int]("game.time")
 }
 
 func IsIPBanned(IP string) bool {
@@ -142,71 +142,71 @@ func IsIPBanned(IP string) bool {
 }
 
 func LimitGlobalChatRadius(radius float64) {
-	setConfigOption("game.use_chat_radius", true)
-	setConfigOption("game.chat_radius", radius)
+	SetConfigOption("game.use_chat_radius", true)
+	SetConfigOption("game.chat_radius", radius)
 }
 
 func LimitPlayerMarkerRadius(radius float64) {
-	setConfigOption("game.use_player_marker_draw_radius", true)
-	setConfigOption("game.player_marker_draw_radius", radius)
+	SetConfigOption("game.use_player_marker_draw_radius", true)
+	SetConfigOption("game.player_marker_draw_radius", radius)
 }
 
 func EnableManualEngineAndLights() {
-	setConfigOption("game.use_manual_engine_and_lights", true)
+	SetConfigOption("game.use_manual_engine_and_lights", true)
 }
 
 func DisableManualEngineAndLights() {
-	setConfigOption("game.use_manual_engine_and_lights", true)
+	SetConfigOption("game.use_manual_engine_and_lights", true)
 }
 
 func IsManualEngineAndLightsEnabled() bool {
-	return configOption[bool]("game.use_manual_engine_and_lights")
+	return ConfigOption[bool]("game.use_manual_engine_and_lights")
 }
 
 func SetNametagDrawRadius(radius float64) {
-	setConfigOption("game.nametag_draw_radius", radius)
+	SetConfigOption("game.nametag_draw_radius", radius)
 }
 
 func EnableNametags() {
-	setConfigOption("game.use_nametags", true)
+	SetConfigOption("game.use_nametags", true)
 }
 
 func DisableNametags() {
-	setConfigOption("game.use_nametags", true)
+	SetConfigOption("game.use_nametags", true)
 }
 
 func IsNametagsEnabled() bool {
-	return configOption[bool]("game.use_nametags")
+	return ConfigOption[bool]("game.use_nametags")
 }
 
 func SetPlayerMarkerMode(mode int) {
-	setConfigOption("game.player_marker_mode", mode)
+	SetConfigOption("game.player_marker_mode", mode)
 }
 
 func PlayerMarkerMode() int {
-	return configOption[int]("game.player_marker_mode")
+	return ConfigOption[int]("game.player_marker_mode")
 }
 
 func EnableChatInputFilter() {
-	setConfigOption("chat_input_filter", true)
+	SetConfigOption("chat_input_filter", true)
 }
 
 func DisableChatInputFilter() {
-	setConfigOption("chat_input_filter", false)
+	SetConfigOption("chat_input_filter", false)
 }
 
 func IsChatInputFilterEnabled() bool {
-	return configOption[bool]("chat_input_filter")
+	return ConfigOption[bool]("chat_input_filter")
 }
 
 func EnablePlayerPedAnims() {
-	setConfigOption("game.use_player_ped_anims", true)
+	SetConfigOption("game.use_player_ped_anims", true)
 }
 
 func DisablePlayerPedAnims() {
-	setConfigOption("game.use_player_ped_anims", false)
+	SetConfigOption("game.use_player_ped_anims", false)
 }
 
 func ArePlayerPedAnimsEnabled() bool {
-	return configOption[bool]("game.use_player_ped_anims")
+	return ConfigOption[bool]("game.use_player_ped_anims")
 }
