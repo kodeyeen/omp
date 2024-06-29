@@ -1272,6 +1272,18 @@ func (p *Player) CustomSkin() int {
 	return int(C.player_getCustomSkin(p.handle))
 }
 
+func (p *Player) RedirectDownload(url string) error {
+	cURL := newCString(url)
+	defer freeCString(cURL)
+
+	cOk := C.player_redirectDownload(p.handle, cURL)
+	if cOk == 0 {
+		return errors.New("failed to redirect download")
+	}
+
+	return nil
+}
+
 func (p *Player) showDialog(style dialogStyle, title, body, button1, button2 string) {
 	cTitle := newCString(title)
 	defer freeCString(cTitle)

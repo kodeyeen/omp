@@ -592,6 +592,10 @@ extern "C" {
         return call<int>("player_getCustomSkin", player);
     }
 
+    unsigned char player_redirectDownload(void* player, String url) {
+        return call<unsigned char>("player_redirectDownload", player, url);
+    }
+
     void player_showDialog(void* player, int id, int style, String title, String body, String button1, String button2) {
         return call<void>("player_showDialog", player, id, style, title, body, button1, button2);
     }

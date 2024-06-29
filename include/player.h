@@ -204,6 +204,7 @@ extern "C" {
 
     // custom models data
     int player_getCustomSkin(void* player);
+    unsigned char player_redirectDownload(void* player, String url);
 
     // dialog data
     void player_showDialog(void* player, int id, int style, String title, String body, String button1, String button2);
