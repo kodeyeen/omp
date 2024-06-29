@@ -42,7 +42,7 @@ func AddSimpleModel(vw, baseID, newID int, dff, txd string) error {
 
 func AddSimpleModelTimed(vw, baseID, newID int, dff, txd string, timeOn, timeOff int) error {
 	cDff := newCString(dff)
-	freeCString(cDff)
+	defer freeCString(cDff)
 
 	cTxd := newCString(txd)
 	defer freeCString(cTxd)
