@@ -61,6 +61,10 @@ func ModelNameFromCRC(crc int) string {
 	return C.GoStringN(cName.buf, C.int(cName.length))
 }
 
+func IsValidModel(modelID int) bool {
+	return C.model_isValid(C.int(modelID)) != 0
+}
+
 func ModelPath(modelID int) (modelPath, error) {
 	var cDffPath C.String
 	var cTxdPath C.String
