@@ -21,21 +21,15 @@ type Animation struct {
 }
 
 type Vector4 struct {
-	X float32
-	Y float32
-	Z float32
-	W float32
+	X, Y, Z, W float32
 }
 
 type Vector3 struct {
-	X float32
-	Y float32
-	Z float32
+	X, Y, Z float32
 }
 
 type Vector2 struct {
-	X float32
-	Y float32
+	X, Y float32
 }
 
 type Color uint
