@@ -12,7 +12,7 @@ type modelPath struct {
 
 func AddCharModel(baseID, newID int, dff, txd string) error {
 	cDff := newCString(dff)
-	freeCString(cDff)
+	defer freeCString(cDff)
 
 	cTxd := newCString(txd)
 	defer freeCString(cTxd)
