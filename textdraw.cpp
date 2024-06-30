@@ -1,9 +1,6 @@
 #include "include/textdraw.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* textDraw_create(float posX, float posY, String text) {
         return call<void*>("textDraw_create", posX, posY, text);
     }
@@ -343,7 +340,4 @@ extern "C" {
     int playerTextDraw_isShown(void* textdraw) {
         return call<int>("playerTextDraw_isShown", textdraw);
     }
-
-#ifdef __cplusplus
 }
-#endif

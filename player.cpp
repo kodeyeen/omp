@@ -1,9 +1,6 @@
 #include "include/player.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* player_getByID(int id) {
         return call<void*>("player_getByID", id);
     }
@@ -679,7 +676,4 @@ extern "C" {
     unsigned char player_isInRangeOfPoint(void* player, float range, float pX, float pY, float pZ) {
         return call<unsigned char>("player_isInRangeOfPoint", player, range, pX, pY, pZ);
     }
-
-#ifdef __cplusplus
 }
-#endif

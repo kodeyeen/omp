@@ -1,9 +1,6 @@
 #include "include/actor.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* actor_create(int skin, float posX, float posY, float posZ, float angle) {
         return call<void*>("actor_create", skin, posX, posY, posZ, angle);
     }
@@ -79,7 +76,4 @@ extern "C" {
     float actor_getFacingAngle(void* actor) {
         return call<float>("actor_getFacingAngle", actor);
     }
-
-#ifdef __cplusplus
 }
-#endif

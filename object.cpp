@@ -1,9 +1,6 @@
 #include "include/object.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* object_create(int modelId, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float drawDistance) {
         return call<void*>("object_create", modelId, posX, posY, posZ, rotX, rotY, rotZ, drawDistance);
     }
@@ -223,7 +220,4 @@ extern "C" {
     Vector3 playerObject_getRotation(void* object) {
         return call<Vector3>("playerObject_getRotation", object);
     }
-
-#ifdef __cplusplus
 }
-#endif

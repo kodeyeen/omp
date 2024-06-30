@@ -1,9 +1,6 @@
 #include "include/pickup.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* pickup_create(int modelId, uint8_t type, float posX, float posY, float posZ, uint32_t virtualWorld, int isStatic) {
         return call<void*>("pickup_create", modelId, type, posX, posY, posZ, virtualWorld, isStatic);
     }
@@ -67,7 +64,4 @@ extern "C" {
     void playerPickup_release(void* pickup, void* player) {
         return call<void>("playerPickup_release", pickup, player);
     }
-
-#ifdef __cplusplus
 }
-#endif

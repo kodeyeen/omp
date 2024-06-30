@@ -1,9 +1,6 @@
 #include "include/turf.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* turf_create(float minX, float minY, float maxX, float maxY) {
         return call<void*>("gangZone_create", minX, minY, maxX, maxY);
     }
@@ -85,7 +82,4 @@ extern "C" {
     void playerTurf_release(void* turf, void* player) {
         return call<void>("playerGangZone_release", turf, player);
     }
-
-#ifdef __cplusplus
 }
-#endif

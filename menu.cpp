@@ -1,9 +1,6 @@
 #include "include/menu.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* menu_create(String title, float posX, float posY, uint8_t columns, float col1Width, float col2Width) {
         return call<void*>("menu_create", title, posX, posY, columns, col1Width, col2Width);
     }
@@ -67,7 +64,4 @@ extern "C" {
     void menu_hideForPlayer(void* menu, void* player) {
         return call<void>("menu_hideForPlayer", menu, player);
     }
-
-#ifdef __cplusplus
 }
-#endif

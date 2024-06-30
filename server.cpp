@@ -1,9 +1,6 @@
 #include "include/server.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void server_printLnU8(const char* fmt) {
         return call<void>("server_printLnU8", fmt);
     }
@@ -27,7 +24,4 @@ extern "C" {
     void server_setData(int type, String data) {
         return call<void>("server_setData", type, data);
     }
-
-#ifdef __cplusplus
 }
-#endif

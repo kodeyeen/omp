@@ -1,9 +1,6 @@
 #include "include/class.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* class_create(ClassData* data) {
         return call<void*>("class_create", data);
     }
@@ -23,7 +20,4 @@ extern "C" {
     ClassData class_getClass(void* class_) {
         return call<ClassData>("class_getClass", class_);
     }
-
-#ifdef __cplusplus
 }
-#endif

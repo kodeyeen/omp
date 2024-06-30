@@ -1,9 +1,6 @@
 #include "include/checkpoint.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* checkpoint_setPosition(void* checkpoint, float posX, float posY, float posZ) {
         return call<void*>("checkpoint_setPosition", checkpoint, posX, posY, posZ);
     }
@@ -83,7 +80,4 @@ extern "C" {
     Vector3 raceCheckpoint_getNextPosition(void* checkpoint) {
         return call<Vector3>("raceCheckpoint_getNextPosition", checkpoint);
     }
-
-#ifdef __cplusplus
 }
-#endif

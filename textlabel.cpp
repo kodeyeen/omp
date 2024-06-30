@@ -1,9 +1,6 @@
 #include "include/textlabel.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void* textLabel_create(String text, uint32_t colour, float posX, float posY, float posZ, float drawDist, int vw, unsigned char los) {
         return call<void*>("textLabel_create", text, colour, posX, posY, posZ, drawDist, vw, los);
     }
@@ -159,7 +156,4 @@ extern "C" {
     int playerTextLabel_getVirtualWorld(void* textLabel) {
         return call<int>("playerTextLabel_getVirtualWorld", textLabel);
     }
-
-#ifdef __cplusplus
 }
-#endif

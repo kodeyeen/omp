@@ -1,9 +1,6 @@
 #include "include/config.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void config_setFloat(String key, float value) {
         return call<void>("config_setFloat", key, value);
     }
@@ -35,7 +32,4 @@ extern "C" {
     unsigned char config_isBanned(String ip) {
         return call<unsigned char>("config_isBanned", ip);
     }
-
-#ifdef __cplusplus
 }
-#endif

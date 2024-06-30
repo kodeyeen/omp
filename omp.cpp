@@ -9,10 +9,7 @@
 void* libHandle;
 std::unordered_map<std::string, void*> funcs;
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
     void loadComponent() {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
         libHandle = LoadLibrary("./components/Go.dll");
@@ -48,7 +45,4 @@ extern "C" {
     unsigned char getVehicleModelInfo(int model, int type, Vector3* out) {
         return call<unsigned char>("getVehicleModelInfo", model, type, out);
     }
-
-#ifdef __cplusplus
 }
-#endif
