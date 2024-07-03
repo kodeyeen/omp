@@ -1,8 +1,9 @@
 #ifndef GOMP_H
 #define GOMP_H
 
-#include <stdint.h>
+#include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 typedef struct {
     const char* buf;
@@ -62,6 +63,11 @@ typedef struct {
 	Vector3 velocity;
 } UnoccupiedVehicleUpdate;
 
+struct EventArgs {
+	uint8_t size;
+	void** list;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -69,6 +75,16 @@ extern "C" {
     void loadComponent();
     void unloadComponent();
     void* findFunc(const char* name);
+
+    bool Event_AddHandler(const char* name, int priority, void* callback);
+    bool Event_RemoveHandler(const char* name, int priority, void* callback);
+
+    void onReady();
+    void onFree();
+    
+    bool onGameModeInit();
+    bool onGameModeExit();
+    bool onPlayerConnect(struct EventArgs* args);
 
     void freeArray(Array arr);
     uint8_t getWeaponSlotIndex(uint8_t weapon);

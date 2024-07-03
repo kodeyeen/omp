@@ -52,20 +52,31 @@ func handlePanic() {
 	}
 }
 
+//export ComponentEntryPoint
+func ComponentEntryPoint() unsafe.Pointer {
+	ver := ComponentVersion{major: 0, minor: 0, patch: 0, prerel: 0}
+
+	return newComponent(newUID(), "OmpGo", ver, C.onReady, nil, C.onFree)
+}
+
 //export onGameModeInit
-func onGameModeInit() {
+func onGameModeInit() C.bool {
 	defer handlePanic()
 
 	C.loadComponent()
 
 	event.Dispatch(Events, EventTypeGameModeInit, &GameModeInitEvent{})
+
+	return true
 }
 
 //export onGameModeExit
-func onGameModeExit() {
+func onGameModeExit() C.bool {
 	defer handlePanic()
 
 	event.Dispatch(Events, EventTypeGameModeExit, &GameModeExitEvent{})
+
+	return true
 }
 
 // Actor events
@@ -526,12 +537,17 @@ func onIncomingConnection(player unsafe.Pointer, ipAddress C.String, port C.usho
 }
 
 //export onPlayerConnect
-func onPlayerConnect(player unsafe.Pointer) {
+func onPlayerConnect(args *C.struct_EventArgs) C.bool {
 	defer handlePanic()
+
+	handles := unsafe.Slice(args.list, args.size)
+	player := *(*unsafe.Pointer)(handles[0])
 
 	event.Dispatch(Events, EventTypePlayerConnect, &PlayerConnectEvent{
 		Player: &Player{handle: player},
 	})
+
+	return true
 }
 
 //export onPlayerDisconnect

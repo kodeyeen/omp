@@ -34,6 +34,26 @@ extern "C" {
 #endif
     }
 
+    bool Event_AddHandler(const char* name, int priority, void* callback) {
+        return call<bool>("Event_AddHandler", name, priority, callback);
+    }
+
+    bool Event_RemoveHandler(const char* name, int priority, void* callback) {
+        return call<bool>("Event_RemoveHandler", name, priority, callback);
+    }
+
+    void onReady() {
+        Event_AddHandler("onPlayerConnect", 0, (void*)onPlayerConnect);
+
+        onGameModeInit();
+    }
+
+    void onFree() {
+        Event_RemoveHandler("onPlayerConnect", 0, (void*)onPlayerConnect);
+
+        onGameModeExit();
+    }
+
     void freeArray(Array arr) {
         return call<void>("freeArray", arr);
     }
