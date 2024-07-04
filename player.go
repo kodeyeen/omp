@@ -169,10 +169,10 @@ const (
 )
 
 type PlayerAttachment struct {
-	ModelID            int
-	Bone               PlayerBone
-	Offset, Rot, Scale Vector3
-	Color1, Color2     Color
+	ModelID                 int
+	Bone                    PlayerBone
+	Offset, Rotation, Scale Vector3
+	Color1, Color2          Color
 }
 
 type PlayerBone int
@@ -1385,9 +1385,9 @@ func (p *Player) SetAttachment(slotIdx int, attachment PlayerAttachment) {
 		C.float(attachment.Offset.X),
 		C.float(attachment.Offset.Y),
 		C.float(attachment.Offset.Z),
-		C.float(attachment.Rot.X),
-		C.float(attachment.Rot.Y),
-		C.float(attachment.Rot.Z),
+		C.float(attachment.Rotation.X),
+		C.float(attachment.Rotation.Y),
+		C.float(attachment.Rotation.Z),
 		C.float(attachment.Scale.X),
 		C.float(attachment.Scale.Y),
 		C.float(attachment.Scale.Z),
@@ -1408,7 +1408,7 @@ func (p *Player) Attachment(slotIdx int) PlayerAttachment {
 			Y: float32(obj.offset.y),
 			Z: float32(obj.offset.z),
 		},
-		Rot: Vector3{
+		Rotation: Vector3{
 			X: float32(obj.rotation.x),
 			Y: float32(obj.rotation.y),
 			Z: float32(obj.rotation.z),
