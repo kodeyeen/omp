@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "capi/include/ompcapi.h"
 
 typedef struct {
     const char* buf;
@@ -63,11 +64,6 @@ typedef struct {
 	Vector3 velocity;
 } UnoccupiedVehicleUpdate;
 
-struct EventArgs {
-	uint8_t size;
-	void** list;
-};
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -84,7 +80,7 @@ extern "C" {
     
     bool onGameModeInit();
     bool onGameModeExit();
-    bool onPlayerConnect(struct EventArgs* args);
+    bool onPlayerConnect(struct EventArgs_onPlayerConnect* args);
 
     void freeArray(Array arr);
     uint8_t getWeaponSlotIndex(uint8_t weapon);

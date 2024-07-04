@@ -20,4 +20,8 @@ extern "C" {
     ClassData class_getClass(void* class_) {
         return call<ClassData>("class_getClass", class_);
     }
+
+    void* Class_FromID(int classid) {
+        return call<void*>("Class_FromID", classid);
+    }
 }

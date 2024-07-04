@@ -26,6 +26,8 @@ extern "C" {
 	void class_setClass(void* class_, ClassData* data);
 	ClassData class_getClass(void* class_);
 
+	void* Class_FromID(int classid);
+
 #ifdef __cplusplus
 }
 #endif
