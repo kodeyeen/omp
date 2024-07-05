@@ -260,6 +260,11 @@ uint32_t Player_GetHydraReactorAngle(void* player);
 float Player_GetTrainSpeed(void* player);
 
 
+// Component functions
+
+void* Component_Create(uint64_t uid, const char* name, ComponentVersion version, void* onReadyCB, void* onResetCB, void* onFreeCB);
+
+
 // Config functions
 
 bool Config_GetAsBool(const char* cvar);
@@ -321,6 +326,17 @@ bool Core_RemoveRule(const char* name);
 // NPC functions
 
 bool NPC_Connect(const char* name, const char* script);
+
+
+// CustomModel functions
+
+bool CustomModel_AddCharModel(int baseid, int newid, const char* dff, const char* textureLibrary);
+bool CustomModel_AddSimpleModel(int virtualWorld, int baseid, int newid, const char* dff, const char* textureLibrary);
+bool CustomModel_AddSimpleModelTimed(int virtualWorld, int baseid, int newid, const char* dff, const char* textureLibrary, int timeOn, int timeOff);
+bool CustomModel_RedirectDownload(void* player, const char* url);
+int CustomModel_FindModelFileNameFromCRC(int crc, CAPIStringView* output);
+bool CustomModel_IsValid(int modelId);
+bool CustomModel_GetPath(int modelId, CAPIStringView* dffPath, CAPIStringView* txdPath);
 
 
 // Dialog functions

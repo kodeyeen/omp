@@ -928,6 +928,13 @@ float Player_GetTrainSpeed(void* player) {
 }
 
 
+// Component functions
+
+void* Component_Create(uint64_t uid, const char* name, ComponentVersion version, void* onReadyCB, void* onResetCB, void* onFreeCB) {
+    return ompcapi->Component.Create(uid, name, version, onReadyCB, onResetCB, onFreeCB);
+}
+
+
 // Config functions
 
 bool Config_GetAsBool(const char* cvar) {
@@ -1138,6 +1145,37 @@ bool Core_RemoveRule(const char* name) {
 
 bool NPC_Connect(const char* name, const char* script) {
     return ompcapi->NPC.Connect(name, script);
+}
+
+
+// CustomModel functions
+
+bool CustomModel_AddCharModel(int baseid, int newid, const char* dff, const char* textureLibrary) {
+    return ompcapi->CustomModel.AddCharModel(baseid, newid, dff, textureLibrary);
+}
+
+bool CustomModel_AddSimpleModel(int virtualWorld, int baseid, int newid, const char* dff, const char* textureLibrary) {
+    return ompcapi->CustomModel.AddSimpleModel(virtualWorld, baseid, newid, dff, textureLibrary);
+}
+
+bool CustomModel_AddSimpleModelTimed(int virtualWorld, int baseid, int newid, const char* dff, const char* textureLibrary, int timeOn, int timeOff) {
+    return ompcapi->CustomModel.AddSimpleModelTimed(virtualWorld, baseid, newid, dff, textureLibrary, timeOn, timeOff);
+}
+
+bool CustomModel_RedirectDownload(void* player, const char* url) {
+    return ompcapi->CustomModel.RedirectDownload(player, url);
+}
+
+int CustomModel_FindModelFileNameFromCRC(int crc, CAPIStringView* output) {
+    return ompcapi->CustomModel.FindModelFileNameFromCRC(crc, output);
+}
+
+bool CustomModel_IsValid(int modelId) {
+    return ompcapi->CustomModel.IsValid(modelId);
+}
+
+bool CustomModel_GetPath(int modelId, CAPIStringView* dffPath, CAPIStringView* txdPath) {
+    return ompcapi->CustomModel.GetPath(modelId, dffPath, txdPath);
 }
 
 
