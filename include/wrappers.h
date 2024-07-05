@@ -9,6 +9,8 @@
 #include <stdbool.h>
 #include "capi/include/ompcapi.h"
 
+typedef struct CAPIStringView CAPIStringView;
+
 struct OMPAPI_t* ompapi;
 
 // Actor functions
