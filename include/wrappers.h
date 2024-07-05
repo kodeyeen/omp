@@ -4,8 +4,8 @@
 // we need to create C wrapper functions around ompcapi pointers
 // which will be used by Go code.
 
-#ifndef CWRAPPERS_H
-#define CWRAPPERS_H
+#ifndef WRAPPERS_H
+#define WRAPPERS_H
 
 #include <stdbool.h>
 #include "capi/include/ompcapi.h"
@@ -734,4 +734,4 @@ void* Vehicle_GetOccupant(void* vehicle, int seat);
 int Vehicle_CountOccupants(void* vehicle);
 
 
-#endif // CWRAPPERS_H
+#endif // WRAPPERS_H
