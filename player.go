@@ -1251,11 +1251,11 @@ func (p *Player) IsAdmin() bool {
 
 // checkpoint data
 
-// DefaultCheckpoint returns the player's default checkpoint.
-func (p *Player) DefaultCheckpoint() *DefaultCheckpoint {
+// Checkpoint returns the player's checkpoint.
+func (p *Player) Checkpoint() *Checkpoint {
 	cp := C.player_getCheckpoint(p.handle)
 
-	return &DefaultCheckpoint{handle: cp}
+	return &Checkpoint{handle: cp}
 }
 
 // RaceCheckpoint returns the player's race checkpoint.
