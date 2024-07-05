@@ -12,7 +12,9 @@
 {{range .Funcs}}
 {{.Ret}} {{.Name}}({{range $i, $e := .Params}}{{if $i}}, {{end}}{{$e.Type}} {{$e.Name}}{{end}}) {
     {{- $splitName := split .Name "_"}}
-    return ompapi->{{join $splitName "."}}({{range $i, $e := .Params}}{{if $i}}, {{end}}{{$e.Name}}{{end}});
+    {{- $group := index $splitName 0}}
+    {{- $rest := slice $splitName 1 }}
+    return ompapi->{{$group}}.{{join $rest "_"}}({{range $i, $e := .Params}}{{if $i}}, {{end}}{{$e.Name}}{{end}});
 }
 {{end}}
 

@@ -1054,7 +1054,7 @@ bool Core_SetDeathDropAmount(int amount) {
 }
 
 bool Core_GameMode_SetText(const char* string) {
-    return ompapi->Core.GameMode.SetText(string);
+    return ompapi->Core.GameMode_SetText(string);
 }
 
 bool Core_SetGravity(float gravity) {
