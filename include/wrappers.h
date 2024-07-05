@@ -9,6 +9,8 @@
 #include <stdbool.h>
 #include "capi/include/ompcapi.h"
 
+struct OMPAPI_t* ompapi;
+
 // Actor functions
 
 void* Actor_Create(int model, float x, float y, float z, float rot, int* id);

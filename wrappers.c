@@ -3,9 +3,7 @@
 // we need to create C wrapper functions around ompcapi pointers
 // which will be used by Go code.
 
-#include "include/cwrappers.h"
-
-struct OMPAPI_t* ompapi;
+#include "include/wrappers.h"
 
 // Actor functions
 
