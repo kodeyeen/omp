@@ -55,9 +55,17 @@ func handlePanic() {
 
 //export ComponentEntryPoint
 func ComponentEntryPoint() unsafe.Pointer {
-	ver := ComponentVersion{major: 0, minor: 0, patch: 0, prerel: 0}
+	cName := C.CString("OmpGo")
+	defer C.free(unsafe.Pointer(cName))
 
-	return newComponent(newUID(), "OmpGo", ver, C.onReady, nil, C.onFree)
+	cVer := C.struct_ComponentVersion{
+		major:  0,
+		minor:  0,
+		patch:  0,
+		prerel: 0,
+	}
+
+	return C.Component_Create(C.ulonglong(uid), cName, cVer, onReady, onReset, onFree)
 }
 
 //export onGameModeInit
