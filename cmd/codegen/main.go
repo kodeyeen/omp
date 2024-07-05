@@ -15,12 +15,12 @@ func main() {
 		log.Fatalf("Failed to parse API docs file: %s\n", err.Error())
 	}
 
-	err = genFromTemplate("include/cwrappers.h", "cwrappers.h.go.tmpl", api)
+	err = genFromTemplate("include/wrappers.h", "wrappers.h.go.tmpl", api)
 	if err != nil {
 		log.Fatalf("Failed to generate header file: %s\n", err.Error())
 	}
 
-	err = genFromTemplate("cwrappers.c", "cwrappers.c.go.tmpl", api)
+	err = genFromTemplate("wrappers.c", "wrappers.c.go.tmpl", api)
 	if err != nil {
 		log.Fatalf("Failed to generate source file: %s\n", err.Error())
 	}
