@@ -10,6 +10,7 @@
 #include "capi/include/ompcapi.h"
 
 typedef struct CAPIStringView CAPIStringView;
+typedef struct ComponentVersion ComponentVersion;
 
 struct OMPAPI_t* ompapi;
 
