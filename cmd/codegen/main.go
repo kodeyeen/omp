@@ -60,7 +60,7 @@ func genFromTemplate(dstPath, tmplPath string, api *API) error {
 		return fmt.Errorf("failed to create destination file: %w", err)
 	}
 
-	err = t.Execute(dstFile, []*Component{
+	err = t.Execute(dstFile, []*Group{
 		{Name: "Actor", Funcs: api.Actor},
 		{Name: "Checkpoint", Funcs: api.Checkpoint},
 		{Name: "RaceCheckpoint", Funcs: api.RaceCheckpoint},

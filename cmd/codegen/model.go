@@ -38,7 +38,7 @@ type Func struct {
 	Params []*FuncParam `json:"params"`
 }
 
-type Component struct {
+type Group struct {
 	Name  string
 	Funcs []*Func
 }
