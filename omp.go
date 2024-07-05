@@ -339,22 +339,22 @@ func onPlayerEnterGangZone(args *C.struct_EventArgs_onPlayerEnterGangZone) C.boo
 	return C.bool(result)
 }
 
-//export onPlayerEnterPlayerGangZone
-func onPlayerEnterPlayerGangZone(args *C.struct_EventArgs_onPlayerEnterPlayerGangZone) C.bool {
-	defer handlePanic()
+// //export onPlayerEnterPlayerGangZone
+// func onPlayerEnterPlayerGangZone(args *C.struct_EventArgs_onPlayerEnterPlayerGangZone) C.bool {
+// 	defer handlePanic()
 
-	eventPlayer := &Player{handle: *args.list.player}
+// 	eventPlayer := &Player{handle: *args.list.player}
 
-	result := event.Dispatch(Events, EventTypePlayerEnterPlayerTurf, &PlayerEnterPlayerTurfEvent{
-		Player: eventPlayer,
-		Turf: &PlayerTurf{
-			handle: *args.list.zone,
-			player: eventPlayer,
-		},
-	})
+// 	result := event.Dispatch(Events, EventTypePlayerEnterPlayerTurf, &PlayerEnterPlayerTurfEvent{
+// 		Player: eventPlayer,
+// 		Turf: &PlayerTurf{
+// 			handle: *args.list.zone,
+// 			player: eventPlayer,
+// 		},
+// 	})
 
-	return C.bool(result)
-}
+// 	return C.bool(result)
+// }
 
 //export onPlayerLeaveGangZone
 func onPlayerLeaveGangZone(args *C.struct_EventArgs_onPlayerLeaveGangZone) C.bool {
