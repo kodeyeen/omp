@@ -33,6 +33,10 @@ func FreeActor(actor *Actor) {
 	C.Actor_Destroy(actor.handle)
 }
 
+func (a *Actor) ID() int {
+	return int(C.Actor_GetID(a.handle))
+}
+
 func (a *Actor) SetSkin(skin int) {
 	C.Actor_SetSkin(a.handle, C.int(skin))
 }
