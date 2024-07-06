@@ -13,7 +13,7 @@
 typedef struct CAPIStringView CAPIStringView;
 typedef struct ComponentVersion ComponentVersion;
 
-extern struct OMPAPI_t* ompapi;
+extern struct OMPAPI_t ompapi;
 
 // Actor functions
 
