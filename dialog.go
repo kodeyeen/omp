@@ -1,9 +1,10 @@
 package omp
 
-// #include "include/player.h"
+// #include "include/wrappers.h"
 import "C"
 import (
 	"strings"
+	"unsafe"
 
 	"github.com/kodeyeen/event"
 )
@@ -19,11 +20,33 @@ const (
 	dialogStyleTablistHeaders
 )
 
-var activeDialogs = make(map[int]dialog, 1000)
+const dialogID = 999
 
-type dialog interface {
+var activeDialogs = make(map[int]Dialog, 1000)
+
+type Dialog interface {
 	ShowFor(player *Player)
 	HideFor(player *Player)
+}
+
+func showDialog(plr *Player, style dialogStyle, title, body, button1, button2 string) {
+	cTitle := C.CString(title)
+	defer C.free(unsafe.Pointer(cTitle))
+
+	cBody := C.CString(body)
+	defer C.free(unsafe.Pointer(cBody))
+
+	cButton1 := C.CString(button1)
+	defer C.free(unsafe.Pointer(cButton1))
+
+	cButton2 := C.CString(button2)
+	defer C.free(unsafe.Pointer(cButton2))
+
+	C.Dialog_Show(plr.handle, dialogID, C.int(style), cTitle, cBody, cButton1, cButton2)
+}
+
+func hideDialog(plr *Player) {
+	C.Dialog_Hide(plr.handle)
 }
 
 type MessageDialog struct {
@@ -48,7 +71,7 @@ func (d *MessageDialog) ShowFor(player *Player) {
 		Player: player,
 	})
 
-	player.showDialog(dialogStyleMsgBox, d.Title, d.Body, d.Button1, d.Button2)
+	showDialog(player, dialogStyleMsgBox, d.Title, d.Body, d.Button1, d.Button2)
 }
 
 func (d *MessageDialog) HideFor(player *Player) {
@@ -58,7 +81,7 @@ func (d *MessageDialog) HideFor(player *Player) {
 
 	delete(activeDialogs, player.ID())
 
-	player.hideDialog()
+	hideDialog(player)
 }
 
 type InputDialog struct {
@@ -101,7 +124,7 @@ func (d *InputDialog) ShowFor(player *Player) {
 		Player: player,
 	})
 
-	player.showDialog(style, d.Title, d.Body, d.Button1, d.Button2)
+	showDialog(player, style, d.Title, d.Body, d.Button1, d.Button2)
 }
 
 func (d *InputDialog) HideFor(player *Player) {
@@ -111,7 +134,7 @@ func (d *InputDialog) HideFor(player *Player) {
 
 	delete(activeDialogs, player.ID())
 
-	player.hideDialog()
+	hideDialog(player)
 }
 
 type ListDialog struct {
@@ -146,7 +169,7 @@ func (d *ListDialog) ShowFor(player *Player) {
 		Player: player,
 	})
 
-	player.showDialog(dialogStyleList, d.Title, body, d.Button1, d.Button2)
+	showDialog(player, dialogStyleList, d.Title, body, d.Button1, d.Button2)
 }
 
 func (d *ListDialog) HideFor(player *Player) {
@@ -156,7 +179,7 @@ func (d *ListDialog) HideFor(player *Player) {
 
 	delete(activeDialogs, player.ID())
 
-	player.hideDialog()
+	hideDialog(player)
 }
 
 type TabListItem []string
@@ -203,7 +226,7 @@ func (d *TabListDialog) ShowFor(player *Player) {
 		Player: player,
 	})
 
-	player.showDialog(style, d.Title, body, d.Button1, d.Button2)
+	showDialog(player, style, d.Title, body, d.Button1, d.Button2)
 }
 
 func (d *TabListDialog) makeBody(style dialogStyle) string {
@@ -227,5 +250,5 @@ func (d *TabListDialog) HideFor(player *Player) {
 
 	delete(activeDialogs, player.ID())
 
-	player.hideDialog()
+	hideDialog(player)
 }
