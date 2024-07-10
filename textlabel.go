@@ -1,8 +1,6 @@
 package omp
 
-// #include "include/textlabel.h"
-// #include "include/player.h"
-// #include "include/vehicle.h"
+// #include "include/wrappers.h"
 import "C"
 import (
 	"errors"
@@ -22,10 +20,12 @@ type TextLabel struct {
 }
 
 func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) (*TextLabel, error) {
-	cText := newCString(text)
-	defer freeCString(cText)
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
 
-	cTl := C.textLabel_create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), newCUchar(los))
+	var cID C.int
+
+	cTl := C.TextLabel_Create(cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), C.int(vw), C.bool(los), &cID)
 	if cTl == nil {
 		return nil, errors.New("text label limit was reached")
 	}
@@ -34,27 +34,32 @@ func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int,
 }
 
 func FreeTextLabel(tl *TextLabel) {
-	C.textLabel_release(tl.handle)
+	C.TextLabel_Destroy(tl.handle)
+}
+
+func (tl *TextLabel) ID() int {
+	return int(C.TextLabel_GetID(tl.handle))
 }
 
 func TextLabelAttachedData[T TextLabelAttachmentTarget](tl *TextLabel) (TextLabelAttachmentData[T], error) {
-	data := C.textLabel_getAttachmentData(tl.handle)
+	var cPlrID, cVehID C.int
 
-	t := any(new(T))
+	C.TextLabel_GetAttachedData(tl.handle, &cPlrID, &cVehID)
 
+	var t T
 	var result TextLabelAttachmentData[T]
 	var target any
 
-	switch t.(type) {
-	case *Vehicle:
-		veh := C.vehicle_getByID(data.vehicleID)
+	switch any(t).(type) {
+	case Vehicle:
+		veh := C.Vehicle_FromID(cVehID)
 		if veh == nil {
 			return result, errors.New("text label is not attached to a vehicle")
 		}
 
 		target = Vehicle{handle: veh}
-	case *Player:
-		plr := C.player_getByID(data.playerID)
+	case Player:
+		plr := C.Player_FromID(cPlrID)
 		if plr == nil {
 			return result, errors.New("text label is not attached to a player")
 		}
@@ -69,87 +74,91 @@ func TextLabelAttachedData[T TextLabelAttachmentTarget](tl *TextLabel) (TextLabe
 	return result, nil
 }
 
-func (tl *TextLabel) SetText(text string) {
-	cText := newCString(text)
-	defer freeCString(cText)
+// func (tl *TextLabel) SetText(text string) {
+// 	cText := newCString(text)
+// 	defer freeCString(cText)
 
-	C.textLabel_setText(tl.handle, cText)
-}
+// 	C.textLabel_setText(tl.handle, cText)
+// }
 
 func (tl *TextLabel) Text() string {
-	cTextStr := C.textLabel_getText(tl.handle)
+	var cText C.struct_CAPIStringView
 
-	return C.GoStringN(cTextStr.buf, C.int(cTextStr.length))
+	C.TextLabel_GetText(tl.handle, &cText)
+
+	return C.GoStringN(cText.data, C.int(cText.len))
 }
 
-func (tl *TextLabel) SetColor(clr Color) {
-	C.textLabel_setColour(tl.handle, C.uint(clr))
-}
+// func (tl *TextLabel) SetColor(clr Color) {
+// 	C.textLabel_setColour(tl.handle, C.uint(clr))
+// }
 
 func (tl *TextLabel) Color() Color {
-	return Color(C.textLabel_getColour(tl.handle))
+	return Color(C.TextLabel_GetColor(tl.handle))
 }
 
 func (tl *TextLabel) SetDrawDistance(drawDist float32) {
-	C.textLabel_setDrawDistance(tl.handle, C.float(drawDist))
+	C.TextLabel_SetDrawDistance(tl.handle, C.float(drawDist))
 }
 
 func (tl *TextLabel) DrawDistance() float32 {
-	return float32(C.textLabel_getDrawDistance(tl.handle))
+	return float32(C.TextLabel_GetDrawDistance(tl.handle))
 }
 
 func (tl *TextLabel) AttachToPlayer(plr *Player, offset Vector3) {
-	C.textLabel_attachToPlayer(tl.handle, plr.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
+	C.TextLabel_AttachToPlayer(tl.handle, plr.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
 }
 
 func (tl *TextLabel) AttachToVehicle(veh *Vehicle, offset Vector3) {
-	C.textLabel_attachToVehicle(tl.handle, veh.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
+	C.TextLabel_AttachToVehicle(tl.handle, veh.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
 }
 
-func (tl *TextLabel) DetachFromPlayer(pos Vector3) {
-	C.textLabel_detachFromPlayer(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
-}
+// func (tl *TextLabel) DetachFromPlayer(pos Vector3) {
+// 	C.textLabel_detachFromPlayer(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+// }
 
-func (tl *TextLabel) DetachFromVehicle(pos Vector3) {
-	C.textLabel_detachFromVehicle(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
-}
+// func (tl *TextLabel) DetachFromVehicle(pos Vector3) {
+// 	C.textLabel_detachFromVehicle(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+// }
 
 func (tl *TextLabel) EnableLOSTest() {
-	C.textLabel_setTestLOS(tl.handle, 1)
+	C.TextLabel_SetLOS(tl.handle, true)
 }
 
 func (tl *TextLabel) DisableLOSTest() {
-	C.textLabel_setTestLOS(tl.handle, 0)
+	C.TextLabel_SetLOS(tl.handle, false)
 }
 
 func (tl *TextLabel) IsLOSTestEnabled() bool {
-	return C.textLabel_getTestLOS(tl.handle) != 0
+	return bool(C.TextLabel_GetLOS(tl.handle))
 }
 
 func (tl *TextLabel) IsStreamedInFor(plr *Player) bool {
-	return C.textLabel_isStreamedInForPlayer(tl.handle, plr.handle) != 0
+	return bool(C.TextLabel_IsStreamedIn(plr.handle, tl.handle))
 }
 
-func (tl *TextLabel) SetPosition(pos Vector3) {
-	C.textLabel_setPosition(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
-}
+// func (tl *TextLabel) SetPosition(pos Vector3) {
+// 	C.textLabel_setPosition(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+// }
 
 func (tl *TextLabel) Position() Vector3 {
-	pos := C.textLabel_getPosition(tl.handle)
+	var cPosX, cPosY, cPosZ C.float
+
+	C.TextLabel_GetPos(tl.handle, &cPosX, &cPosY, &cPosZ)
 
 	return Vector3{
-		X: float32(pos.x),
-		Y: float32(pos.y),
-		Z: float32(pos.z),
+		X: float32(cPosX),
+		Y: float32(cPosY),
+		Z: float32(cPosZ),
 	}
 }
 
 func (tl *TextLabel) SetVirtualWorld(vw int) {
-	C.textLabel_setVirtualWorld(tl.handle, C.int(vw))
+	C.TextLabel_SetVirtualWorld(tl.handle, C.int(vw))
 }
 
 func (tl *TextLabel) VirtualWorld() int {
-	return int(C.textLabel_getVirtualWorld(tl.handle))
+	return int(C.TextLabel_GetVirtualWorld(tl.handle))
 }
 
 type PlayerTextLabel struct {
@@ -158,10 +167,12 @@ type PlayerTextLabel struct {
 }
 
 func NewPlayerTextLabel(plr *Player, text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) (*PlayerTextLabel, error) {
-	cText := newCString(text)
-	defer freeCString(cText)
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
 
-	cTl := C.playerTextLabel_create(plr.handle, cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), newCUchar(los))
+	var cID C.int
+
+	cTl := C.PlayerTextLabel_Create(plr.handle, cText, C.uint(clr), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(drawDist), nil, nil, C.bool(los), &cID)
 	if cTl == nil {
 		return nil, errors.New("player text label limit was reached")
 	}
@@ -175,120 +186,132 @@ func NewPlayerTextLabel(plr *Player, text string, clr Color, pos Vector3, drawDi
 }
 
 func FreePlayerTextLabel(tl *PlayerTextLabel) {
-	C.playerTextLabel_release(tl.handle, tl.player.handle)
+	C.PlayerTextLabel_Destroy(tl.player.handle, tl.handle)
 }
 
 func (tl *PlayerTextLabel) Player() *Player {
 	return tl.player
 }
 
-// func TextLabelAttachedData[T TextLabelAttachmentTarget](tl *TextLabel) (TextLabelAttachmentData[T], error) {
-// 	data := C.textLabel_getAttachmentData(tl.handle)
+func (tl *PlayerTextLabel) ID() int {
+	return int(C.PlayerTextLabel_GetID(tl.player.handle, tl.handle))
+}
 
-// 	t := any(new(T))
+func PlayerTextLabelAttachedData[T TextLabelAttachmentTarget](tl *PlayerTextLabel) (TextLabelAttachmentData[T], error) {
+	var cPlrID, cVehID C.int
 
-// 	var result TextLabelAttachmentData[T]
-// 	var target any
+	C.PlayerTextLabel_GetAttachedData(tl.player.handle, tl.handle, &cPlrID, &cVehID)
 
-// 	switch t.(type) {
-// 	case *Vehicle:
-// 		veh := C.vehicle_getByID(data.vehicleID)
-// 		if veh == nil {
-// 			return result, errors.New("text label is not attached to a vehicle")
-// 		}
+	var t T
+	var result TextLabelAttachmentData[T]
+	var target any
 
-// 		target = Vehicle{handle: veh}
-// 	case *Player:
-// 		plr := C.player_getByID(data.playerID)
-// 		if plr == nil {
-// 			return result, errors.New("text label is not attached to a player")
-// 		}
+	switch any(t).(type) {
+	case Vehicle:
+		veh := C.Vehicle_FromID(cVehID)
+		if veh == nil {
+			return result, errors.New("text label is not attached to a vehicle")
+		}
 
-// 		target = Player{handle: plr}
-// 	}
+		target = Vehicle{handle: veh}
+	case Player:
+		plr := C.Player_FromID(cPlrID)
+		if plr == nil {
+			return result, errors.New("text label is not attached to a player")
+		}
 
-// 	result = TextLabelAttachmentData[T]{
-// 		Target: target.(T),
-// 	}
+		target = Player{handle: plr}
+	}
 
-// 	return result, nil
+	result = TextLabelAttachmentData[T]{
+		Target: target.(T),
+	}
+
+	return result, nil
+}
+
+// func (tl *PlayerTextLabel) SetText(text string) {
+// 	cText := newCString(text)
+// 	defer freeCString(cText)
+
+// 	C.playerTextLabel_setText(tl.handle, cText)
 // }
 
-func (tl *PlayerTextLabel) SetText(text string) {
-	cText := newCString(text)
-	defer freeCString(cText)
-
-	C.playerTextLabel_setText(tl.handle, cText)
-}
-
 func (tl *PlayerTextLabel) Text() string {
-	cTextStr := C.playerTextLabel_getText(tl.handle)
+	var cText C.struct_CAPIStringView
 
-	return C.GoStringN(cTextStr.buf, C.int(cTextStr.length))
+	C.PlayerTextLabel_GetText(tl.player.handle, tl.handle, &cText)
+
+	return C.GoStringN(cText.data, C.int(cText.len))
 }
 
-func (tl *PlayerTextLabel) SetColor(clr Color) {
-	C.playerTextLabel_setColour(tl.handle, C.uint(clr))
-}
+// func (tl *PlayerTextLabel) SetColor(clr Color) {
+// 	C.playerTextLabel_setColour(tl.handle, C.uint(clr))
+// }
 
 func (tl *PlayerTextLabel) Color() Color {
-	return Color(C.playerTextLabel_getColour(tl.handle))
+	var cColor C.uint
+	C.PlayerTextLabel_GetColor(tl.player.handle, tl.handle, &cColor)
+
+	return Color(cColor)
 }
 
 func (tl *PlayerTextLabel) SetDrawDistance(drawDist float32) {
-	C.playerTextLabel_setDrawDistance(tl.handle, C.float(drawDist))
+	C.PlayerTextLabel_SetDrawDistance(tl.player.handle, tl.handle, C.float(drawDist))
 }
 
 func (tl *PlayerTextLabel) DrawDistance() float32 {
-	return float32(C.playerTextLabel_getDrawDistance(tl.handle))
+	return float32(C.PlayerTextLabel_GetDrawDistance(tl.player.handle, tl.handle))
 }
 
-func (tl *PlayerTextLabel) AttachToPlayer(plr *Player, offset Vector3) {
-	C.playerTextLabel_attachToPlayer(tl.handle, plr.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
-}
+// func (tl *PlayerTextLabel) AttachToPlayer(plr *Player, offset Vector3) {
+// 	C.playerTextLabel_attachToPlayer(tl.handle, plr.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
+// }
 
-func (tl *PlayerTextLabel) AttachToVehicle(veh *Vehicle, offset Vector3) {
-	C.playerTextLabel_attachToVehicle(tl.handle, veh.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
-}
+// func (tl *PlayerTextLabel) AttachToVehicle(veh *Vehicle, offset Vector3) {
+// 	C.playerTextLabel_attachToVehicle(tl.handle, veh.handle, C.float(offset.X), C.float(offset.Y), C.float(offset.Z))
+// }
 
-func (tl *PlayerTextLabel) DetachFromPlayer(pos Vector3) {
-	C.playerTextLabel_detachFromPlayer(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
-}
+// func (tl *PlayerTextLabel) DetachFromPlayer(pos Vector3) {
+// 	C.playerTextLabel_detachFromPlayer(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+// }
 
-func (tl *PlayerTextLabel) DetachFromVehicle(pos Vector3) {
-	C.playerTextLabel_detachFromVehicle(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
-}
+// func (tl *PlayerTextLabel) DetachFromVehicle(pos Vector3) {
+// 	C.playerTextLabel_detachFromVehicle(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+// }
 
 func (tl *PlayerTextLabel) EnableLOSTest() {
-	C.playerTextLabel_setTestLOS(tl.handle, 1)
+	C.PlayerTextLabel_SetLOS(tl.player.handle, tl.handle, true)
 }
 
 func (tl *PlayerTextLabel) DisableLOSTest() {
-	C.playerTextLabel_setTestLOS(tl.handle, 0)
+	C.PlayerTextLabel_SetLOS(tl.player.handle, tl.handle, false)
 }
 
 func (tl *PlayerTextLabel) IsLOSTestEnabled() bool {
-	return C.playerTextLabel_getTestLOS(tl.handle) != 0
+	return bool(C.PlayerTextLabel_GetLOS(tl.player.handle, tl.handle))
 }
 
-func (tl *PlayerTextLabel) SetPosition(pos Vector3) {
-	C.playerTextLabel_setPosition(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
-}
+// func (tl *PlayerTextLabel) SetPosition(pos Vector3) {
+// 	C.playerTextLabel_setPosition(tl.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+// }
 
 func (tl *PlayerTextLabel) Position() Vector3 {
-	pos := C.playerTextLabel_getPosition(tl.handle)
+	var cPosX, cPosY, cPosZ C.float
+
+	C.PlayerTextLabel_GetPos(tl.player.handle, tl.handle, &cPosX, &cPosY, &cPosZ)
 
 	return Vector3{
-		X: float32(pos.x),
-		Y: float32(pos.y),
-		Z: float32(pos.z),
+		X: float32(cPosX),
+		Y: float32(cPosY),
+		Z: float32(cPosZ),
 	}
 }
 
-func (tl *PlayerTextLabel) SetVirtualWorld(vw int) {
-	C.playerTextLabel_setVirtualWorld(tl.handle, C.int(vw))
-}
+// func (tl *PlayerTextLabel) SetVirtualWorld(vw int) {
+// 	C.playerTextLabel_setVirtualWorld(tl.handle, C.int(vw))
+// }
 
 func (tl *PlayerTextLabel) VirtualWorld() int {
-	return int(C.playerTextLabel_getVirtualWorld(tl.handle))
+	return int(C.PlayerTextLabel_GetVirtualWorld(tl.player.handle))
 }
