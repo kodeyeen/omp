@@ -1,9 +1,11 @@
 package omp
 
-// #include "include/actor.h"
+// #include <stdlib.h>
+// #include "include/wrappers.h"
 import "C"
 import (
 	"errors"
+	"time"
 	"unsafe"
 )
 
@@ -18,7 +20,8 @@ type Actor struct {
 }
 
 func NewActor(skin int, pos Vector3, angle float32) (*Actor, error) {
-	cActor := C.actor_create(C.int(skin), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle))
+	var cID C.int
+	cActor := C.Actor_Create(C.int(skin), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.float(angle), &cID)
 	if cActor == nil {
 		return nil, errors.New("actor limit was reached")
 	}
@@ -27,119 +30,140 @@ func NewActor(skin int, pos Vector3, angle float32) (*Actor, error) {
 }
 
 func FreeActor(actor *Actor) {
-	C.actor_release(actor.handle)
+	C.Actor_Destroy(actor.handle)
+}
+
+func (a *Actor) ID() int {
+	return int(C.Actor_GetID(a.handle))
 }
 
 func (a *Actor) SetSkin(skin int) {
-	C.actor_setSkin(a.handle, C.int(skin))
+	C.Actor_SetSkin(a.handle, C.int(skin))
 }
 
 func (a *Actor) Skin() int {
-	return int(C.actor_getSkin(a.handle))
+	return int(C.Actor_GetSkin(a.handle))
 }
 
 func (a *Actor) ApplyAnimation(anim Animation) {
-	cLib := newCString(anim.Lib)
-	defer freeCString(cLib)
+	cLib := C.CString(anim.Lib)
+	defer C.free(unsafe.Pointer(cLib))
 
-	cName := newCString(anim.Name)
-	defer freeCString(cName)
+	cName := C.CString(anim.Name)
+	defer C.free(unsafe.Pointer(cName))
 
-	C.actor_applyAnimation(
+	C.Actor_ApplyAnimation(
 		a.handle,
-		C.float(anim.Delta),
-		newCUchar(anim.Loop),
-		newCUchar(anim.LockX),
-		newCUchar(anim.LockY),
-		newCUchar(anim.Freeze),
-		C.uint(anim.Duration.Milliseconds()),
-		cLib,
 		cName,
+		cLib,
+		C.float(anim.Delta),
+		C.bool(anim.Loop),
+		C.bool(anim.LockX),
+		C.bool(anim.LockY),
+		C.bool(anim.Freeze),
+		C.int(anim.Duration.Milliseconds()),
 	)
 }
 
 func (a *Actor) Animation() Animation {
-	cAnim := C.actor_getAnimation(a.handle)
+	var (
+		cLib    C.struct_CAPIStringView
+		cName   C.struct_CAPIStringView
+		cDelta  C.float
+		cLoop   C.bool
+		cLockX  C.bool
+		cLockY  C.bool
+		cFreeze C.bool
+		cTime   C.int
+	)
+
+	C.Actor_GetAnimation(a.handle, &cLib, &cName, &cDelta, &cLoop, &cLockX, &cLockY, &cFreeze, &cTime)
 
 	return Animation{
-		Lib:    C.GoStringN(cAnim.lib.buf, C.int(cAnim.lib.length)),
-		Name:   C.GoStringN(cAnim.name.buf, C.int(cAnim.name.length)),
-		Delta:  float32(cAnim.delta),
-		Loop:   cAnim.loop != 0,
-		LockX:  cAnim.lockX != 0,
-		LockY:  cAnim.lockY != 0,
-		Freeze: cAnim.freeze != 0,
+		Lib:      C.GoStringN(cLib.data, C.int(cLib.len)),
+		Name:     C.GoStringN(cName.data, C.int(cName.len)),
+		Delta:    float32(cDelta),
+		Loop:     bool(cLoop),
+		LockX:    bool(cLockX),
+		LockY:    bool(cLockY),
+		Freeze:   bool(cFreeze),
+		Duration: time.Duration(cTime) * time.Millisecond,
 	}
 }
 
 func (a *Actor) ClearAnimations() {
-	C.actor_clearAnimations(a.handle)
+	C.Actor_ClearAnimations(a.handle)
 }
 
 func (a *Actor) SetHealth(health float32) {
-	C.actor_setHealth(a.handle, C.float(health))
+	C.Actor_SetHealth(a.handle, C.float(health))
 }
 
 func (a *Actor) Health() float32 {
-	return float32(C.actor_getHealth(a.handle))
+	return float32(C.Actor_GetHealth(a.handle))
 }
 
 func (a *Actor) MakeInvulnerable() {
-	C.actor_setInvulnerable(a.handle, 1)
+	C.Actor_SetInvulnerable(a.handle, true)
 }
 
 func (a *Actor) UnmakeInvulnerable() {
-	C.actor_setInvulnerable(a.handle, 0)
+	C.Actor_SetInvulnerable(a.handle, false)
 }
 
 func (a *Actor) IsInvulnerable() bool {
-	return C.actor_isInvulnerable(a.handle) != 0
+	return bool(C.Actor_IsInvulnerable(a.handle))
 }
 
-func (a *Actor) IsStreamedInFor(plr *Player) bool {
-	return C.actor_isStreamedInForPlayer(a.handle, plr.handle) != 0
+func (a *Actor) IsStreamedInFor(player *Player) bool {
+	return bool(C.Actor_IsStreamedInFor(a.handle, player.handle))
 }
 
 func (a *Actor) SpawnData() ActorSpawnData {
-	data := C.actor_getSpawnData(a.handle)
+	var cPosX, cPosY, cPosZ, cAngle C.float
+	var cSkin C.int
+
+	C.Actor_GetSpawnInfo(a.handle, &cPosX, &cPosY, &cPosZ, &cAngle, &cSkin)
 
 	return ActorSpawnData{
 		Position: Vector3{
-			X: float32(data.position.x),
-			Y: float32(data.position.y),
-			Z: float32(data.position.z),
+			X: float32(cPosX),
+			Y: float32(cPosY),
+			Z: float32(cPosZ),
 		},
-		FacingAngle: float32(data.facingAngle),
-		Skin:        int(data.skin),
+		FacingAngle: float32(cAngle),
+		Skin:        int(cSkin),
 	}
 }
 
 func (a *Actor) SetPosition(pos Vector3) {
-	C.actor_setPosition(a.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
+	C.Actor_SetPos(a.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
 }
 
 func (a *Actor) Position() Vector3 {
-	cPos := C.actor_getPosition(a.handle)
+	var cPosX, cPosY, cPosZ C.float
+
+	C.Actor_GetPos(a.handle, &cPosX, &cPosY, &cPosZ)
 
 	return Vector3{
-		X: float32(cPos.x),
-		Y: float32(cPos.y),
-		Z: float32(cPos.z),
+		X: float32(cPosX),
+		Y: float32(cPosY),
+		Z: float32(cPosZ),
 	}
 }
 
 func (a *Actor) SetVirtualWorld(vw int) {
-	C.actor_setVirtualWorld(a.handle, C.int(vw))
+	C.Actor_SetVirtualWorld(a.handle, C.int(vw))
 }
 
 func (a *Actor) VirtualWorld() int {
-	return int(C.actor_getVirtualWorld(a.handle))
+	return int(C.Actor_GetVirtualWorld(a.handle))
 }
 
 func (a *Actor) SetFacingAngle(angle float32) {
-	C.actor_setFacingAngle(a.handle, C.float(angle))
+	C.Actor_SetFacingAngle(a.handle, C.float(angle))
 }
 
 func (a *Actor) FacingAngle() float32 {
-	return float32(C.actor_getFacingAngle(a.handle))
+	return float32(C.Actor_GetFacingAngle(a.handle))
 }

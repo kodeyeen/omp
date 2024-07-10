@@ -4,15 +4,15 @@ package omp
 import "C"
 import "unsafe"
 
-type DefaultCheckpoint struct {
+type Checkpoint struct {
 	handle unsafe.Pointer
 }
 
-func (c *DefaultCheckpoint) SetPosition(pos Vector3) {
+func (c *Checkpoint) SetPosition(pos Vector3) {
 	C.checkpoint_setPosition(c.handle, C.float(pos.X), C.float(pos.Y), C.float(pos.Z))
 }
 
-func (c *DefaultCheckpoint) Position() Vector3 {
+func (c *Checkpoint) Position() Vector3 {
 	cPos := C.checkpoint_getPosition(c.handle)
 
 	return Vector3{
@@ -22,27 +22,27 @@ func (c *DefaultCheckpoint) Position() Vector3 {
 	}
 }
 
-func (c *DefaultCheckpoint) SetRadius(radius float32) {
+func (c *Checkpoint) SetRadius(radius float32) {
 	C.checkpoint_setRadius(c.handle, C.float(radius))
 }
 
-func (c *DefaultCheckpoint) Radius() float32 {
+func (c *Checkpoint) Radius() float32 {
 	return float32(C.checkpoint_getRadius(c.handle))
 }
 
-func (c *DefaultCheckpoint) IsPlayerInside() bool {
+func (c *Checkpoint) IsPlayerInside() bool {
 	return C.checkpoint_isPlayerInside(c.handle) != 0
 }
 
-func (c *DefaultCheckpoint) Enable() {
+func (c *Checkpoint) Enable() {
 	C.checkpoint_enable(c.handle)
 }
 
-func (c *DefaultCheckpoint) Disable() {
+func (c *Checkpoint) Disable() {
 	C.checkpoint_disable(c.handle)
 }
 
-func (c *DefaultCheckpoint) IsEnabled() bool {
+func (c *Checkpoint) IsEnabled() bool {
 	return C.checkpoint_isEnabled(c.handle) != 0
 }
 
