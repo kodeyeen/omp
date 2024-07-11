@@ -1210,7 +1210,7 @@ func (p *Player) Position() Vector3 {
 }
 
 // Rotation returns the players rotation on all axes as a quaternion.
-func (p *Player) Rotation() Vector4 {
+func (p *Player) RotationQuat() Vector4 {
 	rquat := C.player_getRotation(p.handle)
 
 	return Vector4{
