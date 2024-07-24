@@ -1,6 +1,7 @@
 #ifndef GOMP_H
 #define GOMP_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
 

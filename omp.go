@@ -4,13 +4,12 @@ package omp
 // #include "include/omp.h"
 import "C"
 import (
+	"context"
 	"fmt"
 	"runtime/debug"
 	"strings"
 	"time"
 	"unsafe"
-
-	"github.com/kodeyeen/event"
 )
 
 type Animation struct {
@@ -34,13 +33,28 @@ type Vector2 struct {
 
 type Color uint
 
-var Events = event.NewDispatcher()
+var DefaultEventListener = NewDispatcher()
+var eventListener Listener
 var Commands = newCommandManager()
 
-func DispatchEvent[T any](_type event.Type, data T) bool {
-	defer handlePanic()
+func EventListener() Listener {
+	if eventListener == nil {
+		eventListener = DefaultEventListener
+	}
 
-	return event.Dispatch(Events, _type, data)
+	return eventListener
+}
+
+func SetEventListener(listener Listener) {
+	eventListener = listener
+}
+
+func Listen(_type EventType, listener Listener) {
+	DefaultEventListener.Listen(_type, listener)
+}
+
+func ListenFunc(_type EventType, listener func(context.Context, Event) error) {
+	DefaultEventListener.ListenFunc(_type, listener)
 }
 
 func handlePanic() {
@@ -53,157 +67,200 @@ func handlePanic() {
 }
 
 //export onGameModeInit
-func onGameModeInit() {
+func onGameModeInit() C.bool {
 	defer handlePanic()
 
 	C.loadComponent()
 
-	event.Dispatch(Events, EventTypeGameModeInit, &GameModeInitEvent{})
+	evt := NewEvent(EventTypeGameModeInit, nil)
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onGameModeExit
-func onGameModeExit() {
+func onGameModeExit() C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeGameModeExit, &GameModeExitEvent{})
+	evt := NewEvent(EventTypeGameModeExit, nil)
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Actor events
 
 //export onPlayerGiveDamageActor
-func onPlayerGiveDamageActor(player, actor unsafe.Pointer, amount float32, weapon uint, part int) {
+func onPlayerGiveDamageActor(player, actor unsafe.Pointer, amount float32, weapon uint, part int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerGiveDamageActor, &PlayerGiveDamageActorEvent{
+	evt := NewEvent(EventTypePlayerGiveDamageActor, &PlayerGiveDamageActorEvent{
 		Player: &Player{handle: player},
 		Actor:  &Player{handle: actor},
 		Amount: amount,
 		Weapon: weapon,
 		Part:   BodyPart(part),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onActorStreamOut
-func onActorStreamOut(actor, forPlayer unsafe.Pointer) {
+func onActorStreamOut(actor, forPlayer unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeActorStreamOut, &ActorStreamOutEvent{
+	evt := NewEvent(EventTypeActorStreamOut, &ActorStreamOutEvent{
 		Actor:     &Player{handle: actor},
 		ForPlayer: &Player{handle: forPlayer},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onActorStreamIn
-func onActorStreamIn(actor, forPlayer unsafe.Pointer) {
+func onActorStreamIn(actor, forPlayer unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeActorStreamIn, &ActorStreamInEvent{
+	evt := NewEvent(EventTypeActorStreamIn, &ActorStreamInEvent{
 		Actor:     &Player{handle: actor},
 		ForPlayer: &Player{handle: forPlayer},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Checkpoint events
 
 //export onPlayerEnterCheckpoint
-func onPlayerEnterCheckpoint(player unsafe.Pointer) {
+func onPlayerEnterCheckpoint(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerEnterCheckpoint, &PlayerEnterCheckpointEvent{
+	evt := NewEvent(EventTypePlayerEnterCheckpoint, &PlayerEnterCheckpointEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerLeaveCheckpoint
-func onPlayerLeaveCheckpoint(player unsafe.Pointer) {
+func onPlayerLeaveCheckpoint(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerLeaveCheckpoint, &PlayerLeaveCheckpointEvent{
+	evt := NewEvent(EventTypePlayerLeaveCheckpoint, &PlayerLeaveCheckpointEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerEnterRaceCheckpoint
-func onPlayerEnterRaceCheckpoint(player unsafe.Pointer) {
+func onPlayerEnterRaceCheckpoint(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerEnterRaceCheckpoint, &PlayerEnterRaceCheckpointEvent{
+	evt := NewEvent(EventTypePlayerEnterRaceCheckpoint, &PlayerEnterRaceCheckpointEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerLeaveRaceCheckpoint
-func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) {
+func onPlayerLeaveRaceCheckpoint(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerLeaveRaceCheckpoint, &PlayerLeaveRaceCheckpointEvent{
+	evt := NewEvent(EventTypePlayerLeaveRaceCheckpoint, &PlayerLeaveRaceCheckpointEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Class events
 
 //export onPlayerRequestClass
-func onPlayerRequestClass(player, class unsafe.Pointer) bool {
+func onPlayerRequestClass(player, class unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerRequestClass, &PlayerRequestClassEvent{
+	evt := NewEvent(EventTypePlayerRequestClass, &PlayerRequestClassEvent{
 		Player: &Player{handle: player},
 		Class:  &Class{handle: class},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Console events. TODO
 
 //export onConsoleText
-func onConsoleText(command C.String, parameters C.String) bool {
+func onConsoleText(command C.String, parameters C.String) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypeConsoleText, &ConsoleTextEvent{
+	evt := NewEvent(EventTypeConsoleText, &ConsoleTextEvent{
 		Command:    C.GoStringN(command.buf, C.int(command.length)),
 		Parameters: C.GoStringN(parameters.buf, C.int(parameters.length)),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onRconLoginAttempt
-func onRconLoginAttempt(player unsafe.Pointer, password C.String, success bool) {
+func onRconLoginAttempt(player unsafe.Pointer, password C.String, success bool) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeRconLoginAttempt, &RconLoginAttemptEvent{
+	evt := NewEvent(EventTypeRconLoginAttempt, &RconLoginAttemptEvent{
 		Player:   &Player{handle: player},
 		Password: C.GoStringN(password.buf, C.int(password.length)),
 		Success:  success,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Custom model events
 
 //export onPlayerFinishedDownloading
-func onPlayerFinishedDownloading(player unsafe.Pointer) {
+func onPlayerFinishedDownloading(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerFinishedDownloading, &PlayerFinishedDownloadingEvent{
+	evt := NewEvent(EventTypePlayerFinishedDownloading, &PlayerFinishedDownloadingEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerRequestDownload
-func onPlayerRequestDownload(player unsafe.Pointer, _type uint8, checksum uint32) bool {
+func onPlayerRequestDownload(player unsafe.Pointer, _type uint8, checksum uint32) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerRequestDownload, &PlayerRequestDownloadEvent{
+	evt := NewEvent(EventTypePlayerRequestDownload, &PlayerRequestDownloadEvent{
 		Player:   &Player{handle: player},
 		Type:     int(_type),
 		Checksum: int(checksum),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Dialog events
 
 //export onDialogResponse
-func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, inputText C.String) {
+func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, inputText C.String) C.bool {
 	defer handlePanic()
 
+	ctx := context.Background()
 	eventPlayer := &Player{handle: player}
 	playerID := eventPlayer.ID()
 
@@ -213,162 +270,184 @@ func onDialogResponse(player unsafe.Pointer, dialogID, response, listItem int, i
 	}
 	delete(activeDialogs, playerID)
 
-	switch dialog := dialog.(type) {
+	var err error
+
+	switch d := dialog.(type) {
 	case *MessageDialog:
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &MessageDialogResponseEvent{
+		evt := NewEvent(EventTypeDialogResponse, &MessageDialogResponseEvent{
 			Player:   eventPlayer,
 			Response: DialogResponse(response),
 		})
-
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-			Player: eventPlayer,
-		})
+		err = d.Events.HandleEvent(ctx, evt)
 	case *InputDialog:
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &InputDialogResponseEvent{
+		evt := NewEvent(EventTypeDialogResponse, &InputDialogResponseEvent{
 			Player:    eventPlayer,
 			Response:  DialogResponse(response),
 			InputText: C.GoStringN(inputText.buf, C.int(inputText.length)),
 		})
-
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-			Player: eventPlayer,
-		})
+		err = d.Events.HandleEvent(ctx, evt)
 	case *ListDialog:
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &ListDialogResponseEvent{
+		evt := NewEvent(EventTypeDialogResponse, &ListDialogResponseEvent{
 			Player:     eventPlayer,
 			Response:   DialogResponse(response),
 			ItemNumber: listItem,
 			Item:       C.GoStringN(inputText.buf, C.int(inputText.length)),
 		})
-
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-			Player: eventPlayer,
-		})
+		err = d.Events.HandleEvent(ctx, evt)
 	case *TabListDialog:
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogResponse, &TabListDialogResponseEvent{
+		evt := NewEvent(EventTypeDialogResponse, &TabListDialogResponseEvent{
 			Player:     eventPlayer,
 			Response:   DialogResponse(response),
 			ItemNumber: listItem,
-			Item:       dialog.items[listItem],
+			Item:       d.items[listItem],
 		})
-
-		event.Dispatch(dialog.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-			Player: eventPlayer,
-		})
+		err = d.Events.HandleEvent(ctx, evt)
 	default:
 		panic("unknown dialog type")
 	}
+
+	return err == nil
 }
 
 // GangZone events
 
 //export onPlayerEnterGangZone
-func onPlayerEnterGangZone(player, gangzone unsafe.Pointer) {
+func onPlayerEnterGangZone(player, gangzone unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerEnterTurf, &PlayerEnterTurfEvent{
+	evt := NewEvent(EventTypePlayerEnterTurf, &PlayerEnterTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &Turf{handle: gangzone},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerEnterPlayerGangZone
-func onPlayerEnterPlayerGangZone(player, gangzone unsafe.Pointer) {
+func onPlayerEnterPlayerGangZone(player, gangzone unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerEnterPlayerTurf, &PlayerEnterPlayerTurfEvent{
+	evt := NewEvent(EventTypePlayerEnterPlayerTurf, &PlayerEnterPlayerTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &PlayerTurf{handle: gangzone},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerLeaveGangZone
-func onPlayerLeaveGangZone(player, gangzone unsafe.Pointer) {
+func onPlayerLeaveGangZone(player, gangzone unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerLeaveTurf, &PlayerLeaveTurfEvent{
+	evt := NewEvent(EventTypePlayerLeaveTurf, &PlayerLeaveTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &Turf{handle: gangzone},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerLeavePlayerGangZone
-func onPlayerLeavePlayerGangZone(player, gangzone unsafe.Pointer) {
+func onPlayerLeavePlayerGangZone(player, gangzone unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerLeavePlayerTurf, &PlayerLeavePlayerTurfEvent{
+	evt := NewEvent(EventTypePlayerLeavePlayerTurf, &PlayerLeavePlayerTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &PlayerTurf{handle: gangzone},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerClickGangZone
-func onPlayerClickGangZone(player, gangzone unsafe.Pointer) {
+func onPlayerClickGangZone(player, gangzone unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerClickTurf, &PlayerClickTurfEvent{
+	evt := NewEvent(EventTypePlayerClickTurf, &PlayerClickTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &Turf{handle: gangzone},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerClickPlayerGangZone
-func onPlayerClickPlayerGangZone(player, gangzone unsafe.Pointer) {
+func onPlayerClickPlayerGangZone(player, gangzone unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerClickPlayerTurf, &PlayerClickPlayerTurfEvent{
+	evt := NewEvent(EventTypePlayerClickPlayerTurf, &PlayerClickPlayerTurfEvent{
 		Player: &Player{handle: player},
 		Turf:   &PlayerTurf{handle: gangzone},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Menu events
 
 //export onPlayerSelectedMenuRow
-func onPlayerSelectedMenuRow(player unsafe.Pointer, menuRow uint8) {
+func onPlayerSelectedMenuRow(player unsafe.Pointer, menuRow uint8) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerSelectedMenuRow, &PlayerSelectedMenuRowEvent{
+	evt := NewEvent(EventTypePlayerSelectedMenuRow, &PlayerSelectedMenuRowEvent{
 		Player:  &Player{handle: player},
 		MenuRow: menuRow,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerExitedMenu
-func onPlayerExitedMenu(player unsafe.Pointer) {
+func onPlayerExitedMenu(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerExitedMenu, &PlayerExitedMenuEvent{
+	evt := NewEvent(EventTypePlayerExitedMenu, &PlayerExitedMenuEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Object events
 
 //export onObjectMoved
-func onObjectMoved(object unsafe.Pointer) {
+func onObjectMoved(object unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeObjectMoved, &ObjectMovedEvent{
+	evt := NewEvent(EventTypeObjectMoved, &ObjectMovedEvent{
 		Object: &Object{handle: object},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerObjectMoved
-func onPlayerObjectMoved(player, object unsafe.Pointer) {
+func onPlayerObjectMoved(player, object unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerObjectMoved, &PlayerObjectMovedEvent{
+	evt := NewEvent(EventTypePlayerObjectMoved, &PlayerObjectMovedEvent{
 		Player: &Player{handle: player},
 		Object: &PlayerObject{handle: object},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onObjectSelected
-func onObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) {
+func onObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeObjectSelected, &ObjectSelectedEvent{
+	evt := NewEvent(EventTypeObjectSelected, &ObjectSelectedEvent{
 		Player: &Player{handle: player},
 		Object: &Object{handle: object},
 		Model:  model,
@@ -378,13 +457,16 @@ func onObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) {
 			Z: float32(pos.z),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerObjectSelected
-func onPlayerObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) {
+func onPlayerObjectSelected(player, object unsafe.Pointer, model int, pos C.Vector3) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerObjectSelected, &PlayerObjectSelectedEvent{
+	evt := NewEvent(EventTypePlayerObjectSelected, &PlayerObjectSelectedEvent{
 		Player: &Player{handle: player},
 		Object: &PlayerObject{handle: object},
 		Model:  model,
@@ -394,13 +476,16 @@ func onPlayerObjectSelected(player, object unsafe.Pointer, model int, pos C.Vect
 			Z: float32(pos.z),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onObjectEdited
-func onObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.Vector3) {
+func onObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.Vector3) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeObjectEdited, &ObjectEditedEvent{
+	evt := NewEvent(EventTypeObjectEdited, &ObjectEditedEvent{
 		Player:   &Player{handle: player},
 		Object:   &Object{handle: object},
 		Response: ObjectEditResponse(response),
@@ -415,13 +500,16 @@ func onObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.V
 			Z: float32(rot.z),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerObjectEdited
-func onPlayerObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.Vector3) {
+func onPlayerObjectEdited(player, object unsafe.Pointer, response int, offset, rot C.Vector3) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerObjectEdited, &PlayerObjectEditedEvent{
+	evt := NewEvent(EventTypePlayerObjectEdited, &PlayerObjectEditedEvent{
 		Player:   &Player{handle: player},
 		Object:   &PlayerObject{handle: object},
 		Response: ObjectEditResponse(response),
@@ -436,13 +524,16 @@ func onPlayerObjectEdited(player, object unsafe.Pointer, response int, offset, r
 			Z: float32(rot.z),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerAttachedObjectEdited
-func onPlayerAttachedObjectEdited(player unsafe.Pointer, index int, saved bool, data C.PlayerAttachedObject) {
+func onPlayerAttachedObjectEdited(player unsafe.Pointer, index int, saved bool, data C.PlayerAttachedObject) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerAttachmentEdited, &PlayerAttachmentEdited{
+	evt := NewEvent(EventTypePlayerAttachmentEdited, &PlayerAttachmentEdited{
 		Player: &Player{handle: player},
 		Index:  index,
 		Saved:  saved,
@@ -468,131 +559,167 @@ func onPlayerAttachedObjectEdited(player unsafe.Pointer, index int, saved bool, 
 			Color2: Color(data.colour2),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
-// Pickup events
+// // Pickup events
 
 //export onPlayerPickUpPickup
-func onPlayerPickUpPickup(player, pickup unsafe.Pointer) {
+func onPlayerPickUpPickup(player, pickup unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerPickUpPickup, &PlayerPickUpPickupEvent{
+	evt := NewEvent(EventTypePlayerPickUpPickup, &PlayerPickUpPickupEvent{
 		Player: &Player{handle: player},
 		Pickup: &Pickup{handle: pickup},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerPickUpPlayerPickup
-func onPlayerPickUpPlayerPickup(player, pickup unsafe.Pointer) {
+func onPlayerPickUpPlayerPickup(player, pickup unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerPickUpPlayerPickup, &PlayerPickUpPlayerPickupEvent{
+	evt := NewEvent(EventTypePlayerPickUpPlayerPickup, &PlayerPickUpPlayerPickupEvent{
 		Player: &Player{handle: player},
 		Pickup: &PlayerPickup{handle: pickup},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player spawn events
 
 //export onPlayerRequestSpawn
-func onPlayerRequestSpawn(player unsafe.Pointer) bool {
+func onPlayerRequestSpawn(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerRequestSpawn, &PlayerRequestSpawnEvent{
+	evt := NewEvent(EventTypePlayerRequestSpawn, &PlayerRequestSpawnEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerSpawn
-func onPlayerSpawn(player unsafe.Pointer) {
+func onPlayerSpawn(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerSpawn, &PlayerSpawnEvent{
+	evt := NewEvent(EventTypePlayerSpawn, &PlayerSpawnEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player connect events
 
 //export onIncomingConnection
-func onIncomingConnection(player unsafe.Pointer, ipAddress C.String, port C.ushort) {
+func onIncomingConnection(player unsafe.Pointer, ipAddress C.String, port C.ushort) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeIncomingConnection, &IncomingConnectionEvent{
+	evt := NewEvent(EventTypeIncomingConnection, &IncomingConnectionEvent{
 		Player:    &Player{handle: player},
 		IPAddress: C.GoStringN(ipAddress.buf, C.int(ipAddress.length)),
 		Port:      int(port),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerConnect
-func onPlayerConnect(player unsafe.Pointer) {
+func onPlayerConnect(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerConnect, &PlayerConnectEvent{
+	evt := NewEvent(EventTypePlayerConnect, &PlayerConnectEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerDisconnect
-func onPlayerDisconnect(player unsafe.Pointer, reason int) {
+func onPlayerDisconnect(player unsafe.Pointer, reason int) C.bool {
 	defer handlePanic()
 
 	eventPlayer := &Player{handle: player}
 
-	event.Dispatch(Events, EventTypePlayerDisconnect, &PlayerDisconnectEvent{
+	evt := NewEvent(EventTypePlayerDisconnect, &PlayerDisconnectEvent{
 		Player: eventPlayer,
 		Reason: DisconnectReason(reason),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
 
 	delete(activeDialogs, eventPlayer.ID())
+
+	return err == nil
 }
 
 //export onPlayerClientInit
-func onPlayerClientInit(player unsafe.Pointer) {
+func onPlayerClientInit(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerClientInit, &PlayerClientInitEvent{
+	evt := NewEvent(EventTypePlayerClientInit, &PlayerClientInitEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player stream events
 
 //export onPlayerStreamIn
-func onPlayerStreamIn(player, forPlayer unsafe.Pointer) {
+func onPlayerStreamIn(player, forPlayer unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerStreamIn, &PlayerStreamInEvent{
+	evt := NewEvent(EventTypePlayerStreamIn, &PlayerStreamInEvent{
 		Player:    &Player{handle: player},
 		ForPlayer: &Player{handle: forPlayer},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerStreamOut
-func onPlayerStreamOut(player, forPlayer unsafe.Pointer) {
+func onPlayerStreamOut(player, forPlayer unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerStreamOut, &PlayerStreamOutEvent{
+	evt := NewEvent(EventTypePlayerStreamOut, &PlayerStreamOutEvent{
 		Player:    &Player{handle: player},
 		ForPlayer: &Player{handle: forPlayer},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player text events
 
 //export onPlayerText
-func onPlayerText(player unsafe.Pointer, message *C.char) {
+func onPlayerText(player unsafe.Pointer, message *C.char) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerText, &PlayerTextEvent{
+	evt := NewEvent(EventTypePlayerText, &PlayerTextEvent{
 		Player:  &Player{handle: player},
 		Message: C.GoString(message),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerCommandText
-func onPlayerCommandText(player unsafe.Pointer, message C.String) bool {
+func onPlayerCommandText(player unsafe.Pointer, message C.String) C.bool {
 	defer handlePanic()
 
 	rawCmd := C.GoStringN(message.buf, C.int(message.length))
@@ -619,10 +746,10 @@ func onPlayerCommandText(player unsafe.Pointer, message C.String) bool {
 // Player shot events
 
 //export onPlayerShotMissed
-func onPlayerShotMissed(player unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+func onPlayerShotMissed(player unsafe.Pointer, bulletData C.PlayerBulletData) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerShotMissed, &PlayerShotMissedEvent{
+	evt := NewEvent(EventTypePlayerShotMissed, &PlayerShotMissedEvent{
 		Player: &Player{handle: player},
 		Bullet: PlayerBullet{
 			Origin: Vector3{
@@ -643,13 +770,16 @@ func onPlayerShotMissed(player unsafe.Pointer, bulletData C.PlayerBulletData) bo
 			Weapon: Weapon(bulletData.weapon),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerShotPlayer
-func onPlayerShotPlayer(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+func onPlayerShotPlayer(player, target unsafe.Pointer, bulletData C.PlayerBulletData) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerShotPlayer, &PlayerShotPlayerEvent{
+	evt := NewEvent(EventTypePlayerShotPlayer, &PlayerShotPlayerEvent{
 		Player: &Player{handle: player},
 		Target: &Player{handle: target},
 		Bullet: PlayerBullet{
@@ -671,13 +801,16 @@ func onPlayerShotPlayer(player, target unsafe.Pointer, bulletData C.PlayerBullet
 			Weapon: Weapon(bulletData.weapon),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerShotVehicle
-func onPlayerShotVehicle(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+func onPlayerShotVehicle(player, target unsafe.Pointer, bulletData C.PlayerBulletData) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerShotVehicle, &PlayerShotVehicleEvent{
+	evt := NewEvent(EventTypePlayerShotVehicle, &PlayerShotVehicleEvent{
 		Player: &Player{handle: player},
 		Target: &Vehicle{handle: target},
 		Bullet: PlayerBullet{
@@ -699,13 +832,16 @@ func onPlayerShotVehicle(player, target unsafe.Pointer, bulletData C.PlayerBulle
 			Weapon: Weapon(bulletData.weapon),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerShotObject
-func onPlayerShotObject(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+func onPlayerShotObject(player, target unsafe.Pointer, bulletData C.PlayerBulletData) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerShotObject, &PlayerShotObjectEvent{
+	evt := NewEvent(EventTypePlayerShotObject, &PlayerShotObjectEvent{
 		Player: &Player{handle: player},
 		Target: &Object{handle: target},
 		Bullet: PlayerBullet{
@@ -727,13 +863,16 @@ func onPlayerShotObject(player, target unsafe.Pointer, bulletData C.PlayerBullet
 			Weapon: Weapon(bulletData.weapon),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerShotPlayerObject
-func onPlayerShotPlayerObject(player, target unsafe.Pointer, bulletData C.PlayerBulletData) bool {
+func onPlayerShotPlayerObject(player, target unsafe.Pointer, bulletData C.PlayerBulletData) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerShotPlayerObject, &PlayerShotPlayerObjectEvent{
+	evt := NewEvent(EventTypePlayerShotPlayerObject, &PlayerShotPlayerObjectEvent{
 		Player: &Player{handle: player},
 		Target: &PlayerObject{handle: target},
 		Bullet: PlayerBullet{
@@ -755,67 +894,85 @@ func onPlayerShotPlayerObject(player, target unsafe.Pointer, bulletData C.Player
 			Weapon: Weapon(bulletData.weapon),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player change events
 
 //export onPlayerScoreChange
-func onPlayerScoreChange(player unsafe.Pointer, score int) {
+func onPlayerScoreChange(player unsafe.Pointer, score int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerScoreChange, &PlayerScoreChangeEvent{
+	evt := NewEvent(EventTypePlayerScoreChange, &PlayerScoreChangeEvent{
 		Player: &Player{handle: player},
 		Score:  score,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerNameChange
-func onPlayerNameChange(player unsafe.Pointer, oldName C.String) {
+func onPlayerNameChange(player unsafe.Pointer, oldName C.String) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerNameChange, &PlayerNameChangeEvent{
+	evt := NewEvent(EventTypePlayerNameChange, &PlayerNameChangeEvent{
 		Player:  &Player{handle: player},
 		OldName: C.GoStringN(oldName.buf, C.int(oldName.length)),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerInteriorChange
-func onPlayerInteriorChange(player unsafe.Pointer, newInterior, oldInterior uint) {
+func onPlayerInteriorChange(player unsafe.Pointer, newInterior, oldInterior uint) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerInteriorChange, &PlayerInteriorChangeEvent{
+	evt := NewEvent(EventTypePlayerInteriorChange, &PlayerInteriorChangeEvent{
 		Player:      &Player{handle: player},
 		NewInterior: newInterior,
 		OldInterior: oldInterior,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerStateChange
-func onPlayerStateChange(player unsafe.Pointer, newState, oldState int) {
+func onPlayerStateChange(player unsafe.Pointer, newState, oldState int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerStateChange, &PlayerStateChangeEvent{
+	evt := NewEvent(EventTypePlayerStateChange, &PlayerStateChangeEvent{
 		Player:   &Player{handle: player},
 		NewState: PlayerState(newState),
 		OldState: PlayerState(oldState),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerKeyStateChange
-func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys uint) {
+func onPlayerKeyStateChange(player unsafe.Pointer, newKeys, oldKeys uint) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerKeyStateChange, &PlayerKeyStateChangeEvent{
+	evt := NewEvent(EventTypePlayerKeyStateChange, &PlayerKeyStateChangeEvent{
 		Player:  &Player{handle: player},
 		NewKeys: newKeys,
 		OldKeys: oldKeys,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player damage events
 
 //export onPlayerDeath
-func onPlayerDeath(player, killer unsafe.Pointer, reason int) {
+func onPlayerDeath(player, killer unsafe.Pointer, reason int) C.bool {
 	defer handlePanic()
 
 	eventKiller := &Player{handle: killer}
@@ -823,15 +980,18 @@ func onPlayerDeath(player, killer unsafe.Pointer, reason int) {
 		eventKiller = nil
 	}
 
-	event.Dispatch(Events, EventTypePlayerDeath, &PlayerDeathEvent{
+	evt := NewEvent(EventTypePlayerDeath, &PlayerDeathEvent{
 		Player: &Player{handle: player},
 		Killer: eventKiller,
 		Reason: reason,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerTakeDamage
-func onPlayerTakeDamage(player, from unsafe.Pointer, amount float32, weapon uint, part int) {
+func onPlayerTakeDamage(player, from unsafe.Pointer, amount float32, weapon uint, part int) C.bool {
 	defer handlePanic()
 
 	eventFrom := &Player{handle: from}
@@ -839,35 +999,41 @@ func onPlayerTakeDamage(player, from unsafe.Pointer, amount float32, weapon uint
 		eventFrom = nil
 	}
 
-	event.Dispatch(Events, EventTypePlayerTakeDamage, &PlayerTakeDamageEvent{
+	evt := NewEvent(EventTypePlayerTakeDamage, &PlayerTakeDamageEvent{
 		Player: &Player{handle: player},
 		From:   eventFrom,
 		Amount: amount,
 		Weapon: Weapon(weapon),
 		Part:   BodyPart(part),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerGiveDamage
-func onPlayerGiveDamage(player, to unsafe.Pointer, amount float32, weapon uint, part int) {
+func onPlayerGiveDamage(player, to unsafe.Pointer, amount float32, weapon uint, part int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerGiveDamage, &PlayerGiveDamageEvent{
+	evt := NewEvent(EventTypePlayerGiveDamage, &PlayerGiveDamageEvent{
 		Player: &Player{handle: player},
 		To:     &Player{handle: to},
 		Amount: amount,
 		Weapon: Weapon(weapon),
 		Part:   BodyPart(part),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player click events
 
 //export onPlayerClickMap
-func onPlayerClickMap(player unsafe.Pointer, pos C.Vector3) {
+func onPlayerClickMap(player unsafe.Pointer, pos C.Vector3) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerClickMap, &PlayerClickMapEvent{
+	evt := NewEvent(EventTypePlayerClickMap, &PlayerClickMapEvent{
 		Player: &Player{handle: player},
 		Position: Vector3{
 			X: float32(pos.x),
@@ -875,206 +1041,263 @@ func onPlayerClickMap(player unsafe.Pointer, pos C.Vector3) {
 			Z: float32(pos.z),
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerClickPlayer
-func onPlayerClickPlayer(player, clicked unsafe.Pointer, source int) {
+func onPlayerClickPlayer(player, clicked unsafe.Pointer, source int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerClickPlayer, &PlayerClickPlayerEvent{
+	evt := NewEvent(EventTypePlayerClickPlayer, &PlayerClickPlayerEvent{
 		Player:  &Player{handle: player},
 		Clicked: &Player{handle: clicked},
 		Source:  PlayerClickSource(source),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player check events
 
 //export onClientCheckResponse
-func onClientCheckResponse(player unsafe.Pointer, actionType, address, results int) {
+func onClientCheckResponse(player unsafe.Pointer, actionType, address, results int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeClientCheckResponse, &ClientCheckResponseEvent{
+	evt := NewEvent(EventTypeClientCheckResponse, &ClientCheckResponseEvent{
 		Player:     &Player{handle: player},
 		ActionType: actionType,
 		Address:    address,
 		Results:    results,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Player update event
 
 //export onPlayerUpdate
-func onPlayerUpdate(player unsafe.Pointer, now C.longlong) bool {
+func onPlayerUpdate(player unsafe.Pointer, now C.longlong) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerUpdate, &PlayerUpdateEvent{
+	evt := NewEvent(EventTypePlayerUpdate, &PlayerUpdateEvent{
 		Player: &Player{handle: player},
 		Now:    time.Unix(0, int64(now)*int64(time.Millisecond)),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Textdraw events
 
 //export onPlayerClickTextDraw
-func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) {
+func onPlayerClickTextDraw(player, textdraw unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerClickTextDraw, &PlayerClickTextDrawEvent{
+	evt := NewEvent(EventTypePlayerClickTextDraw, &PlayerClickTextDrawEvent{
 		Player:   &Player{handle: player},
 		Textdraw: &Textdraw{handle: textdraw},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerClickPlayerTextDraw
-func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) {
+func onPlayerClickPlayerTextDraw(player, textdraw unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerClickPlayerTextDraw, &PlayerClickPlayerTextDrawEvent{
+	evt := NewEvent(EventTypePlayerClickPlayerTextDraw, &PlayerClickPlayerTextDrawEvent{
 		Player:   &Player{handle: player},
 		Textdraw: &PlayerTextdraw{handle: textdraw},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerCancelTextDrawSelection
-func onPlayerCancelTextDrawSelection(player unsafe.Pointer) bool {
+func onPlayerCancelTextDrawSelection(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerCancelTextDrawSelection, &PlayerCancelTextDrawSelectionEvent{
+	evt := NewEvent(EventTypePlayerCancelTextDrawSelection, &PlayerCancelTextDrawSelectionEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerCancelPlayerTextDrawSelection
-func onPlayerCancelPlayerTextDrawSelection(player unsafe.Pointer) bool {
+func onPlayerCancelPlayerTextDrawSelection(player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypePlayerCancelPlayerTextDrawSelection, &PlayerCancelPlayerTextDrawSelectionEvent{
+	evt := NewEvent(EventTypePlayerCancelPlayerTextDrawSelection, &PlayerCancelPlayerTextDrawSelectionEvent{
 		Player: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 // Vehicle events
 
 //export onVehicleStreamIn
-func onVehicleStreamIn(vehicle, player unsafe.Pointer) {
+func onVehicleStreamIn(vehicle, player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehicleStreamIn, &VehicleStreamInEvent{
+	evt := NewEvent(EventTypeVehicleStreamIn, &VehicleStreamInEvent{
 		Vehicle:   &Vehicle{handle: vehicle},
 		ForPlayer: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehicleStreamOut
-func onVehicleStreamOut(vehicle, player unsafe.Pointer) {
+func onVehicleStreamOut(vehicle, player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehicleStreamOut, &VehicleStreamOutEvent{
+	evt := NewEvent(EventTypeVehicleStreamOut, &VehicleStreamOutEvent{
 		Vehicle:   &Vehicle{handle: vehicle},
 		ForPlayer: &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehicleDeath
-func onVehicleDeath(vehicle, killer unsafe.Pointer) {
+func onVehicleDeath(vehicle, killer unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehicleDeath, &VehicleDeathEvent{
+	evt := NewEvent(EventTypeVehicleDeath, &VehicleDeathEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 		Killer:  &Player{handle: killer},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerEnterVehicle
-func onPlayerEnterVehicle(player, vehicle unsafe.Pointer, isPassenger int) {
+func onPlayerEnterVehicle(player, vehicle unsafe.Pointer, isPassenger int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerEnterVehicle, &PlayerEnterVehicleEvent{
+	evt := NewEvent(EventTypePlayerEnterVehicle, &PlayerEnterVehicleEvent{
 		Player:      &Player{handle: player},
 		Vehicle:     &Vehicle{handle: vehicle},
 		IsPassenger: isPassenger != 0,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onPlayerExitVehicle
-func onPlayerExitVehicle(player, vehicle unsafe.Pointer) {
+func onPlayerExitVehicle(player, vehicle unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypePlayerExitVehicle, &PlayerExitVehicleEvent{
+	evt := NewEvent(EventTypePlayerExitVehicle, &PlayerExitVehicleEvent{
 		Player:  &Player{handle: player},
 		Vehicle: &Vehicle{handle: vehicle},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehicleDamageStatusUpdate
-func onVehicleDamageStatusUpdate(vehicle, player unsafe.Pointer) {
+func onVehicleDamageStatusUpdate(vehicle, player unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehicleDamageStatusUpdate, &VehicleDamageStatusUpdateEvent{
+	evt := NewEvent(EventTypeVehicleDamageStatusUpdate, &VehicleDamageStatusUpdateEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 		Player:  &Player{handle: player},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehiclePaintJob
-func onVehiclePaintJob(player, vehicle unsafe.Pointer, paintJob int) {
+func onVehiclePaintJob(player, vehicle unsafe.Pointer, paintJob int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehiclePaintJob, &VehiclePaintJobEvent{
+	evt := NewEvent(EventTypeVehiclePaintJob, &VehiclePaintJobEvent{
 		Player:   &Player{handle: player},
 		Vehicle:  &Vehicle{handle: vehicle},
 		PaintJob: paintJob,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehicleMod
-func onVehicleMod(player, vehicle unsafe.Pointer, component int) {
+func onVehicleMod(player, vehicle unsafe.Pointer, component int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehicleMod, &VehicleModEvent{
+	evt := NewEvent(EventTypeVehicleMod, &VehicleModEvent{
 		Player:    &Player{handle: player},
 		Vehicle:   &Vehicle{handle: vehicle},
 		Component: component,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehicleRespray
-func onVehicleRespray(player, vehicle unsafe.Pointer, color1, color2 int) {
+func onVehicleRespray(player, vehicle unsafe.Pointer, color1, color2 int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehicleRespray, &VehicleResprayEvent{
+	evt := NewEvent(EventTypeVehicleRespray, &VehicleResprayEvent{
 		Player:  &Player{handle: player},
 		Vehicle: &Vehicle{handle: vehicle},
 		Color:   VehicleColor{Primary: color1, Secondary: color2},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onEnterExitModShop
-func onEnterExitModShop(player unsafe.Pointer, enterexit bool, interiorID int) {
+func onEnterExitModShop(player unsafe.Pointer, enterexit bool, interiorID int) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeEnterExitModShop, &EnterExitModShopEvent{
+	evt := NewEvent(EventTypeEnterExitModShop, &EnterExitModShopEvent{
 		Player:     &Player{handle: player},
 		EnterExit:  enterexit,
 		InteriorID: interiorID,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehicleSpawn
-func onVehicleSpawn(vehicle unsafe.Pointer) {
+func onVehicleSpawn(vehicle unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	event.Dispatch(Events, EventTypeVehicleSpawn, &VehicleSpawnEvent{
+	evt := NewEvent(EventTypeVehicleSpawn, &VehicleSpawnEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onUnoccupiedVehicleUpdate
-func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, updateData C.UnoccupiedVehicleUpdate) bool {
+func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, updateData C.UnoccupiedVehicleUpdate) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypeUnoccupiedVehicleUpdate, &UnoccupiedVehicleUpdateEvent{
+	evt := NewEvent(EventTypeUnoccupiedVehicleUpdate, &UnoccupiedVehicleUpdateEvent{
 		Vehicle: &Vehicle{handle: vehicle},
 		Player:  &Player{handle: player},
 		Update: UnoccupiedVehicleUpdate{
@@ -1091,25 +1314,34 @@ func onUnoccupiedVehicleUpdate(vehicle, player unsafe.Pointer, updateData C.Unoc
 			},
 		},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onTrailerUpdate
-func onTrailerUpdate(player, vehicle unsafe.Pointer) bool {
+func onTrailerUpdate(player, vehicle unsafe.Pointer) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypeTrailerUpdate, &TrailerUpdateEvent{
+	evt := NewEvent(EventTypeTrailerUpdate, &TrailerUpdateEvent{
 		Player:  &Player{handle: player},
 		Vehicle: &Vehicle{handle: vehicle},
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }
 
 //export onVehicleSirenStateChange
-func onVehicleSirenStateChange(player, vehicle unsafe.Pointer, sirenState uint8) bool {
+func onVehicleSirenStateChange(player, vehicle unsafe.Pointer, sirenState uint8) C.bool {
 	defer handlePanic()
 
-	return event.Dispatch(Events, EventTypeVehicleSirenStateChange, &VehicleSirenStateChangeEvent{
+	evt := NewEvent(EventTypeVehicleSirenStateChange, &VehicleSirenStateChangeEvent{
 		Player:     &Player{handle: player},
 		Vehicle:    &Vehicle{handle: vehicle},
 		SirenState: int(sirenState),
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
+
+	return err == nil
 }

@@ -4,8 +4,6 @@ package omp
 import "C"
 import (
 	"strings"
-
-	"github.com/kodeyeen/event"
 )
 
 type dialogStyle int
@@ -27,49 +25,41 @@ type dialog interface {
 }
 
 type MessageDialog struct {
-	*event.Dispatcher
+	Events                        *Dispatcher
 	Title, Body, Button1, Button2 string
 }
 
 func NewMessageDialog(title, body, button1, button2 string) *MessageDialog {
 	return &MessageDialog{
-		Dispatcher: event.NewDispatcher(),
-		Title:      title,
-		Body:       body,
-		Button1:    button1,
-		Button2:    button2,
+		Events:  NewDispatcher(),
+		Title:   title,
+		Body:    body,
+		Button1: button1,
+		Button2: button2,
 	}
 }
 
 func (d *MessageDialog) ShowFor(player *Player) {
 	activeDialogs[player.ID()] = d
 
-	event.Dispatch(d.Dispatcher, EventTypeDialogShow, &DialogShowEvent{
-		Player: player,
-	})
-
 	player.showDialog(dialogStyleMsgBox, d.Title, d.Body, d.Button1, d.Button2)
 }
 
 func (d *MessageDialog) HideFor(player *Player) {
-	event.Dispatch(d.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-		Player: player,
-	})
-
 	delete(activeDialogs, player.ID())
 
 	player.hideDialog()
 }
 
 type InputDialog struct {
-	*event.Dispatcher
+	Events                        *Dispatcher
 	Title, Body, Button1, Button2 string
 	isPassword                    bool
 }
 
 func NewInputDialog(title, body, button1, button2 string) *InputDialog {
 	return &InputDialog{
-		Dispatcher: event.NewDispatcher(),
+		Events:     NewDispatcher(),
 		Title:      title,
 		Body:       body,
 		Button1:    button1,
@@ -80,7 +70,7 @@ func NewInputDialog(title, body, button1, button2 string) *InputDialog {
 
 func NewPasswordDialog(title, body, button1, button2 string) *InputDialog {
 	return &InputDialog{
-		Dispatcher: event.NewDispatcher(),
+		Events:     NewDispatcher(),
 		Title:      title,
 		Body:       body,
 		Button1:    button1,
@@ -97,35 +87,27 @@ func (d *InputDialog) ShowFor(player *Player) {
 
 	activeDialogs[player.ID()] = d
 
-	event.Dispatch(d.Dispatcher, EventTypeDialogShow, &DialogShowEvent{
-		Player: player,
-	})
-
 	player.showDialog(style, d.Title, d.Body, d.Button1, d.Button2)
 }
 
 func (d *InputDialog) HideFor(player *Player) {
-	event.Dispatch(d.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-		Player: player,
-	})
-
 	delete(activeDialogs, player.ID())
 
 	player.hideDialog()
 }
 
 type ListDialog struct {
-	*event.Dispatcher
+	Events                  *Dispatcher
 	Title, Button1, Button2 string
 	items                   []string
 }
 
 func NewListDialog(title, button1, button2 string) *ListDialog {
 	return &ListDialog{
-		Dispatcher: event.NewDispatcher(),
-		Title:      title,
-		Button1:    button1,
-		Button2:    button2,
+		Events:  NewDispatcher(),
+		Title:   title,
+		Button1: button1,
+		Button2: button2,
 	}
 }
 
@@ -142,18 +124,10 @@ func (d *ListDialog) ShowFor(player *Player) {
 
 	activeDialogs[player.ID()] = d
 
-	event.Dispatch(d.Dispatcher, EventTypeDialogShow, &DialogShowEvent{
-		Player: player,
-	})
-
 	player.showDialog(dialogStyleList, d.Title, body, d.Button1, d.Button2)
 }
 
 func (d *ListDialog) HideFor(player *Player) {
-	event.Dispatch(d.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-		Player: player,
-	})
-
 	delete(activeDialogs, player.ID())
 
 	player.hideDialog()
@@ -162,7 +136,7 @@ func (d *ListDialog) HideFor(player *Player) {
 type TabListItem []string
 
 type TabListDialog struct {
-	*event.Dispatcher
+	Events                  *Dispatcher
 	Title, Button1, Button2 string
 	header                  TabListItem
 	items                   []TabListItem
@@ -170,10 +144,10 @@ type TabListDialog struct {
 
 func NewTabListDialog(title, button1, button2 string) *TabListDialog {
 	return &TabListDialog{
-		Dispatcher: event.NewDispatcher(),
-		Title:      title,
-		Button1:    button1,
-		Button2:    button2,
+		Events:  NewDispatcher(),
+		Title:   title,
+		Button1: button1,
+		Button2: button2,
 	}
 }
 
@@ -199,10 +173,6 @@ func (d *TabListDialog) ShowFor(player *Player) {
 
 	activeDialogs[player.ID()] = d
 
-	event.Dispatch(d.Dispatcher, EventTypeDialogShow, &DialogShowEvent{
-		Player: player,
-	})
-
 	player.showDialog(style, d.Title, body, d.Button1, d.Button2)
 }
 
@@ -221,10 +191,6 @@ func (d *TabListDialog) makeBody(style dialogStyle) string {
 }
 
 func (d *TabListDialog) HideFor(player *Player) {
-	event.Dispatch(d.Dispatcher, EventTypeDialogHide, &DialogHideEvent{
-		Player: player,
-	})
-
 	delete(activeDialogs, player.ID())
 
 	player.hideDialog()

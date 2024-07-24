@@ -1,6 +1,2 @@
-github.com/kodeyeen/event v0.0.0-20240510090158-480a71bf5498 h1:kFu6xS8pAseFDSd6FAIBsSgyyxgVctwP3ODl2wsMNXY=
-github.com/kodeyeen/event v0.0.0-20240510090158-480a71bf5498/go.mod h1:IF6pJtK3LJSCc/AtEt/UbJf0G5iNVEMOx7sHtx1OtVA=
-github.com/kodeyeen/event v0.0.0-20240511101302-ae21620581f8 h1:eLqE3nLlV26nEHPV9J14l75DK8MpII1XLQroycbWs3I=
-github.com/kodeyeen/event v0.0.0-20240511101302-ae21620581f8/go.mod h1:IF6pJtK3LJSCc/AtEt/UbJf0G5iNVEMOx7sHtx1OtVA=
-github.com/kodeyeen/event v0.0.0-20240511110731-d25f707523ba h1:iZYaQzACFF1BDwhbA9b/jQnnCrIdNPmM/v/9S9B4NnU=
-github.com/kodeyeen/event v0.0.0-20240511110731-d25f707523ba/go.mod h1:IF6pJtK3LJSCc/AtEt/UbJf0G5iNVEMOx7sHtx1OtVA=
+golang.org/x/sync v0.7.0 h1:YsImfSBoP9QPYL0xyKJPq0gcaJdG3rInoqxTWbfQu9M=
+golang.org/x/sync v0.7.0/go.mod h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk=

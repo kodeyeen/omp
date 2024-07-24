@@ -2,8 +2,6 @@ package omp
 
 import (
 	"time"
-
-	"github.com/kodeyeen/event"
 )
 
 type DisconnectReason int
@@ -75,128 +73,128 @@ type UnoccupiedVehicleUpdate struct {
 }
 
 const (
-	EventTypeGameModeInit event.Type = "gameModeInit"
-	EventTypeGameModeExit event.Type = "gameModeExit"
+	EventTypeGameModeInit EventType = "gameModeInit"
+	EventTypeGameModeExit EventType = "gameModeExit"
 
 	// Actor events
-	EventTypePlayerGiveDamageActor event.Type = "playerGiveDamageActor"
-	EventTypeActorStreamOut        event.Type = "actorStreamOut"
-	EventTypeActorStreamIn         event.Type = "actorStreamIn"
+	EventTypePlayerGiveDamageActor EventType = "playerGiveDamageActor"
+	EventTypeActorStreamOut        EventType = "actorStreamOut"
+	EventTypeActorStreamIn         EventType = "actorStreamIn"
 
 	// Checkpoint events
-	EventTypePlayerEnterCheckpoint     event.Type = "playerEnterCheckpoint"
-	EventTypePlayerLeaveCheckpoint     event.Type = "playerLeaveCheckpoint"
-	EventTypePlayerEnterRaceCheckpoint event.Type = "playerEnterRaceCheckpoint"
-	EventTypePlayerLeaveRaceCheckpoint event.Type = "playerLeaveRaceCheckpoint"
+	EventTypePlayerEnterCheckpoint     EventType = "playerEnterCheckpoint"
+	EventTypePlayerLeaveCheckpoint     EventType = "playerLeaveCheckpoint"
+	EventTypePlayerEnterRaceCheckpoint EventType = "playerEnterRaceCheckpoint"
+	EventTypePlayerLeaveRaceCheckpoint EventType = "playerLeaveRaceCheckpoint"
 
 	// Class events
-	EventTypePlayerRequestClass event.Type = "playerRequestClass"
+	EventTypePlayerRequestClass EventType = "playerRequestClass"
 
 	// Console events
-	EventTypeConsoleText      event.Type = "consoleText"
-	EventTypeRconLoginAttempt event.Type = "rconLoginAttempt"
+	EventTypeConsoleText      EventType = "consoleText"
+	EventTypeRconLoginAttempt EventType = "rconLoginAttempt"
 
 	// Custom model events
-	EventTypePlayerFinishedDownloading event.Type = "playerFinishedDownloading"
-	EventTypePlayerRequestDownload     event.Type = "playerRequestDownload"
+	EventTypePlayerFinishedDownloading EventType = "playerFinishedDownloading"
+	EventTypePlayerRequestDownload     EventType = "playerRequestDownload"
 
 	// Player dialog event
-	EventTypeDialogResponse event.Type = "dialogResponse"
-	EventTypeDialogShow     event.Type = "dialogShow"
-	EventTypeDialogHide     event.Type = "dialogHide"
+	EventTypeDialogResponse EventType = "dialogResponse"
+	EventTypeDialogShow     EventType = "dialogShow"
+	EventTypeDialogHide     EventType = "dialogHide"
 
 	// Turf events
-	EventTypePlayerEnterTurf       event.Type = "playerEnterTurf"
-	EventTypePlayerEnterPlayerTurf event.Type = "playerEnterPlayerTurf"
-	EventTypePlayerLeaveTurf       event.Type = "playerLeaveTurf"
-	EventTypePlayerLeavePlayerTurf event.Type = "playerLeavePlayerTurf"
-	EventTypePlayerClickTurf       event.Type = "playerClickTurf"
-	EventTypePlayerClickPlayerTurf event.Type = "playerClickPlayerTurf"
+	EventTypePlayerEnterTurf       EventType = "playerEnterTurf"
+	EventTypePlayerEnterPlayerTurf EventType = "playerEnterPlayerTurf"
+	EventTypePlayerLeaveTurf       EventType = "playerLeaveTurf"
+	EventTypePlayerLeavePlayerTurf EventType = "playerLeavePlayerTurf"
+	EventTypePlayerClickTurf       EventType = "playerClickTurf"
+	EventTypePlayerClickPlayerTurf EventType = "playerClickPlayerTurf"
 
 	// Menu events
-	EventTypePlayerSelectedMenuRow event.Type = "playerSelectedMenuRow"
-	EventTypePlayerExitedMenu      event.Type = "playerExitedMenu"
+	EventTypePlayerSelectedMenuRow EventType = "playerSelectedMenuRow"
+	EventTypePlayerExitedMenu      EventType = "playerExitedMenu"
 
 	// Object events
-	EventTypeObjectMoved            event.Type = "objectMoved"
-	EventTypePlayerObjectMoved      event.Type = "playerObjectMoved"
-	EventTypeObjectSelected         event.Type = "objectSelected"
-	EventTypePlayerObjectSelected   event.Type = "playerObjectSelected"
-	EventTypeObjectEdited           event.Type = "objectEdited"
-	EventTypePlayerObjectEdited     event.Type = "playerObjectEdited"
-	EventTypePlayerAttachmentEdited event.Type = "playerAttachmentEdited"
+	EventTypeObjectMoved            EventType = "objectMoved"
+	EventTypePlayerObjectMoved      EventType = "playerObjectMoved"
+	EventTypeObjectSelected         EventType = "objectSelected"
+	EventTypePlayerObjectSelected   EventType = "playerObjectSelected"
+	EventTypeObjectEdited           EventType = "objectEdited"
+	EventTypePlayerObjectEdited     EventType = "playerObjectEdited"
+	EventTypePlayerAttachmentEdited EventType = "playerAttachmentEdited"
 
 	// Pickup events
-	EventTypePlayerPickUpPickup       event.Type = "playerPickUpPickup"
-	EventTypePlayerPickUpPlayerPickup event.Type = "playerPickUpPlayerPickup"
+	EventTypePlayerPickUpPickup       EventType = "playerPickUpPickup"
+	EventTypePlayerPickUpPlayerPickup EventType = "playerPickUpPlayerPickup"
 
 	// Player spawn events
-	EventTypePlayerRequestSpawn event.Type = "playerRequestSpawn"
-	EventTypePlayerSpawn        event.Type = "playerSpawn"
+	EventTypePlayerRequestSpawn EventType = "playerRequestSpawn"
+	EventTypePlayerSpawn        EventType = "playerSpawn"
 
 	// Player connect events
-	EventTypeIncomingConnection event.Type = "incomingConnection"
-	EventTypePlayerConnect      event.Type = "playerConnect"
-	EventTypePlayerDisconnect   event.Type = "playerDisconnect"
-	EventTypePlayerClientInit   event.Type = "playerClientInit"
+	EventTypeIncomingConnection EventType = "incomingConnection"
+	EventTypePlayerConnect      EventType = "playerConnect"
+	EventTypePlayerDisconnect   EventType = "playerDisconnect"
+	EventTypePlayerClientInit   EventType = "playerClientInit"
 
 	// Player stream events
-	EventTypePlayerStreamIn  event.Type = "playerStreamIn"
-	EventTypePlayerStreamOut event.Type = "playerStreamOut"
+	EventTypePlayerStreamIn  EventType = "playerStreamIn"
+	EventTypePlayerStreamOut EventType = "playerStreamOut"
 
 	// Player text events
-	EventTypePlayerText event.Type = "playerText"
+	EventTypePlayerText EventType = "playerText"
 
 	// Player shot events
-	EventTypePlayerShotMissed       event.Type = "playerShotMissed"
-	EventTypePlayerShotPlayer       event.Type = "playerShotPlayer"
-	EventTypePlayerShotVehicle      event.Type = "playerShotVehicle"
-	EventTypePlayerShotObject       event.Type = "playerShotObject"
-	EventTypePlayerShotPlayerObject event.Type = "playerShotPlayerObject"
+	EventTypePlayerShotMissed       EventType = "playerShotMissed"
+	EventTypePlayerShotPlayer       EventType = "playerShotPlayer"
+	EventTypePlayerShotVehicle      EventType = "playerShotVehicle"
+	EventTypePlayerShotObject       EventType = "playerShotObject"
+	EventTypePlayerShotPlayerObject EventType = "playerShotPlayerObject"
 
 	// Player change events
-	EventTypePlayerScoreChange    event.Type = "playerScoreChange"
-	EventTypePlayerNameChange     event.Type = "playerNameChange"
-	EventTypePlayerInteriorChange event.Type = "playerInteriorChange"
-	EventTypePlayerStateChange    event.Type = "playerStateChange"
-	EventTypePlayerKeyStateChange event.Type = "playerKeyStateChange"
+	EventTypePlayerScoreChange    EventType = "playerScoreChange"
+	EventTypePlayerNameChange     EventType = "playerNameChange"
+	EventTypePlayerInteriorChange EventType = "playerInteriorChange"
+	EventTypePlayerStateChange    EventType = "playerStateChange"
+	EventTypePlayerKeyStateChange EventType = "playerKeyStateChange"
 
 	// Player damage events
-	EventTypePlayerDeath      event.Type = "playerDeath"
-	EventTypePlayerTakeDamage event.Type = "playerTakeDamage"
-	EventTypePlayerGiveDamage event.Type = "playerGiveDamage"
+	EventTypePlayerDeath      EventType = "playerDeath"
+	EventTypePlayerTakeDamage EventType = "playerTakeDamage"
+	EventTypePlayerGiveDamage EventType = "playerGiveDamage"
 
 	// Player click events
-	EventTypePlayerClickMap    event.Type = "playerClickMap"
-	EventTypePlayerClickPlayer event.Type = "playerClickPlayer"
+	EventTypePlayerClickMap    EventType = "playerClickMap"
+	EventTypePlayerClickPlayer EventType = "playerClickPlayer"
 
 	// Player check events
-	EventTypeClientCheckResponse event.Type = "clientCheckResponse"
+	EventTypeClientCheckResponse EventType = "clientCheckResponse"
 
 	// Player update event
-	EventTypePlayerUpdate event.Type = "playerUpdate"
+	EventTypePlayerUpdate EventType = "playerUpdate"
 
 	// TextDraw events
-	EventTypePlayerClickTextDraw                 event.Type = "playerClickTextDraw"
-	EventTypePlayerClickPlayerTextDraw           event.Type = "playerClickPlayerTextDraw"
-	EventTypePlayerCancelTextDrawSelection       event.Type = "playerCancelTextDrawSelection"
-	EventTypePlayerCancelPlayerTextDrawSelection event.Type = "playerCancelPlayerTextDrawSelection"
+	EventTypePlayerClickTextDraw                 EventType = "playerClickTextDraw"
+	EventTypePlayerClickPlayerTextDraw           EventType = "playerClickPlayerTextDraw"
+	EventTypePlayerCancelTextDrawSelection       EventType = "playerCancelTextDrawSelection"
+	EventTypePlayerCancelPlayerTextDrawSelection EventType = "playerCancelPlayerTextDrawSelection"
 
 	// Vehicle events
-	EventTypeVehicleStreamIn           event.Type = "vehicleStreamIn"
-	EventTypeVehicleStreamOut          event.Type = "vehicleStreamOut"
-	EventTypeVehicleDeath              event.Type = "vehicleDeath"
-	EventTypePlayerEnterVehicle        event.Type = "playerEnterVehicle"
-	EventTypePlayerExitVehicle         event.Type = "playerExitVehicle"
-	EventTypeVehicleDamageStatusUpdate event.Type = "vehicleDamageStatusUpdate"
-	EventTypeVehiclePaintJob           event.Type = "vehiclePaintJob"
-	EventTypeVehicleMod                event.Type = "vehicleMod"
-	EventTypeVehicleRespray            event.Type = "vehicleRespray"
-	EventTypeEnterExitModShop          event.Type = "enterExitModShop"
-	EventTypeVehicleSpawn              event.Type = "vehicleSpawn"
-	EventTypeUnoccupiedVehicleUpdate   event.Type = "unoccupiedVehicleUpdate"
-	EventTypeTrailerUpdate             event.Type = "trailerUpdate"
-	EventTypeVehicleSirenStateChange   event.Type = "vehicleSirenStateChange"
+	EventTypeVehicleStreamIn           EventType = "vehicleStreamIn"
+	EventTypeVehicleStreamOut          EventType = "vehicleStreamOut"
+	EventTypeVehicleDeath              EventType = "vehicleDeath"
+	EventTypePlayerEnterVehicle        EventType = "playerEnterVehicle"
+	EventTypePlayerExitVehicle         EventType = "playerExitVehicle"
+	EventTypeVehicleDamageStatusUpdate EventType = "vehicleDamageStatusUpdate"
+	EventTypeVehiclePaintJob           EventType = "vehiclePaintJob"
+	EventTypeVehicleMod                EventType = "vehicleMod"
+	EventTypeVehicleRespray            EventType = "vehicleRespray"
+	EventTypeEnterExitModShop          EventType = "enterExitModShop"
+	EventTypeVehicleSpawn              EventType = "vehicleSpawn"
+	EventTypeUnoccupiedVehicleUpdate   EventType = "unoccupiedVehicleUpdate"
+	EventTypeTrailerUpdate             EventType = "trailerUpdate"
+	EventTypeVehicleSirenStateChange   EventType = "vehicleSirenStateChange"
 )
 
 type GameModeInitEvent struct {
