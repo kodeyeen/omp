@@ -197,12 +197,6 @@ const (
 	EventTypeVehicleSirenStateChange   EventType = "vehicleSirenStateChange"
 )
 
-type GameModeInitEvent struct {
-}
-
-type GameModeExitEvent struct {
-}
-
 // Actor events
 
 type PlayerGiveDamageActorEvent struct {
@@ -297,14 +291,6 @@ type TabListDialogResponseEvent struct {
 	Response   DialogResponse
 	ItemNumber int
 	Item       TabListItem
-}
-
-type DialogShowEvent struct {
-	Player *Player
-}
-
-type DialogHideEvent struct {
-	Player *Player
 }
 
 // Turf events
