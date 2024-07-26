@@ -3,64 +3,61 @@ package omp
 import (
 	"context"
 
-	"golang.org/x/sync/errgroup"
+	"github.com/kodeyeen/event"
 )
 
-type EventType string
+// These are wrappers around event package.
+
+type baseEvent = event.Event
+type baseDispatcher = *event.Dispatcher
+
+type EventType event.Type
 
 type Event interface {
 	Type() EventType
 	Payload() any
 }
 
-type event struct {
-	Event
-
-	_type   EventType
-	payload any
+type payloadEvt struct {
+	baseEvent
 }
 
 func NewEvent(_type EventType, payload any) Event {
-	return &event{
-		_type:   _type,
-		payload: payload,
+	return &payloadEvt{
+		baseEvent: event.WithPayload(event.Type(_type), payload),
 	}
 }
 
-func (e *event) Type() EventType {
-	return e._type
+func (e *payloadEvt) Type() EventType {
+	return EventType(e.baseEvent.Type())
 }
 
-func (e *event) Payload() any {
-	return e.payload
+func (e *payloadEvt) Payload() any {
+	return e.baseEvent.Payload()
 }
 
 type Dispatcher struct {
-	listeners map[EventType][]Listener
+	baseDispatcher
 }
 
 func NewDispatcher() *Dispatcher {
 	return &Dispatcher{
-		listeners: make(map[EventType][]Listener),
+		baseDispatcher: event.NewDispatcher(),
 	}
 }
 
 func (d *Dispatcher) HandleEvent(ctx context.Context, e Event) error {
-	listeners := d.listeners[e.Type()]
-
-	g, ctx := errgroup.WithContext(ctx)
-
-	for _, listener := range listeners {
-		g.Go(func() error {
-			return listener.HandleEvent(ctx, e)
-		})
-	}
-
-	return g.Wait()
+	pkgEvent := event.WithPayload(event.Type(e.Type()), e.Payload())
+	return d.baseDispatcher.HandleEvent(ctx, pkgEvent)
 }
 
 func (d *Dispatcher) Listen(_type EventType, listener Listener) {
-	d.listeners[_type] = append(d.listeners[_type], listener)
+	pkgListener := event.ListenerFunc(func(ctx context.Context, e event.Event) error {
+		ompEvent := NewEvent(EventType(e.Type()), e.Payload())
+		return listener.HandleEvent(ctx, ompEvent)
+	})
+
+	d.baseDispatcher.Listen(event.Type(_type), pkgListener)
 }
 
 func (d *Dispatcher) ListenFunc(_type EventType, listener func(context.Context, Event) error) {
@@ -68,38 +65,33 @@ func (d *Dispatcher) ListenFunc(_type EventType, listener func(context.Context, 
 }
 
 func (d *Dispatcher) HasListener(_type EventType) bool {
-	_, ok := d.listeners[_type]
-	return ok
+	return d.baseDispatcher.HasListener(event.Type(_type))
 }
 
 func (d *Dispatcher) Subscribe(subscriber Subscriber) {
-	events := subscriber.SubscribedEvents()
-
-	for _type, listeners := range events {
-		d.listeners[_type] = append(d.listeners[_type], listeners...)
-	}
+	d.baseDispatcher.Subscribe(subscriber)
 }
 
-func (d *Dispatcher) SubscribeFunc(subscriber func() map[EventType][]Listener) {
+func (d *Dispatcher) SubscribeFunc(subscriber func() any) {
 	d.Subscribe(SubscriberFunc(subscriber))
 }
 
 type Listener interface {
-	HandleEvent(context.Context, Event) error
+	HandleEvent(ctx context.Context, e Event) error
 }
 
-type ListenerFunc func(context.Context, Event) error
+type ListenerFunc func(ctx context.Context, e Event) error
 
 func (f ListenerFunc) HandleEvent(ctx context.Context, e Event) error {
 	return f(ctx, e)
 }
 
 type Subscriber interface {
-	SubscribedEvents() map[EventType][]Listener
+	event.Subscriber
 }
 
-type SubscriberFunc func() map[EventType][]Listener
+type SubscriberFunc event.SubscriberFunc
 
-func (f SubscriberFunc) SubscribedEvents() map[EventType][]Listener {
+func (f SubscriberFunc) SubscribedEvents() any {
 	return f()
 }

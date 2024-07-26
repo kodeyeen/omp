@@ -1,2 +1,4 @@
+github.com/kodeyeen/event v0.1.1-0.20240725193601-f335914ce075 h1:pIb5ANBJSyD7qvOMnrgT6RcOVRyleyggLew252acts0=
+github.com/kodeyeen/event v0.1.1-0.20240725193601-f335914ce075/go.mod h1:xYiACuD9T/uLO0UqubNZblp/l/Z8KMqMKN4s0tAvq4Y=
 golang.org/x/sync v0.7.0 h1:YsImfSBoP9QPYL0xyKJPq0gcaJdG3rInoqxTWbfQu9M=
 golang.org/x/sync v0.7.0/go.mod h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk=
