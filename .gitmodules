@@ -1,0 +1,3 @@
+[submodule "capi"]
+	path = capi
+	url = https://github.com/openmultiplayer/omp-capi.git

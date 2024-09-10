@@ -59,13 +59,22 @@ const (
 	ObjectEditResponseUpdate
 )
 
+type DownloadRequestType int
+
+const (
+	DownloadRequestTypeUnknown DownloadRequestType = iota - 1
+	DownloadRequestTypeEmpty
+	DownloadRequestTypeModelFile
+	DownloadRequestTypeTextureFile
+)
+
 type PlayerBullet struct {
-	Origin  Vector3
-	HitPos  Vector3
-	Offset  Vector3
-	Weapon  Weapon
-	HitType int
-	HitID   int
+	Origin      Vector3
+	HitPosition Vector3
+	Offset      Vector3
+	Weapon      Weapon
+	HitType     int
+	HitID       int
 }
 
 type UnoccupiedVehicleUpdate struct {
@@ -95,6 +104,9 @@ const (
 	// Console events
 	EventTypeConsoleText      event.Type = "consoleText"
 	EventTypeRconLoginAttempt event.Type = "rconLoginAttempt"
+
+	// Core events
+	EventTypeTick event.Type = "tick"
 
 	// Custom model events
 	EventTypePlayerFinishedDownloading event.Type = "playerFinishedDownloading"
@@ -208,11 +220,11 @@ type GameModeExitEvent struct {
 // Actor events
 
 type PlayerGiveDamageActorEvent struct {
-	Player *Player
-	Actor  *Player
-	Amount float32
-	Weapon uint
-	Part   BodyPart
+	Player   *Player
+	Actor    *Player
+	Amount   float32
+	Weapon   Weapon
+	BodyPart BodyPart
 }
 
 type ActorStreamInEvent struct {
@@ -263,6 +275,11 @@ type RconLoginAttemptEvent struct {
 	Success  bool
 }
 
+type TickEvent struct {
+	Elapsed time.Duration
+	Now     time.Time
+}
+
 // Custom model events
 
 type PlayerFinishedDownloadingEvent struct {
@@ -270,8 +287,9 @@ type PlayerFinishedDownloadingEvent struct {
 }
 
 type PlayerRequestDownloadEvent struct {
-	Player         *Player
-	Type, Checksum int
+	Player   *Player
+	Type     DownloadRequestType
+	Checksum int
 }
 
 // Dialog events
@@ -345,7 +363,7 @@ type PlayerClickPlayerTurfEvent struct {
 
 type PlayerSelectedMenuRowEvent struct {
 	Player  *Player
-	MenuRow uint8
+	MenuRow int
 }
 
 type PlayerExitedMenuEvent struct {
@@ -426,7 +444,7 @@ type PlayerSpawnEvent struct {
 
 type IncomingConnectionEvent struct {
 	Player    *Player
-	IPAddress string
+	ipAddress string
 	Port      int
 }
 
@@ -507,8 +525,8 @@ type PlayerNameChangeEvent struct {
 
 type PlayerInteriorChangeEvent struct {
 	Player      *Player
-	NewInterior uint
-	OldInterior uint
+	NewInterior int
+	OldInterior int
 }
 
 type PlayerStateChangeEvent struct {
@@ -519,8 +537,8 @@ type PlayerStateChangeEvent struct {
 
 type PlayerKeyStateChangeEvent struct {
 	Player  *Player
-	NewKeys uint
-	OldKeys uint
+	NewKeys int
+	OldKeys int
 }
 
 // Player damage events
@@ -540,11 +558,11 @@ type PlayerTakeDamageEvent struct {
 }
 
 type PlayerGiveDamageEvent struct {
-	Player *Player
-	To     *Player
-	Amount float32
-	Weapon Weapon
-	Part   BodyPart
+	Player   *Player
+	To       *Player
+	Amount   float32
+	Weapon   Weapon
+	BodyPart BodyPart
 }
 
 // Player click events
@@ -555,9 +573,9 @@ type PlayerClickMapEvent struct {
 }
 
 type PlayerClickPlayerEvent struct {
-	Player  *Player
-	Clicked *Player
-	Source  PlayerClickSource
+	Player *Player
+	Target *Player
+	Source PlayerClickSource
 }
 
 // Player check events
@@ -665,7 +683,7 @@ type UnoccupiedVehicleUpdateEvent struct {
 
 type TrailerUpdateEvent struct {
 	Player  *Player
-	Vehicle *Vehicle
+	Trailer *Vehicle
 }
 
 type VehicleSirenStateChangeEvent struct {

@@ -1,129 +1,94 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
-	"path/filepath"
-	"regexp"
 	"strings"
-)
-
-const srcTpl = `#include "include/%s"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-%s
-
-#ifdef __cplusplus
-}
-#endif
-`
-
-const funcTpl = `%s%s %s(%s) {
-%s%sreturn call<%s>(%s);
-%s}`
-
-// ^\s*([\w\s\*]+)\s+(\w+)\s*\(([^)]*)\)\s*;
-var funcPrototypeRe = regexp.MustCompile(`(?m)` +
-	`^` +
-	`\s*` +
-	`([\w\s\*]+)` + // type
-	`\s+` +
-	`(\w+)` + // name
-	`\s*` +
-	`\(` +
-	`([^)]*)` + // arguments
-	`\)` +
-	`\s*` +
-	`;`,
+	"text/template"
 )
 
 func main() {
-	genSrcFiles("include")
-}
-
-func genSrcFiles(headersPath string) error {
-	headers, err := os.ReadDir(headersPath)
+	api, err := parseAPIDocs("capi/apidocs/api.json")
 	if err != nil {
-		return err
+		log.Fatalf("Failed to parse API docs file: %s\n", err.Error())
 	}
 
-	for _, header := range headers {
-		if header.Name() == "omp.h" {
-			continue
-		}
+	err = genFromTemplate("include/wrappers.h", "wrappers.h.go.tmpl", api)
+	if err != nil {
+		log.Fatalf("Failed to generate header file: %s\n", err.Error())
+	}
 
-		headerPath := filepath.Join(headersPath, header.Name())
-		genSrcFile(headerPath)
+	err = genFromTemplate("wrappers.c", "wrappers.c.go.tmpl", api)
+	if err != nil {
+		log.Fatalf("Failed to generate source file: %s\n", err.Error())
+	}
+}
+
+func parseAPIDocs(path string) (*API, error) {
+	inf, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open API docs file: %w", err)
+	}
+
+	var api *API
+
+	err = json.NewDecoder(inf).Decode(&api)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode API docs file: %w", err)
+	}
+
+	return api, nil
+}
+
+func genFromTemplate(dstPath, tmplPath string, api *API) error {
+	tmpl, err := os.ReadFile(tmplPath)
+	if err != nil {
+		return fmt.Errorf("failed to read template file: %w", err)
+	}
+
+	funcs := template.FuncMap{
+		"split": strings.Split,
+		"join":  strings.Join,
+	}
+
+	t := template.Must(template.New("func").Funcs(funcs).Parse(string(tmpl)))
+
+	dstFile, err := os.Create(dstPath)
+	if err != nil {
+		return fmt.Errorf("failed to create destination file: %w", err)
+	}
+
+	err = t.Execute(dstFile, []*Group{
+		{Name: "Actor", Funcs: api.Actor},
+		{Name: "Checkpoint", Funcs: api.Checkpoint},
+		{Name: "RaceCheckpoint", Funcs: api.RaceCheckpoint},
+		{Name: "Class", Funcs: api.Class},
+		{Name: "Player", Funcs: api.Player},
+		{Name: "Component", Funcs: api.Component},
+		{Name: "Config", Funcs: api.Config},
+		{Name: "Core", Funcs: api.Core},
+		{Name: "NPC", Funcs: api.NPC},
+		{Name: "CustomModel", Funcs: api.CustomModel},
+		{Name: "Dialog", Funcs: api.Dialog},
+		{Name: "Event", Funcs: api.Event},
+		{Name: "GangZone", Funcs: api.GangZone},
+		{Name: "Menu", Funcs: api.Menu},
+		{Name: "Object", Funcs: api.Object},
+		{Name: "PlayerObject", Funcs: api.PlayerObject},
+		{Name: "Pickup", Funcs: api.Pickup},
+		{Name: "All", Funcs: api.All},
+		{Name: "Recording", Funcs: api.Recording},
+		{Name: "TextDraw", Funcs: api.TextDraw},
+		{Name: "PlayerTextDraw", Funcs: api.PlayerTextDraw},
+		{Name: "TextLabel", Funcs: api.TextLabel},
+		{Name: "PlayerTextLabel", Funcs: api.PlayerTextLabel},
+		{Name: "Vehicle", Funcs: api.Vehicle},
+	})
+	if err != nil {
+		return fmt.Errorf("failed to execute template file: %w", err)
 	}
 
 	return nil
-}
-
-func genSrcFile(headerPath string) error {
-	contents, err := os.ReadFile(headerPath)
-	if err != nil {
-		return err
-	}
-
-	matches := funcPrototypeRe.FindAllStringSubmatch(string(contents), -1)
-
-	funcs := make([]string, 0, len(matches))
-
-	for _, match := range matches {
-		retType := match[1]
-		name := match[2]
-		args := match[3]
-
-		funcs = append(funcs, newFunc(retType, name, args, "    "))
-	}
-
-	header := filepath.Base(headerPath)
-	headerName := strings.TrimSuffix(header, filepath.Ext(header))
-
-	src := fmt.Sprintf(srcTpl, header, strings.Join(funcs, "\n\n"))
-
-	// srcFile, _ := os.Create("test.cpp")
-	srcFile, _ := os.Create(fmt.Sprintf("%s.cpp", headerName))
-	srcFile.WriteString(src)
-
-	return nil
-}
-
-func newFunc(retType, name, args, indent string) string {
-	callArgs := []string{
-		fmt.Sprintf(`"%s"`, name),
-	}
-
-	if args != "" {
-		callArgs = append(callArgs, removeArgTypes(args)...)
-	}
-
-	return fmt.Sprintf(
-		funcTpl,
-		indent,
-		retType,
-		name,
-		args,
-		indent, indent,
-		retType,
-		strings.Join(callArgs, ", "),
-		indent,
-	)
-}
-
-func removeArgTypes(rawArgs string) []string {
-	args := strings.Split(rawArgs, ",")
-	result := make([]string, 0, len(args))
-
-	for _, arg := range args {
-		argWords := strings.Fields(strings.TrimSpace(arg))
-		argName := argWords[len(argWords)-1]
-
-		result = append(result, argName)
-	}
-
-	return result
 }

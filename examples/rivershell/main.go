@@ -402,7 +402,7 @@ func onPlayerStateChange(e *omp.PlayerStateChangeEvent) bool {
 			char.SetColor(ColorObjective)
 			char.ShowGameText("~w~Take the ~y~boat ~w~back to the ~r~spawn!", 3*time.Second, 5)
 
-			cp := char.DefaultCheckpoint()
+			cp := char.Checkpoint()
 			cp.SetPosition(omp.Vector3{X: 2135.7368, Y: -179.8811, Z: -0.5323})
 			cp.SetRadius(10.0)
 			cp.Enable()
@@ -413,7 +413,7 @@ func onPlayerStateChange(e *omp.PlayerStateChangeEvent) bool {
 			char.SetColor(ColorObjective)
 			char.ShowGameText("~w~Take the ~y~boat ~w~back to the ~r~spawn!", 3*time.Second, 5)
 
-			cp := char.DefaultCheckpoint()
+			cp := char.Checkpoint()
 			cp.SetPosition(omp.Vector3{X: 2329.4226, Y: 532.7426, Z: 0.5862})
 			cp.SetRadius(10.0)
 			cp.Enable()
@@ -424,11 +424,11 @@ func onPlayerStateChange(e *omp.PlayerStateChangeEvent) bool {
 		if *char == objectiveGreenChar {
 			objectiveGreenChar = Character{}
 			char.SetColorFromTeam()
-			char.DefaultCheckpoint().Disable()
+			char.Checkpoint().Disable()
 		} else if *char == objectiveBlueChar {
 			objectiveBlueChar = Character{}
 			char.SetColorFromTeam()
-			char.DefaultCheckpoint().Disable()
+			char.Checkpoint().Disable()
 		}
 	}
 
