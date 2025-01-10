@@ -143,7 +143,8 @@ const (
 	EventTypePlayerStreamOut EventType = "playerStreamOut"
 
 	// Player text events
-	EventTypePlayerText EventType = "playerText"
+	EventTypePlayerText        EventType = "playerText"
+	EventTypePlayerCommandText EventType = "playerCommandText"
 
 	// Player shot events
 	EventTypePlayerShotMissed       EventType = "playerShotMissed"
@@ -444,6 +445,13 @@ type PlayerStreamOutEvent struct {
 type PlayerTextEvent struct {
 	Player  *Player
 	Message string
+}
+
+type PlayerCommandTextEvent struct {
+	Sender   *Player
+	Name     string
+	Args     []string
+	RawValue string
 }
 
 // Player shot events

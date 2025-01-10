@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -55,219 +56,196 @@ func init() {
 		return nil
 	})
 
-	omp.Commands.Add("rcontest", func(cmd *omp.Command) {
-		fmt.Println(cmd)
+	omp.ListenFunc(omp.EventTypePlayerCommandText, func(ctx context.Context, e omp.Event) error {
+		ep := e.Payload().(*omp.PlayerCommandTextEvent)
 
-		omp.SendRCONCommand("weather 20")
-	})
+		switch ep.Name {
+		case "rcontest":
+			fmt.Println(ep)
 
-	omp.Commands.Add("msgdlg", func(cmd *omp.Command) {
-		dialog := omp.NewMessageDialog("Message Dialog", "Message", "Ok", "Cancel")
+			omp.SendRCONCommand("weather 20")
+		case "msgdlg":
+			dialog := omp.NewMessageDialog("Message Dialog", "Message", "Ok", "Cancel")
 
-		// dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
-		// 	e.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
-		// 	return true
-		// })
+			// dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
+			// 	e.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
+			// 	return true
+			// })
 
-		dialog.ShowFor(cmd.Sender)
-	})
+			dialog.ShowFor(ep.Sender)
+		case "inputdlg":
+			dialog := omp.NewInputDialog("Input Dialog", "Enter something:", "Ok", "Cancel")
 
-	omp.Commands.Add("inputdlg", func(cmd *omp.Command) {
-		dialog := omp.NewInputDialog("Input Dialog", "Enter something:", "Ok", "Cancel")
+			// dialog.On(omp.EventTypeDialogResponse, func(e *omp.InputDialogResponseEvent) bool {
+			// 	if e.Response == omp.DialogResponseLeft {
+			// 		e.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", e.InputText), 0xFF0FFFFF)
+			// 	} else if e.Response == omp.DialogResponseRight {
+			// 		e.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", e.InputText), 0xFF0FFFFF)
+			// 	}
 
-		// dialog.On(omp.EventTypeDialogResponse, func(e *omp.InputDialogResponseEvent) bool {
-		// 	if e.Response == omp.DialogResponseLeft {
-		// 		e.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", e.InputText), 0xFF0FFFFF)
-		// 	} else if e.Response == omp.DialogResponseRight {
-		// 		e.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", e.InputText), 0xFF0FFFFF)
-		// 	}
+			// 	return true
+			// })
 
-		// 	return true
-		// })
+			dialog.ShowFor(ep.Sender)
+		case "listdlg":
+			dialog := omp.NewListDialog("List Dialog", "Ok", "Cancel")
 
-		dialog.ShowFor(cmd.Sender)
-	})
+			dialog.SetItems([]string{"Item 0", "Item 1", "Item 2"})
 
-	omp.Commands.Add("listdlg", func(cmd *omp.Command) {
-		dialog := omp.NewListDialog("List Dialog", "Ok", "Cancel")
+			dialog.Add("Item 3", "Item 4")
 
-		dialog.SetItems([]string{"Item 0", "Item 1", "Item 2"})
+			dialog.ShowFor(ep.Sender)
+		case "pwddlg":
+			dialog := omp.NewPasswordDialog("Password Dialog", "Enter password:", "Ok", "Cancel")
+			dialog.ShowFor(ep.Sender)
+		case "hidedlg":
+			time.AfterFunc(5*time.Second, func() {
+				dialog, err := ep.Sender.Dialog()
+				if err != nil {
+					ep.Sender.SendClientMessage("You have no active dialog", 0xFF00FFFF)
+					return
+				}
 
-		dialog.Add("Item 3", "Item 4")
+				ep.Sender.SendClientMessage("timer worked", 0xFF00FFFF)
+				dialog.HideFor(ep.Sender)
+			})
+		case "tablistdlg":
+			dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
 
-		dialog.ShowFor(cmd.Sender)
-	})
+			dialog.SetItems([]omp.TabListItem{
+				{"Deagle", "$5000", "100"},
+				{"Sawnoff", "$5000", "100"},
+				{"Pistol", "$1000", "50"},
+			})
 
-	omp.Commands.Add("pwddlg", func(cmd *omp.Command) {
-		dialog := omp.NewPasswordDialog("Password Dialog", "Enter password:", "Ok", "Cancel")
-		dialog.ShowFor(cmd.Sender)
-	})
+			dialog.Add(
+				omp.TabListItem{"M4", "$15000", "150"},
+				omp.TabListItem{"AK47", "$12000", "150"},
+			)
 
-	omp.Commands.Add("hidedlg", func(cmd *omp.Command) {
-		time.AfterFunc(5*time.Second, func() {
-			dialog, err := cmd.Sender.Dialog()
-			if err != nil {
-				cmd.Sender.SendClientMessage("You have no active dialog", 0xFF00FFFF)
-				return
+			// dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
+			// 	e.Player.SendClientMessage(fmt.Sprintf("Response: %d, itemno: %d, item: %+v", e.Response, e.ItemNumber, e.Item), 0xFFFF00FF)
+			// 	return true
+			// })
+
+			// dialog.On(omp.EventTypeDialogShow, func(e *omp.DialogShowEvent) bool {
+			// 	e.Player.SendClientMessage("Dialog shown", 0xFFFF00FF)
+			// 	return true
+			// })
+
+			// dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
+			// 	e.Player.SendClientMessage("Dialog hidden", 0xFFFF00FF)
+			// 	return true
+			// })
+
+			dialog.ShowFor(ep.Sender)
+		case "tablistheadersdlg":
+			dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
+
+			dialog.SetHeader(omp.TabListItem{"Weapon", "Price", "Ammo"})
+
+			dialog.Add(omp.TabListItem{"Deagle", "$5000", "100"})
+			dialog.Add(omp.TabListItem{"Sawnoff", "$5000", "100"})
+			dialog.Add(omp.TabListItem{"Pistol", "$1000", "50"})
+
+			dialog.ShowFor(ep.Sender)
+
+			// dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
+			// 	e.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
+
+			// 	return true
+			// })
+		case "getpos":
+			ep.Sender.SendClientMessage(fmt.Sprintf("Your position is %+v", ep.Sender.Position()), 0xFFFFFFFF)
+		case "createveh":
+			if len(ep.Args) != 1 {
+				ep.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
+				return errors.New("invalid command syntax")
 			}
 
-			cmd.Sender.SendClientMessage("timer worked", 0xFF00FFFF)
-			dialog.HideFor(cmd.Sender)
-		})
-	})
+			modelID, err := strconv.Atoi(ep.Args[0])
+			if err != nil {
+				ep.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
+				return errors.New("invalid command syntax")
+			}
 
-	omp.Commands.Add("tablistdlg", func(cmd *omp.Command) {
-		dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
+			omp.NewVehicle(omp.VehicleModel(modelID), ep.Sender.Position(), 0.0)
+		case "setname":
+			status := ep.Sender.SetName("кириллица")
+			ep.Sender.SendClientMessage(fmt.Sprintf("You changed %d your name to %s", status, ep.Sender.Name()), 0xFFFFFFFF)
+		case "doors":
+			plrVeh, err := ep.Sender.Vehicle()
+			if err != nil {
+				return errors.New("player is not in a vehicle")
+			}
 
-		dialog.SetItems([]omp.TabListItem{
-			{"Deagle", "$5000", "100"},
-			{"Sawnoff", "$5000", "100"},
-			{"Pistol", "$1000", "50"},
-		})
+			if plrVeh.AreDoorsLocked() {
+				plrVeh.UnlockDoors()
+				ep.Sender.SendClientMessage("Doors unlocked", 0xFFFFFFFF)
+			} else {
+				plrVeh.LockDoors()
+				ep.Sender.SendClientMessage("Doors locked", 0xFFFFFFFF)
+			}
+		case "hood":
+			plrVeh, err := ep.Sender.Vehicle()
+			if err != nil {
+				return errors.New("player is not in a vehicle")
+			}
 
-		dialog.Add(
-			omp.TabListItem{"M4", "$15000", "150"},
-			omp.TabListItem{"AK47", "$12000", "150"},
-		)
+			if plrVeh.IsHoodOpen() {
+				plrVeh.CloseHood()
+			} else {
+				plrVeh.OpenHood()
+			}
+		case "trunk":
+			plrVeh, err := ep.Sender.Vehicle()
+			if err != nil {
+				return errors.New("player is not in a vehicle")
+			}
 
-		// dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
-		// 	e.Player.SendClientMessage(fmt.Sprintf("Response: %d, itemno: %d, item: %+v", e.Response, e.ItemNumber, e.Item), 0xFFFF00FF)
-		// 	return true
-		// })
+			if plrVeh.IsTrunkOpen() {
+				plrVeh.CloseTrunk()
+			} else {
+				plrVeh.OpenTrunk()
+			}
+		case "lights":
+			plrVeh, err := ep.Sender.Vehicle()
+			if err != nil {
+				return errors.New("player is not in a vehicle")
+			}
 
-		// dialog.On(omp.EventTypeDialogShow, func(e *omp.DialogShowEvent) bool {
-		// 	e.Player.SendClientMessage("Dialog shown", 0xFFFF00FF)
-		// 	return true
-		// })
+			if plrVeh.AreLightsTurnedOn() {
+				plrVeh.TurnOffLights()
+			} else {
+				plrVeh.TurnOnLights()
+			}
+		case "engine":
+			plrVeh, err := ep.Sender.Vehicle()
+			if err != nil {
+				return errors.New("player is not in a vehicle")
+			}
 
-		// dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
-		// 	e.Player.SendClientMessage("Dialog hidden", 0xFFFF00FF)
-		// 	return true
-		// })
+			if plrVeh.IsEngineStarted() {
+				plrVeh.StopEngine()
+			} else {
+				plrVeh.StartEngine()
+			}
+		case "alarm":
+			plrVeh, err := ep.Sender.Vehicle()
+			if err != nil {
+				return errors.New("player is not in a vehicle")
+			}
 
-		dialog.ShowFor(cmd.Sender)
-	})
-
-	omp.Commands.Add("tablistheadersdlg", func(cmd *omp.Command) {
-		dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
-
-		dialog.SetHeader(omp.TabListItem{"Weapon", "Price", "Ammo"})
-
-		dialog.Add(omp.TabListItem{"Deagle", "$5000", "100"})
-		dialog.Add(omp.TabListItem{"Sawnoff", "$5000", "100"})
-		dialog.Add(omp.TabListItem{"Pistol", "$1000", "50"})
-
-		dialog.ShowFor(cmd.Sender)
-
-		// dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
-		// 	e.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
-
-		// 	return true
-		// })
-	})
-
-	omp.Commands.Add("getpos", func(cmd *omp.Command) {
-		cmd.Sender.SendClientMessage(fmt.Sprintf("Your position is %+v", cmd.Sender.Position()), 0xFFFFFFFF)
-	})
-
-	omp.Commands.Add("createveh", func(cmd *omp.Command) {
-		if len(cmd.Args) != 1 {
-			cmd.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
-			return
+			if plrVeh.IsAlarmTurnedOn() {
+				plrVeh.TurnOffAlarm()
+			} else {
+				plrVeh.TurnOnAlarm()
+			}
+		default:
+			return errors.New("unknown command")
 		}
 
-		modelID, err := strconv.Atoi(cmd.Args[0])
-		if err != nil {
-			cmd.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
-			return
-		}
-
-		omp.NewVehicle(omp.VehicleModel(modelID), cmd.Sender.Position(), 0.0)
-	})
-
-	omp.Commands.Add("setname", func(cmd *omp.Command) {
-		status := cmd.Sender.SetName("кириллица")
-		cmd.Sender.SendClientMessage(fmt.Sprintf("You changed %d your name to %s", status, cmd.Sender.Name()), 0xFFFFFFFF)
-	})
-
-	omp.Commands.Add("doors", func(cmd *omp.Command) {
-		plrVeh, err := cmd.Sender.Vehicle()
-		if err != nil {
-			return
-		}
-
-		if plrVeh.AreDoorsLocked() {
-			plrVeh.UnlockDoors()
-			cmd.Sender.SendClientMessage("Doors unlocked", 0xFFFFFFFF)
-		} else {
-			plrVeh.LockDoors()
-			cmd.Sender.SendClientMessage("Doors locked", 0xFFFFFFFF)
-		}
-	})
-
-	omp.Commands.Add("hood", func(cmd *omp.Command) {
-		plrVeh, err := cmd.Sender.Vehicle()
-		if err != nil {
-			return
-		}
-
-		if plrVeh.IsHoodOpen() {
-			plrVeh.CloseHood()
-		} else {
-			plrVeh.OpenHood()
-		}
-	})
-
-	omp.Commands.Add("trunk", func(cmd *omp.Command) {
-		plrVeh, err := cmd.Sender.Vehicle()
-		if err != nil {
-			return
-		}
-
-		if plrVeh.IsTrunkOpen() {
-			plrVeh.CloseTrunk()
-		} else {
-			plrVeh.OpenTrunk()
-		}
-	})
-
-	omp.Commands.Add("lights", func(cmd *omp.Command) {
-		plrVeh, err := cmd.Sender.Vehicle()
-		if err != nil {
-			return
-		}
-
-		if plrVeh.AreLightsTurnedOn() {
-			plrVeh.TurnOffLights()
-		} else {
-			plrVeh.TurnOnLights()
-		}
-	})
-
-	omp.Commands.Add("engine", func(cmd *omp.Command) {
-		plrVeh, err := cmd.Sender.Vehicle()
-		if err != nil {
-			return
-		}
-
-		if plrVeh.IsEngineStarted() {
-			plrVeh.StopEngine()
-		} else {
-			plrVeh.StartEngine()
-		}
-	})
-
-	omp.Commands.Add("alarm", func(cmd *omp.Command) {
-		plrVeh, err := cmd.Sender.Vehicle()
-		if err != nil {
-			return
-		}
-
-		if plrVeh.IsAlarmTurnedOn() {
-			plrVeh.TurnOffAlarm()
-		} else {
-			plrVeh.TurnOnAlarm()
-		}
+		return nil
 	})
 }
 

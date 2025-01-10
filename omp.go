@@ -35,7 +35,6 @@ type Color uint
 
 var DefaultEventListener = NewDispatcher()
 var eventListener Listener
-var Commands = newCommandManager()
 
 func EventListener() Listener {
 	if eventListener == nil {
@@ -722,25 +721,21 @@ func onPlayerText(player unsafe.Pointer, message *C.char) C.bool {
 func onPlayerCommandText(player unsafe.Pointer, message C.String) C.bool {
 	defer handlePanic()
 
-	rawCmd := C.GoStringN(message.buf, C.int(message.length))
+	rawVal := C.GoStringN(message.buf, C.int(message.length))
 
-	tmp := strings.Fields(rawCmd)
+	tmp := strings.Fields(rawVal)
 	name := strings.TrimPrefix(tmp[0], "/")
 	args := tmp[1:]
 
-	exists := Commands.Has(name)
-	if !exists {
-		return false
-	}
-
-	Commands.run(name, &Command{
+	evt := NewEvent(EventTypePlayerText, &PlayerCommandTextEvent{
 		Sender:   &Player{handle: player},
 		Name:     name,
 		Args:     args,
-		RawValue: rawCmd,
+		RawValue: rawVal,
 	})
+	err := EventListener().HandleEvent(context.Background(), evt)
 
-	return true
+	return err == nil
 }
 
 // Player shot events
