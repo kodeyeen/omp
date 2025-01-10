@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"context"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand/v2"
@@ -51,7 +53,7 @@ var lsSpawns = losSantosSpawns()
 var sfSpawns = sanFierroSpawns()
 var lvSpawns = lasVenturasSpawns()
 
-func onGameModeInit(e *omp.GameModeInitEvent) bool {
+func onGameModeInit(ctx context.Context, e omp.Event) error {
 	omp.SetGameModeText("Grand Larceny")
 	// omp.SetPlayerMarkerMode(omp.PlayerMarkerModeGlobal)
 	// omp.EnableNametags()
@@ -171,12 +173,14 @@ func onGameModeInit(e *omp.GameModeInitEvent) bool {
 
 	fmt.Printf("Total vehicles from files: %d\n", vehCnt)
 
-	return true
+	return nil
 }
 
-func onPlayerConnect(e *omp.PlayerConnectEvent) bool {
+func onPlayerConnect(ctx context.Context, e omp.Event) error {
+	ep := e.Payload().(*omp.PlayerConnectEvent)
+
 	char := &Character{
-		Player:             e.Player,
+		Player:             ep.Player,
 		citySelection:      -1,
 		hasCitySelected:    false,
 		lastCitySelectedAt: time.Now(),
@@ -187,14 +191,16 @@ func onPlayerConnect(e *omp.PlayerConnectEvent) bool {
 	char.ShowGameText("~w~Grand Larceny", 3*time.Second, 4)
 	char.SendClientMessage("Welcome to {88AA88}G{FFFFFF}rand {88AA88}L{FFFFFF}arceny", ColorWhite)
 
-	return true
+	return nil
 }
 
-func onPlayerSpawn(e *omp.PlayerSpawnEvent) bool {
-	char := chars[e.Player.ID()]
+func onPlayerSpawn(ctx context.Context, e omp.Event) error {
+	ep := e.Payload().(*omp.PlayerSpawnEvent)
+
+	char := chars[ep.Player.ID()]
 
 	if char.IsBot() {
-		return true
+		return nil
 	}
 
 	char.SetInterior(0)
@@ -221,19 +227,21 @@ func onPlayerSpawn(e *omp.PlayerSpawnEvent) bool {
 	char.GiveWeapon(omp.WeaponColt45, 100)
 	char.HideClock()
 
-	return true
+	return nil
 }
 
-func onPlayerRequestClass(e *omp.PlayerRequestClassEvent) bool {
-	char := chars[e.Player.ID()]
+func onPlayerRequestClass(ctx context.Context, e omp.Event) error {
+	ep := e.Payload().(*omp.PlayerRequestClassEvent)
+
+	char := chars[ep.Player.ID()]
 
 	if char.IsBot() {
-		return true
+		return nil
 	}
 
 	if char.hasCitySelected {
 		setupCharSelection(char)
-		return true
+		return nil
 	}
 
 	if char.State() != omp.PlayerStateSpectating {
@@ -242,42 +250,46 @@ func onPlayerRequestClass(e *omp.PlayerRequestClassEvent) bool {
 		char.citySelection = -1
 	}
 
-	return false
+	return errors.New("city is not selected")
 }
 
-func onPlayerUpdate(e *omp.PlayerUpdateEvent) bool {
-	char := chars[e.Player.ID()]
+func onPlayerUpdate(ctx context.Context, e omp.Event) error {
+	ep := e.Payload().(*omp.PlayerUpdateEvent)
+
+	char := chars[ep.Player.ID()]
 
 	if char.IsBot() {
-		return true
+		return nil
 	}
 
 	if !char.hasCitySelected && char.State() == omp.PlayerStateSpectating {
 		handleCitySelection(char)
-		return true
+		return nil
 	}
 
 	if char.ArmedWeapon() == omp.WeaponMinigun {
 		char.Kick()
-		return false
+		return errors.New("minigun is not allowed")
 	}
 
-	return true
+	return nil
 }
 
-func onPlayerDeath(e *omp.PlayerDeathEvent) bool {
-	char := chars[e.Player.ID()]
+func onPlayerDeath(ctx context.Context, e omp.Event) error {
+	ep := e.Payload().(*omp.PlayerDeathEvent)
+
+	char := chars[ep.Player.ID()]
 
 	char.hasCitySelected = false
 
 	var killer *Character
-	if e.Killer != nil {
-		killer = chars[e.Killer.ID()]
+	if ep.Killer != nil {
+		killer = chars[ep.Killer.ID()]
 	}
 
 	if killer == nil {
 		char.ResetMoney()
-		return true
+		return nil
 	}
 
 	if char.Money() > 0 {
@@ -285,7 +297,7 @@ func onPlayerDeath(e *omp.PlayerDeathEvent) bool {
 		char.ResetMoney()
 	}
 
-	return true
+	return nil
 }
 
 func NewCityNameTextdraw(cityName string) (*omp.Textdraw, error) {
@@ -492,12 +504,12 @@ func setupCharSelection(char *Character) {
 }
 
 func init() {
-	omp.Events.Listen(omp.EventTypeGameModeInit, onGameModeInit)
-	omp.Events.Listen(omp.EventTypePlayerConnect, onPlayerConnect)
-	omp.Events.Listen(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	omp.Events.Listen(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	omp.Events.Listen(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	omp.Events.Listen(omp.EventTypePlayerDeath, onPlayerDeath)
+	omp.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
+	omp.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
+	omp.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
+	omp.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
+	omp.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
+	omp.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
 }
 
 func main() {}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"time"
@@ -11,23 +12,24 @@ import (
 // GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o test.dll
 
 func init() {
-	omp.Events.Listen(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
+	omp.ListenFunc(omp.EventTypeGameModeInit, func(ctx context.Context, e omp.Event) error {
 		omp.Println("GAME MODE INIT 2")
 
-		return true
+		return nil
 	})
 }
 
 func init() {
-	omp.Events.Listen(omp.EventTypeGameModeInit, func(e *omp.GameModeInitEvent) bool {
+	omp.ListenFunc(omp.EventTypeGameModeInit, func(ctx context.Context, e omp.Event) error {
 		omp.Println("GAME MODE INIT")
 
 		omp.EnableManualEngineAndLights()
-		return true
+		return nil
 	})
 
-	omp.Events.Listen(omp.EventTypePlayerConnect, func(e *omp.PlayerConnectEvent) bool {
-		player := e.Player
+	omp.ListenFunc(omp.EventTypePlayerConnect, func(ctx context.Context, e omp.Event) error {
+		ep := e.Payload().(*omp.PlayerConnectEvent)
+		player := ep.Player
 
 		player.SendClientMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
 
@@ -35,20 +37,22 @@ func init() {
 
 		omp.NewPickup(1273, 1, 0, omp.Vector3{X: 3.9905, Y: 7.0804, Z: 3.1096})
 
-		return true
+		return nil
 	})
 
-	omp.Events.Listen(omp.EventTypePlayerSpawn, func(e *omp.PlayerSpawnEvent) bool {
-		player := e.Player
+	omp.ListenFunc(omp.EventTypePlayerSpawn, func(ctx context.Context, e omp.Event) error {
+		ep := e.Payload().(*omp.PlayerSpawnEvent)
+		player := ep.Player
 
 		player.GiveWeapon(omp.WeaponDeagle, 100)
 
-		return true
+		return nil
 	})
 
-	omp.Events.Listen(omp.EventTypeConsoleText, func(e *omp.ConsoleTextEvent) bool {
-		fmt.Println("onConsoleText", e.Command, e.Parameters)
-		return false
+	omp.ListenFunc(omp.EventTypeConsoleText, func(ctx context.Context, e omp.Event) error {
+		ep := e.Payload().(*omp.ConsoleTextEvent)
+		fmt.Println("onConsoleText", ep.Command, ep.Parameters)
+		return nil
 	})
 
 	omp.Commands.Add("rcontest", func(cmd *omp.Command) {
@@ -60,10 +64,10 @@ func init() {
 	omp.Commands.Add("msgdlg", func(cmd *omp.Command) {
 		dialog := omp.NewMessageDialog("Message Dialog", "Message", "Ok", "Cancel")
 
-		dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
-			e.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
-			return true
-		})
+		// dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
+		// 	e.Player.SendClientMessage("Dialog is hiding", 0x00FFFFFF)
+		// 	return true
+		// })
 
 		dialog.ShowFor(cmd.Sender)
 	})
@@ -71,15 +75,15 @@ func init() {
 	omp.Commands.Add("inputdlg", func(cmd *omp.Command) {
 		dialog := omp.NewInputDialog("Input Dialog", "Enter something:", "Ok", "Cancel")
 
-		dialog.On(omp.EventTypeDialogResponse, func(e *omp.InputDialogResponseEvent) bool {
-			if e.Response == omp.DialogResponseLeft {
-				e.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", e.InputText), 0xFF0FFFFF)
-			} else if e.Response == omp.DialogResponseRight {
-				e.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", e.InputText), 0xFF0FFFFF)
-			}
+		// dialog.On(omp.EventTypeDialogResponse, func(e *omp.InputDialogResponseEvent) bool {
+		// 	if e.Response == omp.DialogResponseLeft {
+		// 		e.Player.SendClientMessage(fmt.Sprintf("Left button. Your input is %s", e.InputText), 0xFF0FFFFF)
+		// 	} else if e.Response == omp.DialogResponseRight {
+		// 		e.Player.SendClientMessage(fmt.Sprintf("Right button. Your input is %s", e.InputText), 0xFF0FFFFF)
+		// 	}
 
-			return true
-		})
+		// 	return true
+		// })
 
 		dialog.ShowFor(cmd.Sender)
 	})
@@ -126,20 +130,20 @@ func init() {
 			omp.TabListItem{"AK47", "$12000", "150"},
 		)
 
-		dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
-			e.Player.SendClientMessage(fmt.Sprintf("Response: %d, itemno: %d, item: %+v", e.Response, e.ItemNumber, e.Item), 0xFFFF00FF)
-			return true
-		})
+		// dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
+		// 	e.Player.SendClientMessage(fmt.Sprintf("Response: %d, itemno: %d, item: %+v", e.Response, e.ItemNumber, e.Item), 0xFFFF00FF)
+		// 	return true
+		// })
 
-		dialog.On(omp.EventTypeDialogShow, func(e *omp.DialogShowEvent) bool {
-			e.Player.SendClientMessage("Dialog shown", 0xFFFF00FF)
-			return true
-		})
+		// dialog.On(omp.EventTypeDialogShow, func(e *omp.DialogShowEvent) bool {
+		// 	e.Player.SendClientMessage("Dialog shown", 0xFFFF00FF)
+		// 	return true
+		// })
 
-		dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
-			e.Player.SendClientMessage("Dialog hidden", 0xFFFF00FF)
-			return true
-		})
+		// dialog.On(omp.EventTypeDialogHide, func(e *omp.DialogHideEvent) bool {
+		// 	e.Player.SendClientMessage("Dialog hidden", 0xFFFF00FF)
+		// 	return true
+		// })
 
 		dialog.ShowFor(cmd.Sender)
 	})
@@ -155,11 +159,11 @@ func init() {
 
 		dialog.ShowFor(cmd.Sender)
 
-		dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
-			e.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
+		// dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
+		// 	e.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
 
-			return true
-		})
+		// 	return true
+		// })
 	})
 
 	omp.Commands.Add("getpos", func(cmd *omp.Command) {
