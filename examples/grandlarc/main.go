@@ -53,6 +53,17 @@ var lsSpawns = losSantosSpawns()
 var sfSpawns = sanFierroSpawns()
 var lvSpawns = lasVenturasSpawns()
 
+func init() {
+	omp.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
+	omp.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
+	omp.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
+	omp.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
+	omp.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
+	omp.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
+}
+
+func main() {}
+
 func onGameModeInit(ctx context.Context, e omp.Event) error {
 	omp.SetGameModeText("Grand Larceny")
 	// omp.SetPlayerMarkerMode(omp.PlayerMarkerModeGlobal)
@@ -502,14 +513,3 @@ func setupCharSelection(char *Character) {
 		char.SetCameraLookAt(omp.Vector3{X: 349.0453, Y: 193.2271, Z: 1014.1797}, omp.PlayerCameraCutTypeCut)
 	}
 }
-
-func init() {
-	omp.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
-	omp.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
-	omp.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	omp.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	omp.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	omp.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
-}
-
-func main() {}
