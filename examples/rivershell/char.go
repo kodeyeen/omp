@@ -8,15 +8,15 @@ import (
 
 type Character struct {
 	*omp.Player
-	AreBuildingRemoved bool
-	SpectateState      SpectateState
-	LastDiedAt         time.Time
-	LastResuppliedAt   time.Time
-	LastKiller         *Character
+	AreBuildingsRemoved bool
+	SpectateState       SpectateState
+	LastDiedAt          time.Time
+	LastResuppliedAt    time.Time
+	LastKiller          *Character
 }
 
 func (c *Character) RemoveNeededBuildings() {
-	if c.AreBuildingRemoved {
+	if c.AreBuildingsRemoved {
 		return
 	}
 
@@ -33,7 +33,7 @@ func (c *Character) RemoveNeededBuildings() {
 	c.RemoveDefaultObjects(935, 0.25, omp.Vector3{X: 2119.4922, Y: -73.6172, Z: 0.1250})
 	c.RemoveDefaultObjects(935, 0.25, omp.Vector3{X: 2117.8438, Y: -67.8359, Z: 0.1328})
 
-	c.AreBuildingRemoved = true
+	c.AreBuildingsRemoved = true
 }
 
 func (c *Character) SetupForClassSelection() {
