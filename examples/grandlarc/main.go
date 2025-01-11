@@ -176,7 +176,7 @@ func onGameModeInit(ctx context.Context, e omp.Event) error {
 
 	var vehCnt int
 	for _, vehFile := range vehFiles {
-		filename := filepath.Join("scriptfiles/vehicles", vehFile)
+		filename := filepath.Join("scriptfiles", "vehicles", vehFile)
 
 		cnt, err := LoadStaticVehiclesFromFile(filename)
 		if err != nil {
