@@ -60,8 +60,8 @@ func handlePanic() {
 	if r := recover(); r != nil {
 		stackTrace := strings.TrimSuffix(string(debug.Stack()), "\n")
 
-		Log(LogLevelError, fmt.Sprint(r))
-		Log(LogLevelError, stackTrace)
+		Log(LogLevelError, "%s", fmt.Sprint(r))
+		Log(LogLevelError, "%s", stackTrace)
 	}
 }
 
