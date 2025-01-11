@@ -10,9 +10,9 @@ import (
 const (
 	RespawnDelay = 20 * time.Second
 
-	ColorObjective omp.Color = 0xE2C063FF
-	ColorGreen     omp.Color = 0x77CC77FF
-	ColorBlue      omp.Color = 0x7777DDFF
+	ColorObjective = 0xE2C063FF
+	ColorGreen     = 0x77CC77FF
+	ColorBlue      = 0x7777DDFF
 )
 
 var (

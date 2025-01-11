@@ -31,8 +31,6 @@ type Vector2 struct {
 	X, Y float32
 }
 
-type Color uint
-
 var DefaultDispatcher = NewDispatcher()
 var eventListener Listener
 
@@ -554,8 +552,8 @@ func onPlayerAttachedObjectEdited(player unsafe.Pointer, index int, saved bool, 
 				Y: float32(data.scale.y),
 				Z: float32(data.scale.z),
 			},
-			Color1: Color(data.colour1),
-			Color2: Color(data.colour2),
+			Color1: uint(data.colour1),
+			Color2: uint(data.colour2),
 		},
 	})
 	err := EventListener().HandleEvent(context.Background(), evt)

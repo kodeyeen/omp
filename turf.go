@@ -46,11 +46,11 @@ func (t *Turf) IsFlashingFor(plr *Player) bool {
 	return C.turf_isFlashingForPlayer(t.handle, plr.handle) != 0
 }
 
-func (t *Turf) ShowFor(plr *Player, clr Color) {
+func (t *Turf) ShowFor(plr *Player, clr uint) {
 	C.turf_showForPlayer(t.handle, plr.handle, C.uint(clr))
 }
 
-func (t *Turf) ShowForAll(clr Color) {
+func (t *Turf) ShowForAll(clr uint) {
 	C.turf_showForAll(t.handle, C.uint(clr))
 }
 
@@ -62,11 +62,11 @@ func (t *Turf) HideForAll() {
 	C.turf_hideForAll(t.handle)
 }
 
-func (t *Turf) FlashFor(plr *Player, clr Color) {
+func (t *Turf) FlashFor(plr *Player, clr uint) {
 	C.turf_flashForPlayer(t.handle, plr.handle, C.uint(clr))
 }
 
-func (t *Turf) FlashForAll(clr Color) {
+func (t *Turf) FlashForAll(clr uint) {
 	C.turf_flashForAll(t.handle, C.uint(clr))
 }
 
@@ -101,12 +101,12 @@ func (t *Turf) IsPlayerInside(plr *Player) bool {
 	return C.turf_isPlayerInside(t.handle, plr.handle) != 0
 }
 
-func (t *Turf) FlashingColorFor(plr *Player) Color {
-	return Color(C.turf_getFlashingColourForPlayer(t.handle, plr.handle))
+func (t *Turf) FlashingColorFor(plr *Player) uint {
+	return uint(C.turf_getFlashingColourForPlayer(t.handle, plr.handle))
 }
 
-func (t *Turf) ColorFor(plr *Player) Color {
-	return Color(C.turf_getColourForPlayer(t.handle, plr.handle))
+func (t *Turf) ColorFor(plr *Player) uint {
+	return uint(C.turf_getColourForPlayer(t.handle, plr.handle))
 }
 
 type PlayerTurf struct {
@@ -152,7 +152,7 @@ func (t *PlayerTurf) IsFlashing() bool {
 	return C.turf_isFlashingForPlayer(t.handle, t.player.handle) != 0
 }
 
-func (t *PlayerTurf) Show(clr Color) {
+func (t *PlayerTurf) Show(clr uint) {
 	C.turf_showForPlayer(t.handle, t.player.handle, C.uint(clr))
 }
 
@@ -160,7 +160,7 @@ func (t *PlayerTurf) Hide() {
 	C.turf_hideForPlayer(t.handle, t.player.handle)
 }
 
-func (t *PlayerTurf) Flash(clr Color) {
+func (t *PlayerTurf) Flash(clr uint) {
 	C.turf_flashForPlayer(t.handle, t.player.handle, C.uint(clr))
 }
 
@@ -191,10 +191,10 @@ func (t *PlayerTurf) IsPlayerInside() bool {
 	return C.turf_isPlayerInside(t.handle, t.player.handle) != 0
 }
 
-func (t *PlayerTurf) FlashingColor() Color {
-	return Color(C.turf_getFlashingColourForPlayer(t.handle, t.player.handle))
+func (t *PlayerTurf) FlashingColor() uint {
+	return uint(C.turf_getFlashingColourForPlayer(t.handle, t.player.handle))
 }
 
-func (t *PlayerTurf) Color() Color {
-	return Color(C.turf_getColourForPlayer(t.handle, t.player.handle))
+func (t *PlayerTurf) Color() uint {
+	return uint(C.turf_getColourForPlayer(t.handle, t.player.handle))
 }

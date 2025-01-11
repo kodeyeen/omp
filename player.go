@@ -172,7 +172,7 @@ type PlayerAttachment struct {
 	ModelID            int
 	Bone               PlayerBone
 	Offset, Rot, Scale Vector3
-	Color1, Color2     Color
+	Color1, Color2     uint
 }
 
 type PlayerBone int
@@ -456,22 +456,22 @@ func (p *Player) DrunkLevel() int {
 }
 
 // SetColor sets the color of the player's nametag and marker (radar blip).
-func (p *Player) SetColor(color Color) {
+func (p *Player) SetColor(color uint) {
 	C.player_setColour(p.handle, C.uint(color))
 }
 
 // Color returns the color of the player's name and radar marker. Only works after SetColor.
-func (p *Player) Color() Color {
-	return Color(C.player_getColour(p.handle))
+func (p *Player) Color() uint {
+	return uint(C.player_getColour(p.handle))
 }
 
 // SetColorFor sets another player's color for this player
-func (p *Player) SetColorFor(other *Player, color Color) {
+func (p *Player) SetColorFor(other *Player, color uint) {
 	C.player_setOtherColour(p.handle, other.handle, C.uint(color))
 }
 
 // ColorFor returns another player's color for this player
-func (p *Player) ColorFor(other *Player) (Color, error) {
+func (p *Player) ColorFor(other *Player) (uint, error) {
 	var cColor C.uint
 	hasSpecificColor := C.player_getOtherColour(p.handle, other.handle, &cColor) != 0
 
@@ -479,7 +479,7 @@ func (p *Player) ColorFor(other *Player) (Color, error) {
 		return 0, errors.New("player has no specific color")
 	}
 
-	return Color(cColor), nil
+	return uint(cColor), nil
 }
 
 // Freeze freezes the player so that it cannot control their character.
@@ -602,7 +602,7 @@ func (p *Player) Money() int {
 
 // SetMapIcon places an icon/marker on the player's map.
 // Can be used to mark locations such as banks and hospitals to players.
-func (p *Player) SetMapIcon(ID int, _type int, color Color, style int, pos Vector3) {
+func (p *Player) SetMapIcon(ID int, _type int, color uint, style int, pos Vector3) {
 	C.player_setMapIcon(p.handle, C.int(ID), C.float(pos.X), C.float(pos.Y), C.float(pos.Z), C.int(_type), C.uint(color), C.int(style))
 }
 
@@ -804,7 +804,7 @@ func (p *Player) Skin() int {
 }
 
 // SetChatBubble creates a chat bubble above the player's name tag.
-func (p *Player) SetChatBubble(text string, color Color, drawDist float32, expire time.Duration) {
+func (p *Player) SetChatBubble(text string, color uint, drawDist float32, expire time.Duration) {
 	cText := newCString(text)
 	defer freeCString(cText)
 
@@ -813,7 +813,7 @@ func (p *Player) SetChatBubble(text string, color Color, drawDist float32, expir
 
 // SendClientMessage sends a message to the player with a chosen color in the chat.
 // The whole line in the chatbox will be in the set color unless color embedding is used.
-func (p *Player) SendClientMessage(msg string, color Color) {
+func (p *Player) SendClientMessage(msg string, color uint) {
 	cMsg := newCString(msg)
 	defer freeCString(cMsg)
 
@@ -1418,8 +1418,8 @@ func (p *Player) Attachment(slotIdx int) PlayerAttachment {
 			Y: float32(obj.scale.y),
 			Z: float32(obj.scale.z),
 		},
-		Color1: Color(obj.colour1),
-		Color2: Color(obj.colour2),
+		Color1: uint(obj.colour1),
+		Color2: uint(obj.colour2),
 	}
 }
 

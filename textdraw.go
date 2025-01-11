@@ -117,12 +117,12 @@ func (td *Textdraw) Alignment() TextDrawAlignment {
 	return TextDrawAlignment(C.textDraw_getAlignment(td.handle))
 }
 
-func (td *Textdraw) SetColor(color Color) {
+func (td *Textdraw) SetColor(color uint) {
 	C.textDraw_setColour(td.handle, C.uint(color))
 }
 
-func (td *Textdraw) Color() Color {
-	return Color(C.textDraw_getLetterColour(td.handle))
+func (td *Textdraw) Color() uint {
+	return uint(C.textDraw_getLetterColour(td.handle))
 }
 
 func (td *Textdraw) EnableBox() {
@@ -137,12 +137,12 @@ func (td *Textdraw) IsBoxEnabled() bool {
 	return C.textDraw_hasBox(td.handle) != 0
 }
 
-func (td *Textdraw) SetBoxColor(color Color) {
+func (td *Textdraw) SetBoxColor(color uint) {
 	C.textDraw_setBoxColour(td.handle, C.uint(color))
 }
 
-func (td *Textdraw) BoxColor() Color {
-	return Color(C.textDraw_getBoxColour(td.handle))
+func (td *Textdraw) BoxColor() uint {
+	return uint(C.textDraw_getBoxColour(td.handle))
 }
 
 func (td *Textdraw) SetShadow(shadow int) {
@@ -161,12 +161,12 @@ func (td *Textdraw) Outline() int {
 	return int(C.textDraw_getOutline(td.handle))
 }
 
-func (td *Textdraw) SetBackgroundColor(color Color) {
+func (td *Textdraw) SetBackgroundColor(color uint) {
 	C.textDraw_setBackgroundColour(td.handle, C.uint(color))
 }
 
-func (td *Textdraw) BackgroundColor() Color {
-	return Color(C.textDraw_getBackgroundColour(td.handle))
+func (td *Textdraw) BackgroundColor() uint {
+	return uint(C.textDraw_getBackgroundColour(td.handle))
 }
 
 func (td *Textdraw) SetStyle(style TextdrawStyle) {
@@ -357,12 +357,12 @@ func (td *PlayerTextdraw) Alignment() TextDrawAlignment {
 	return TextDrawAlignment(C.playerTextDraw_getAlignment(td.handle))
 }
 
-func (td *PlayerTextdraw) SetColor(color Color) {
+func (td *PlayerTextdraw) SetColor(color uint) {
 	C.playerTextDraw_setColour(td.handle, C.uint(color))
 }
 
-func (td *PlayerTextdraw) Color() Color {
-	return Color(C.playerTextDraw_getLetterColour(td.handle))
+func (td *PlayerTextdraw) Color() uint {
+	return uint(C.playerTextDraw_getLetterColour(td.handle))
 }
 
 func (td *PlayerTextdraw) EnableBox() {
@@ -377,12 +377,12 @@ func (td *PlayerTextdraw) IsBoxEnabled() bool {
 	return C.playerTextDraw_hasBox(td.handle) != 0
 }
 
-func (td *PlayerTextdraw) SetBoxColor(color Color) {
+func (td *PlayerTextdraw) SetBoxColor(color uint) {
 	C.playerTextDraw_setBoxColour(td.handle, C.uint(color))
 }
 
-func (td *PlayerTextdraw) BoxColor() Color {
-	return Color(C.playerTextDraw_getBoxColour(td.handle))
+func (td *PlayerTextdraw) BoxColor() uint {
+	return uint(C.playerTextDraw_getBoxColour(td.handle))
 }
 
 func (td *PlayerTextdraw) SetShadow(shadow int) {
@@ -401,12 +401,12 @@ func (td *PlayerTextdraw) Outline() int {
 	return int(C.playerTextDraw_getOutline(td.handle))
 }
 
-func (td *PlayerTextdraw) SetBackgroundColor(color Color) {
+func (td *PlayerTextdraw) SetBackgroundColor(color uint) {
 	C.playerTextDraw_setBackgroundColour(td.handle, C.uint(color))
 }
 
-func (td *PlayerTextdraw) BackgroundColor() Color {
-	return Color(C.playerTextDraw_getBackgroundColour(td.handle))
+func (td *PlayerTextdraw) BackgroundColor() uint {
+	return uint(C.playerTextDraw_getBackgroundColour(td.handle))
 }
 
 func (td *PlayerTextdraw) SetStyle(style TextdrawStyle) {

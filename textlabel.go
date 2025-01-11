@@ -21,7 +21,7 @@ type TextLabel struct {
 	handle unsafe.Pointer
 }
 
-func NewTextLabel(text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) (*TextLabel, error) {
+func NewTextLabel(text string, clr uint, pos Vector3, drawDist float32, vw int, los bool) (*TextLabel, error) {
 	cText := newCString(text)
 	defer freeCString(cText)
 
@@ -82,12 +82,12 @@ func (tl *TextLabel) Text() string {
 	return C.GoStringN(cTextStr.buf, C.int(cTextStr.length))
 }
 
-func (tl *TextLabel) SetColor(clr Color) {
+func (tl *TextLabel) SetColor(clr uint) {
 	C.textLabel_setColour(tl.handle, C.uint(clr))
 }
 
-func (tl *TextLabel) Color() Color {
-	return Color(C.textLabel_getColour(tl.handle))
+func (tl *TextLabel) Color() uint {
+	return uint(C.textLabel_getColour(tl.handle))
 }
 
 func (tl *TextLabel) SetDrawDistance(drawDist float32) {
@@ -157,7 +157,7 @@ type PlayerTextLabel struct {
 	player *Player
 }
 
-func NewPlayerTextLabel(plr *Player, text string, clr Color, pos Vector3, drawDist float32, vw int, los bool) (*PlayerTextLabel, error) {
+func NewPlayerTextLabel(plr *Player, text string, clr uint, pos Vector3, drawDist float32, vw int, los bool) (*PlayerTextLabel, error) {
 	cText := newCString(text)
 	defer freeCString(cText)
 
@@ -227,12 +227,12 @@ func (tl *PlayerTextLabel) Text() string {
 	return C.GoStringN(cTextStr.buf, C.int(cTextStr.length))
 }
 
-func (tl *PlayerTextLabel) SetColor(clr Color) {
+func (tl *PlayerTextLabel) SetColor(clr uint) {
 	C.playerTextLabel_setColour(tl.handle, C.uint(clr))
 }
 
-func (tl *PlayerTextLabel) Color() Color {
-	return Color(C.playerTextLabel_getColour(tl.handle))
+func (tl *PlayerTextLabel) Color() uint {
+	return uint(C.playerTextLabel_getColour(tl.handle))
 }
 
 func (tl *PlayerTextLabel) SetDrawDistance(drawDist float32) {

@@ -58,7 +58,7 @@ type ObjectMaterial struct {
 	ModelID     int
 	TextureLib  string
 	TextureName string
-	Color       Color
+	Color       uint
 }
 
 type ObjectMaterialText struct {
@@ -67,8 +67,8 @@ type ObjectMaterialText struct {
 	FontFace        string
 	FontSize        int
 	IsBold          bool
-	FontColor       Color
-	BackgroundColor Color
+	FontColor       uint
+	BackgroundColor uint
 	Alignment       int
 }
 
@@ -230,7 +230,7 @@ func (o *Object) Material(slotIdx int) (ObjectMaterial, error) {
 		ModelID:     int(data.model),
 		TextureLib:  C.GoStringN(data.textureLibrary.buf, C.int(data.textureLibrary.length)),
 		TextureName: C.GoStringN(data.textureName.buf, C.int(data.textureName.length)),
-		Color:       Color(data.colour),
+		Color:       uint(data.colour),
 	}
 
 	return material, nil
@@ -249,8 +249,8 @@ func (o *Object) MaterialText(slotIdx int) (ObjectMaterialText, error) {
 		FontFace:        C.GoStringN(data.fontFace.buf, C.int(data.fontFace.length)),
 		FontSize:        int(data.fontSize),
 		IsBold:          data.bold != 0,
-		FontColor:       Color(data.fontColour),
-		BackgroundColor: Color(data.backgroundColour),
+		FontColor:       uint(data.fontColour),
+		BackgroundColor: uint(data.backgroundColour),
 		Alignment:       int(data.alignment),
 	}
 
@@ -274,7 +274,7 @@ func (o *Object) SetMaterialText(
 	fontFace string,
 	fontSize int,
 	bold bool,
-	fontColor, bgColor Color,
+	fontColor, bgColor uint,
 	align ObjectMaterialTextAlign,
 ) {
 	cText := newCString(text)
@@ -478,7 +478,7 @@ func (o *PlayerObject) Material(slotIdx int) (ObjectMaterial, error) {
 		ModelID:     int(data.model),
 		TextureLib:  C.GoStringN(data.textureLibrary.buf, C.int(data.textureLibrary.length)),
 		TextureName: C.GoStringN(data.textureName.buf, C.int(data.textureName.length)),
-		Color:       Color(data.colour),
+		Color:       uint(data.colour),
 	}
 
 	return material, nil
@@ -497,8 +497,8 @@ func (o *PlayerObject) MaterialText(slotIdx int) (ObjectMaterialText, error) {
 		FontFace:        C.GoStringN(data.fontFace.buf, C.int(data.fontFace.length)),
 		FontSize:        int(data.fontSize),
 		IsBold:          data.bold != 0,
-		FontColor:       Color(data.fontColour),
-		BackgroundColor: Color(data.backgroundColour),
+		FontColor:       uint(data.fontColour),
+		BackgroundColor: uint(data.backgroundColour),
 		Alignment:       int(data.alignment),
 	}
 
@@ -522,7 +522,7 @@ func (o *PlayerObject) SetMaterialText(
 	fontFace string,
 	fontSize int,
 	bold bool,
-	fontColor, bgColor Color,
+	fontColor, bgColor uint,
 	align ObjectMaterialTextAlign,
 ) {
 	cText := newCString(text)

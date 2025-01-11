@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	ColorWhite omp.Color = 0xFFFFFFFF
+	ColorWhite = 0xFFFFFFFF
 )
 
 type City int
