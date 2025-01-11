@@ -33,12 +33,12 @@ type Vector2 struct {
 
 type Color uint
 
-var DefaultEventListener = NewDispatcher()
+var DefaultEventDispatcher = NewDispatcher()
 var eventListener Listener
 
 func EventListener() Listener {
 	if eventListener == nil {
-		eventListener = DefaultEventListener
+		eventListener = DefaultEventDispatcher
 	}
 
 	return eventListener
@@ -49,11 +49,11 @@ func SetEventListener(listener Listener) {
 }
 
 func Listen(_type EventType, listener Listener) {
-	DefaultEventListener.Listen(_type, listener)
+	DefaultEventDispatcher.Listen(_type, listener)
 }
 
 func ListenFunc(_type EventType, listener func(context.Context, Event) error) {
-	DefaultEventListener.ListenFunc(_type, listener)
+	DefaultEventDispatcher.ListenFunc(_type, listener)
 }
 
 func handlePanic() {
