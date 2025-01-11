@@ -54,12 +54,16 @@ var sfSpawns = sanFierroSpawns()
 var lvSpawns = lasVenturasSpawns()
 
 func init() {
-	omp.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
-	omp.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
-	omp.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	omp.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	omp.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	omp.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
+	dispr := omp.NewDispatcher()
+
+	dispr.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
+	dispr.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
+	dispr.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
+	dispr.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
+	dispr.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
+	dispr.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
+
+	omp.SetEventListener(dispr)
 }
 
 func main() {}

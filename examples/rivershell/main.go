@@ -25,16 +25,20 @@ var (
 )
 
 func init() {
-	omp.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
-	omp.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
-	omp.ListenFunc(omp.EventTypePlayerDisconnect, onPlayerDisconnect)
-	omp.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	omp.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	omp.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
-	omp.ListenFunc(omp.EventTypePlayerEnterCheckpoint, onPlayerEnterCheckpoint)
-	omp.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	omp.ListenFunc(omp.EventTypePlayerStateChange, onPlayerStateChange)
-	omp.ListenFunc(omp.EventTypeVehicleStreamIn, onVehicleStreamIn)
+	dispr := omp.NewDispatcher()
+
+	dispr.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
+	dispr.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
+	dispr.ListenFunc(omp.EventTypePlayerDisconnect, onPlayerDisconnect)
+	dispr.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
+	dispr.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
+	dispr.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
+	dispr.ListenFunc(omp.EventTypePlayerEnterCheckpoint, onPlayerEnterCheckpoint)
+	dispr.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
+	dispr.ListenFunc(omp.EventTypePlayerStateChange, onPlayerStateChange)
+	dispr.ListenFunc(omp.EventTypeVehicleStreamIn, onVehicleStreamIn)
+
+	omp.SetEventListener(dispr)
 }
 
 func main() {}
