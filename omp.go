@@ -725,7 +725,7 @@ func onPlayerCommandText(player unsafe.Pointer, message C.String) C.bool {
 	name := strings.TrimPrefix(tmp[0], "/")
 	args := tmp[1:]
 
-	evt := NewEvent(EventTypePlayerText, &PlayerCommandTextEvent{
+	evt := NewEvent(EventTypePlayerCommandText, &PlayerCommandTextEvent{
 		Sender:   &Player{handle: player},
 		Name:     name,
 		Args:     args,
