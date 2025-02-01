@@ -68,15 +68,15 @@ On Linux:
 GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o build/gamemode.so
 ```
 
-If you're using Visual Studio Code and seeing error messages during development, this is because of your GOARCH and CGO_ENABLED env variable values.
+If you're using `Visual Studio Code` and seeing error messages during development, this is because of your `GOARCH` and `CGO_ENABLED` env variable values.
 You can check them by typing:
 
 ```shell
 go env
 ```
 
-If GOARCH value is something different than 386 and CGO_ENABLED is 0 this is the cause of those error messages.
-You can set them permanently to be 386 and 1 respectively by typing:
+If `GOARCH` value is something different than `386` and `CGO_ENABLED` is `0` this is the cause of those error messages.
+You can set them permanently to be `386` and `1` respectively by typing:
 
 ```shell
 go env -w GOARCH=386
@@ -85,6 +85,19 @@ go env -w GOARCH=386
 ```shell
 go env -w CGO_ENABLED=1
 ```
+
+Or you could create a `.vscode/settings.json` file with the following contents:
+
+```json
+{
+    "go.toolsEnvVars": {
+        "GOARCH": "386",
+        "CGO_ENABLED": "1"
+    }
+}
+```
+
+Now you don't need to set these variables every time you open your project.
 
 ## Credits
 
