@@ -1,5 +1,5 @@
 # omp
-omp is a Go package that allows you to write open.mp gamemodes.
+omp is a Go package that allows you to write [open.mp](https://www.open.mp/) gamemodes.
 
 ## Installation
 
