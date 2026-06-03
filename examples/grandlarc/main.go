@@ -53,22 +53,31 @@ var lsSpawns = losSantosSpawns()
 var sfSpawns = sanFierroSpawns()
 var lvSpawns = lasVenturasSpawns()
 
+type LoggingEventEmitter struct {
+	omp.EventEmitter
+}
+
+func (em *LoggingEventEmitter) Emit(ctx context.Context, e any) error {
+	omp.Log(omp.LogLevelMessage, "wow %T", e)
+	return em.EventEmitter.Emit(ctx, e)
+}
+
 func init() {
-	dispr := omp.NewDispatcher()
+	omp.SetEventEmitter(&LoggingEventEmitter{
+		EventEmitter: omp.BaseEventEmitter(),
+	})
 
-	dispr.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
-	dispr.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
-	dispr.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	dispr.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	dispr.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	dispr.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
-
-	omp.SetEventListener(dispr)
+	omp.On(onGameModeInit)
+	omp.On(onPlayerConnect)
+	omp.On(onPlayerSpawn)
+	omp.On(onPlayerRequestClass)
+	omp.On(onPlayerUpdate)
+	omp.On(onPlayerDeath)
 }
 
 func main() {}
 
-func onGameModeInit(ctx context.Context, e omp.Event) error {
+func onGameModeInit(ctx context.Context, _ *omp.GameModeInitEvent) error {
 	omp.SetGameModeText("Grand Larceny")
 	// omp.SetPlayerMarkerMode(omp.PlayerMarkerModeGlobal)
 	// omp.EnableNametags()
@@ -191,11 +200,9 @@ func onGameModeInit(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerConnect(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerConnectEvent)
-
+func onPlayerConnect(ctx context.Context, e *omp.PlayerConnectEvent) error {
 	char := &Character{
-		Player:             ep.Player,
+		Player:             e.Player,
 		citySelection:      -1,
 		hasCitySelected:    false,
 		lastCitySelectedAt: time.Now(),
@@ -209,10 +216,8 @@ func onPlayerConnect(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerSpawn(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerSpawnEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerSpawn(ctx context.Context, e *omp.PlayerSpawnEvent) error {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return nil
@@ -225,13 +230,14 @@ func onPlayerSpawn(ctx context.Context, e omp.Event) error {
 
 	var randSpawn Spawn
 
-	if char.citySelection == CityLosSantos {
+	switch char.citySelection {
+	case CityLosSantos:
 		randN := rand.IntN(len(lsSpawns))
 		randSpawn = lsSpawns[randN]
-	} else if char.citySelection == CitySanFierro {
+	case CitySanFierro:
 		randN := rand.IntN(len(sfSpawns))
 		randSpawn = sfSpawns[randN]
-	} else if char.citySelection == CityLasVenturas {
+	case CityLasVenturas:
 		randN := rand.IntN(len(lvSpawns))
 		randSpawn = lvSpawns[randN]
 	}
@@ -245,10 +251,8 @@ func onPlayerSpawn(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerRequestClass(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerRequestClassEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerRequestClass(ctx context.Context, e *omp.PlayerRequestClassEvent) error {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return nil
@@ -268,10 +272,8 @@ func onPlayerRequestClass(ctx context.Context, e omp.Event) error {
 	return errors.New("city is not selected")
 }
 
-func onPlayerUpdate(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerUpdateEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerUpdate(ctx context.Context, e *omp.PlayerUpdateEvent) error {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return nil
@@ -290,16 +292,14 @@ func onPlayerUpdate(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerDeath(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerDeathEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerDeath(ctx context.Context, e *omp.PlayerDeathEvent) error {
+	char := chars[e.Player.ID()]
 
 	char.hasCitySelected = false
 
 	var killer *Character
-	if ep.Killer != nil {
-		killer = chars[ep.Killer.ID()]
+	if e.Killer != nil {
+		killer = chars[e.Killer.ID()]
 	}
 
 	if killer == nil {
@@ -472,21 +472,22 @@ func setupSelectedCity(char *Character) {
 
 	char.SetInterior(0)
 
-	if char.citySelection == CityLosSantos {
+	switch char.citySelection {
+	case CityLosSantos:
 		char.SetCameraPosition(omp.Vector3{X: 1630.6136, Y: -2286.0298, Z: 110.0})
 		char.SetCameraLookAt(omp.Vector3{X: 1887.6034, Y: -1682.1442, Z: 47.6167}, omp.PlayerCameraCutTypeCut)
 
 		lsTd.ShowFor(char.Player)
 		sfTd.HideFor(char.Player)
 		lvTd.HideFor(char.Player)
-	} else if char.citySelection == CitySanFierro {
+	case CitySanFierro:
 		char.SetCameraPosition(omp.Vector3{X: -1300.8754, Y: 68.0546, Z: 129.4823})
 		char.SetCameraLookAt(omp.Vector3{X: -1817.9412, Y: 769.3878, Z: 132.6589}, omp.PlayerCameraCutTypeCut)
 
 		lsTd.HideFor(char.Player)
 		sfTd.ShowFor(char.Player)
 		lvTd.HideFor(char.Player)
-	} else if char.citySelection == CityLasVenturas {
+	case CityLasVenturas:
 		char.SetCameraPosition(omp.Vector3{X: 1310.6155, Y: 1675.9182, Z: 110.7390})
 		char.SetCameraLookAt(omp.Vector3{X: 2285.2944, Y: 1919.3756, Z: 68.2275}, omp.PlayerCameraCutTypeCut)
 
@@ -497,19 +498,20 @@ func setupSelectedCity(char *Character) {
 }
 
 func setupCharSelection(char *Character) {
-	if char.citySelection == CityLosSantos {
+	switch char.citySelection {
+	case CityLosSantos:
 		char.SetInterior(11)
 		char.SetPosition(omp.Vector3{X: 508.7362, Y: -87.4335, Z: 998.9609})
 		char.SetFacingAngle(0.0)
 		char.SetCameraPosition(omp.Vector3{X: 508.7362, Y: -83.4335, Z: 998.9609})
 		char.SetCameraLookAt(omp.Vector3{X: 508.7362, Y: -87.4335, Z: 998.9609}, omp.PlayerCameraCutTypeCut)
-	} else if char.citySelection == CitySanFierro {
+	case CitySanFierro:
 		char.SetInterior(3)
 		char.SetPosition(omp.Vector3{X: -2673.8381, Y: 1399.7424, Z: 918.3516})
 		char.SetFacingAngle(181.0)
 		char.SetCameraPosition(omp.Vector3{X: -2673.2776, Y: 1394.3859, Z: 918.3516})
 		char.SetCameraLookAt(omp.Vector3{X: -2673.8381, Y: 1399.7424, Z: 918.3516}, omp.PlayerCameraCutTypeCut)
-	} else if char.citySelection == CityLasVenturas {
+	case CityLasVenturas:
 		char.SetInterior(3)
 		char.SetPosition(omp.Vector3{X: 349.0453, Y: 193.2271, Z: 1014.1797})
 		char.SetFacingAngle(286.25)

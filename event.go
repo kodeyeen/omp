@@ -72,131 +72,13 @@ type UnoccupiedVehicleUpdate struct {
 	Velocity Vector3
 }
 
-const (
-	EventTypeGameModeInit EventType = "gameModeInit"
-	EventTypeGameModeExit EventType = "gameModeExit"
+// Game mode events
 
-	// Actor events
-	EventTypePlayerGiveDamageActor EventType = "playerGiveDamageActor"
-	EventTypeActorStreamOut        EventType = "actorStreamOut"
-	EventTypeActorStreamIn         EventType = "actorStreamIn"
+type GameModeInitEvent struct {
+}
 
-	// Checkpoint events
-	EventTypePlayerEnterCheckpoint     EventType = "playerEnterCheckpoint"
-	EventTypePlayerLeaveCheckpoint     EventType = "playerLeaveCheckpoint"
-	EventTypePlayerEnterRaceCheckpoint EventType = "playerEnterRaceCheckpoint"
-	EventTypePlayerLeaveRaceCheckpoint EventType = "playerLeaveRaceCheckpoint"
-
-	// Class events
-	EventTypePlayerRequestClass EventType = "playerRequestClass"
-
-	// Console events
-	EventTypeConsoleText      EventType = "consoleText"
-	EventTypeRconLoginAttempt EventType = "rconLoginAttempt"
-
-	// Custom model events
-	EventTypePlayerFinishedDownloading EventType = "playerFinishedDownloading"
-	EventTypePlayerRequestDownload     EventType = "playerRequestDownload"
-
-	// Player dialog event
-	EventTypeDialogResponse EventType = "dialogResponse"
-	EventTypeDialogShow     EventType = "dialogShow"
-	EventTypeDialogHide     EventType = "dialogHide"
-
-	// Turf events
-	EventTypePlayerEnterTurf       EventType = "playerEnterTurf"
-	EventTypePlayerEnterPlayerTurf EventType = "playerEnterPlayerTurf"
-	EventTypePlayerLeaveTurf       EventType = "playerLeaveTurf"
-	EventTypePlayerLeavePlayerTurf EventType = "playerLeavePlayerTurf"
-	EventTypePlayerClickTurf       EventType = "playerClickTurf"
-	EventTypePlayerClickPlayerTurf EventType = "playerClickPlayerTurf"
-
-	// Menu events
-	EventTypePlayerSelectedMenuRow EventType = "playerSelectedMenuRow"
-	EventTypePlayerExitedMenu      EventType = "playerExitedMenu"
-
-	// Object events
-	EventTypeObjectMoved            EventType = "objectMoved"
-	EventTypePlayerObjectMoved      EventType = "playerObjectMoved"
-	EventTypeObjectSelected         EventType = "objectSelected"
-	EventTypePlayerObjectSelected   EventType = "playerObjectSelected"
-	EventTypeObjectEdited           EventType = "objectEdited"
-	EventTypePlayerObjectEdited     EventType = "playerObjectEdited"
-	EventTypePlayerAttachmentEdited EventType = "playerAttachmentEdited"
-
-	// Pickup events
-	EventTypePlayerPickUpPickup       EventType = "playerPickUpPickup"
-	EventTypePlayerPickUpPlayerPickup EventType = "playerPickUpPlayerPickup"
-
-	// Player spawn events
-	EventTypePlayerRequestSpawn EventType = "playerRequestSpawn"
-	EventTypePlayerSpawn        EventType = "playerSpawn"
-
-	// Player connect events
-	EventTypeIncomingConnection EventType = "incomingConnection"
-	EventTypePlayerConnect      EventType = "playerConnect"
-	EventTypePlayerDisconnect   EventType = "playerDisconnect"
-	EventTypePlayerClientInit   EventType = "playerClientInit"
-
-	// Player stream events
-	EventTypePlayerStreamIn  EventType = "playerStreamIn"
-	EventTypePlayerStreamOut EventType = "playerStreamOut"
-
-	// Player text events
-	EventTypePlayerText        EventType = "playerText"
-	EventTypePlayerCommandText EventType = "playerCommandText"
-
-	// Player shot events
-	EventTypePlayerShotMissed       EventType = "playerShotMissed"
-	EventTypePlayerShotPlayer       EventType = "playerShotPlayer"
-	EventTypePlayerShotVehicle      EventType = "playerShotVehicle"
-	EventTypePlayerShotObject       EventType = "playerShotObject"
-	EventTypePlayerShotPlayerObject EventType = "playerShotPlayerObject"
-
-	// Player change events
-	EventTypePlayerScoreChange    EventType = "playerScoreChange"
-	EventTypePlayerNameChange     EventType = "playerNameChange"
-	EventTypePlayerInteriorChange EventType = "playerInteriorChange"
-	EventTypePlayerStateChange    EventType = "playerStateChange"
-	EventTypePlayerKeyStateChange EventType = "playerKeyStateChange"
-
-	// Player damage events
-	EventTypePlayerDeath      EventType = "playerDeath"
-	EventTypePlayerTakeDamage EventType = "playerTakeDamage"
-	EventTypePlayerGiveDamage EventType = "playerGiveDamage"
-
-	// Player click events
-	EventTypePlayerClickMap    EventType = "playerClickMap"
-	EventTypePlayerClickPlayer EventType = "playerClickPlayer"
-
-	// Player check events
-	EventTypeClientCheckResponse EventType = "clientCheckResponse"
-
-	// Player update event
-	EventTypePlayerUpdate EventType = "playerUpdate"
-
-	// TextDraw events
-	EventTypePlayerClickTextDraw                 EventType = "playerClickTextDraw"
-	EventTypePlayerClickPlayerTextDraw           EventType = "playerClickPlayerTextDraw"
-	EventTypePlayerCancelTextDrawSelection       EventType = "playerCancelTextDrawSelection"
-	EventTypePlayerCancelPlayerTextDrawSelection EventType = "playerCancelPlayerTextDrawSelection"
-
-	// Vehicle events
-	EventTypeVehicleStreamIn           EventType = "vehicleStreamIn"
-	EventTypeVehicleStreamOut          EventType = "vehicleStreamOut"
-	EventTypeVehicleDeath              EventType = "vehicleDeath"
-	EventTypePlayerEnterVehicle        EventType = "playerEnterVehicle"
-	EventTypePlayerExitVehicle         EventType = "playerExitVehicle"
-	EventTypeVehicleDamageStatusUpdate EventType = "vehicleDamageStatusUpdate"
-	EventTypeVehiclePaintJob           EventType = "vehiclePaintJob"
-	EventTypeVehicleMod                EventType = "vehicleMod"
-	EventTypeVehicleRespray            EventType = "vehicleRespray"
-	EventTypeEnterExitModShop          EventType = "enterExitModShop"
-	EventTypeVehicleSpawn              EventType = "vehicleSpawn"
-	EventTypeUnoccupiedVehicleUpdate   EventType = "unoccupiedVehicleUpdate"
-	EventTypeTrailerUpdate             EventType = "trailerUpdate"
-	EventTypeVehicleSirenStateChange   EventType = "vehicleSirenStateChange"
-)
+type GameModeExitEvent struct {
+}
 
 // Actor events
 
@@ -378,7 +260,7 @@ type PlayerObjectEditedEvent struct {
 	Rotation Vector3
 }
 
-type PlayerAttachmentEdited struct {
+type PlayerAttachmentEditedEvent struct {
 	Player     *Player
 	Index      int
 	Saved      bool

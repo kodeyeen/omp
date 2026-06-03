@@ -13,7 +13,7 @@ import (
 // GOARCH=386 CGO_ENABLED=1 go build -buildmode=c-shared -o test.dll
 
 func init() {
-	omp.ListenFunc(omp.EventTypeGameModeInit, func(ctx context.Context, e omp.Event) error {
+	omp.On(func(ctx context.Context, _ *omp.GameModeInitEvent) error {
 		omp.Println("GAME MODE INIT 2")
 
 		return nil
@@ -21,18 +21,15 @@ func init() {
 }
 
 func init() {
-	omp.ListenFunc(omp.EventTypeGameModeInit, func(ctx context.Context, e omp.Event) error {
+	omp.On(func(ctx context.Context, _ *omp.GameModeInitEvent) error {
 		omp.Println("GAME MODE INIT")
 
 		omp.EnableManualEngineAndLights()
 		return nil
 	})
 
-	omp.ListenFunc(omp.EventTypePlayerConnect, func(ctx context.Context, e omp.Event) error {
-		ep := e.Payload().(*omp.PlayerConnectEvent)
-		player := ep.Player
-
-		player.SendClientMessage(fmt.Sprintf("Hello, %s", player.Name()), 0x00FF0000)
+	omp.On(func(ctx context.Context, e *omp.PlayerConnectEvent) error {
+		e.Player.SendClientMessage(fmt.Sprintf("Hello, %s", e.Player.Name()), 0x00FF0000)
 
 		omp.NewVehicle(omp.VehicleModelAlpha, omp.Vector3{X: 2161.8389, Y: -1143.7473, Z: 24.6501}, 266.9070)
 
@@ -41,27 +38,21 @@ func init() {
 		return nil
 	})
 
-	omp.ListenFunc(omp.EventTypePlayerSpawn, func(ctx context.Context, e omp.Event) error {
-		ep := e.Payload().(*omp.PlayerSpawnEvent)
-		player := ep.Player
-
-		player.GiveWeapon(omp.WeaponDeagle, 100)
+	omp.On(func(ctx context.Context, e *omp.PlayerSpawnEvent) error {
+		e.Player.GiveWeapon(omp.WeaponDeagle, 100)
 
 		return nil
 	})
 
-	omp.ListenFunc(omp.EventTypeConsoleText, func(ctx context.Context, e omp.Event) error {
-		ep := e.Payload().(*omp.ConsoleTextEvent)
-		fmt.Println("onConsoleText", ep.Command, ep.Parameters)
+	omp.On(func(ctx context.Context, e *omp.ConsoleTextEvent) error {
+		fmt.Println("onConsoleText", e.Command, e.Parameters)
 		return nil
 	})
 
-	omp.ListenFunc(omp.EventTypePlayerCommandText, func(ctx context.Context, e omp.Event) error {
-		ep := e.Payload().(*omp.PlayerCommandTextEvent)
-
-		switch ep.Name {
+	omp.On(func(ctx context.Context, e *omp.PlayerCommandTextEvent) error {
+		switch e.Name {
 		case "rcontest":
-			fmt.Println(ep)
+			fmt.Println(e)
 
 			omp.SendRCONCommand("weather 20")
 		case "msgdlg":
@@ -72,7 +63,7 @@ func init() {
 			// 	return true
 			// })
 
-			dialog.ShowFor(ep.Sender)
+			dialog.ShowFor(e.Sender)
 		case "inputdlg":
 			dialog := omp.NewInputDialog("Input Dialog", "Enter something:", "Ok", "Cancel")
 
@@ -86,7 +77,7 @@ func init() {
 			// 	return true
 			// })
 
-			dialog.ShowFor(ep.Sender)
+			dialog.ShowFor(e.Sender)
 		case "listdlg":
 			dialog := omp.NewListDialog("List Dialog", "Ok", "Cancel")
 
@@ -94,20 +85,20 @@ func init() {
 
 			dialog.Add("Item 3", "Item 4")
 
-			dialog.ShowFor(ep.Sender)
+			dialog.ShowFor(e.Sender)
 		case "pwddlg":
 			dialog := omp.NewPasswordDialog("Password Dialog", "Enter password:", "Ok", "Cancel")
-			dialog.ShowFor(ep.Sender)
+			dialog.ShowFor(e.Sender)
 		case "hidedlg":
 			time.AfterFunc(5*time.Second, func() {
-				dialog, err := ep.Sender.Dialog()
+				dialog, err := e.Sender.Dialog()
 				if err != nil {
-					ep.Sender.SendClientMessage("You have no active dialog", 0xFF00FFFF)
+					e.Sender.SendClientMessage("You have no active dialog", 0xFF00FFFF)
 					return
 				}
 
-				ep.Sender.SendClientMessage("timer worked", 0xFF00FFFF)
-				dialog.HideFor(ep.Sender)
+				e.Sender.SendClientMessage("timer worked", 0xFF00FFFF)
+				dialog.HideFor(e.Sender)
 			})
 		case "tablistdlg":
 			dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
@@ -138,7 +129,7 @@ func init() {
 			// 	return true
 			// })
 
-			dialog.ShowFor(ep.Sender)
+			dialog.ShowFor(e.Sender)
 		case "tablistheadersdlg":
 			dialog := omp.NewTabListDialog("Weapons Dialog", "Ok", "Cancel")
 
@@ -148,7 +139,7 @@ func init() {
 			dialog.Add(omp.TabListItem{"Sawnoff", "$5000", "100"})
 			dialog.Add(omp.TabListItem{"Pistol", "$1000", "50"})
 
-			dialog.ShowFor(ep.Sender)
+			dialog.ShowFor(e.Sender)
 
 			// dialog.On(omp.EventTypeDialogResponse, func(e *omp.TabListDialogResponseEvent) bool {
 			// 	e.Player.SendClientMessage("Dialog response triggered", 0xFFFF00FF)
@@ -156,38 +147,38 @@ func init() {
 			// 	return true
 			// })
 		case "getpos":
-			ep.Sender.SendClientMessage(fmt.Sprintf("Your position is %+v", ep.Sender.Position()), 0xFFFFFFFF)
+			e.Sender.SendClientMessage(fmt.Sprintf("Your position is %+v", e.Sender.Position()), 0xFFFFFFFF)
 		case "createveh":
-			if len(ep.Args) != 1 {
-				ep.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
+			if len(e.Args) != 1 {
+				e.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
 				return errors.New("invalid command syntax")
 			}
 
-			modelID, err := strconv.Atoi(ep.Args[0])
+			modelID, err := strconv.Atoi(e.Args[0])
 			if err != nil {
-				ep.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
+				e.Sender.SendClientMessage("Invalid command syntax", 0xFFFFFFFF)
 				return errors.New("invalid command syntax")
 			}
 
-			omp.NewVehicle(omp.VehicleModel(modelID), ep.Sender.Position(), 0.0)
+			omp.NewVehicle(omp.VehicleModel(modelID), e.Sender.Position(), 0.0)
 		case "setname":
-			status := ep.Sender.SetName("кириллица")
-			ep.Sender.SendClientMessage(fmt.Sprintf("You changed %d your name to %s", status, ep.Sender.Name()), 0xFFFFFFFF)
+			status := e.Sender.SetName("кириллица")
+			e.Sender.SendClientMessage(fmt.Sprintf("You changed %d your name to %s", status, e.Sender.Name()), 0xFFFFFFFF)
 		case "doors":
-			plrVeh, err := ep.Sender.Vehicle()
+			plrVeh, err := e.Sender.Vehicle()
 			if err != nil {
 				return errors.New("player is not in a vehicle")
 			}
 
 			if plrVeh.AreDoorsLocked() {
 				plrVeh.UnlockDoors()
-				ep.Sender.SendClientMessage("Doors unlocked", 0xFFFFFFFF)
+				e.Sender.SendClientMessage("Doors unlocked", 0xFFFFFFFF)
 			} else {
 				plrVeh.LockDoors()
-				ep.Sender.SendClientMessage("Doors locked", 0xFFFFFFFF)
+				e.Sender.SendClientMessage("Doors locked", 0xFFFFFFFF)
 			}
 		case "hood":
-			plrVeh, err := ep.Sender.Vehicle()
+			plrVeh, err := e.Sender.Vehicle()
 			if err != nil {
 				return errors.New("player is not in a vehicle")
 			}
@@ -198,7 +189,7 @@ func init() {
 				plrVeh.OpenHood()
 			}
 		case "trunk":
-			plrVeh, err := ep.Sender.Vehicle()
+			plrVeh, err := e.Sender.Vehicle()
 			if err != nil {
 				return errors.New("player is not in a vehicle")
 			}
@@ -209,7 +200,7 @@ func init() {
 				plrVeh.OpenTrunk()
 			}
 		case "lights":
-			plrVeh, err := ep.Sender.Vehicle()
+			plrVeh, err := e.Sender.Vehicle()
 			if err != nil {
 				return errors.New("player is not in a vehicle")
 			}
@@ -220,7 +211,7 @@ func init() {
 				plrVeh.TurnOnLights()
 			}
 		case "engine":
-			plrVeh, err := ep.Sender.Vehicle()
+			plrVeh, err := e.Sender.Vehicle()
 			if err != nil {
 				return errors.New("player is not in a vehicle")
 			}
@@ -231,7 +222,7 @@ func init() {
 				plrVeh.StartEngine()
 			}
 		case "alarm":
-			plrVeh, err := ep.Sender.Vehicle()
+			plrVeh, err := e.Sender.Vehicle()
 			if err != nil {
 				return errors.New("player is not in a vehicle")
 			}

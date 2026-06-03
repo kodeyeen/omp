@@ -25,25 +25,21 @@ var (
 )
 
 func init() {
-	dispr := omp.NewDispatcher()
-
-	dispr.ListenFunc(omp.EventTypeGameModeInit, onGameModeInit)
-	dispr.ListenFunc(omp.EventTypePlayerConnect, onPlayerConnect)
-	dispr.ListenFunc(omp.EventTypePlayerDisconnect, onPlayerDisconnect)
-	dispr.ListenFunc(omp.EventTypePlayerRequestClass, onPlayerRequestClass)
-	dispr.ListenFunc(omp.EventTypePlayerSpawn, onPlayerSpawn)
-	dispr.ListenFunc(omp.EventTypePlayerDeath, onPlayerDeath)
-	dispr.ListenFunc(omp.EventTypePlayerEnterCheckpoint, onPlayerEnterCheckpoint)
-	dispr.ListenFunc(omp.EventTypePlayerUpdate, onPlayerUpdate)
-	dispr.ListenFunc(omp.EventTypePlayerStateChange, onPlayerStateChange)
-	dispr.ListenFunc(omp.EventTypeVehicleStreamIn, onVehicleStreamIn)
-
-	omp.SetEventListener(dispr)
+	omp.On(onGameModeInit)
+	omp.On(onPlayerConnect)
+	omp.On(onPlayerDisconnect)
+	omp.On(onPlayerRequestClass)
+	omp.On(onPlayerSpawn)
+	omp.On(onPlayerDeath)
+	omp.On(onPlayerEnterCheckpoint)
+	omp.On(onPlayerUpdate)
+	omp.On(onPlayerStateChange)
+	omp.On(onVehicleStreamIn)
 }
 
 func main() {}
 
-func onGameModeInit(ctx context.Context, e omp.Event) error {
+func onGameModeInit(ctx context.Context, _ *omp.GameModeInitEvent) error {
 	omp.SetGameModeText("Rivershell")
 
 	omp.SetPlayerMarkerMode(omp.PlayerMarkerModeOff)
@@ -202,11 +198,9 @@ func onGameModeInit(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerConnect(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerConnectEvent)
-
+func onPlayerConnect(ctx context.Context, e *omp.PlayerConnectEvent) error {
 	char := &Character{
-		Player: ep.Player,
+		Player: e.Player,
 	}
 
 	chars[char.ID()] = char
@@ -218,35 +212,29 @@ func onPlayerConnect(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerDisconnect(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerDisconnectEvent)
-	delete(chars, ep.Player.ID())
+func onPlayerDisconnect(ctx context.Context, e *omp.PlayerDisconnectEvent) error {
+	delete(chars, e.Player.ID())
 	return nil
 }
 
-func onPlayerRequestClass(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerRequestClassEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerRequestClass(ctx context.Context, e *omp.PlayerRequestClassEvent) error {
+	char := chars[e.Player.ID()]
 
 	char.SetupForClassSelection()
-	char.SetTeamFromClass(ep.Class)
+	char.SetTeamFromClass(e.Class)
 
-	clsID := ep.Class.ID()
-
-	if clsID == 0 || clsID == 1 {
+	switch e.Class.ID() {
+	case 0, 1:
 		char.ShowGameText("~g~GREEN ~w~TEAM", 1*time.Second, 5)
-	} else if clsID == 2 || clsID == 3 {
+	case 2, 3:
 		char.ShowGameText("~b~BLUE ~w~TEAM", 1*time.Second, 5)
 	}
 
 	return nil
 }
 
-func onPlayerSpawn(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerSpawnEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerSpawn(ctx context.Context, e *omp.PlayerSpawnEvent) error {
+	char := chars[e.Player.ID()]
 
 	if !char.LastDiedAt.IsZero() && time.Since(char.LastDiedAt) < RespawnDelay {
 		char.SendClientMessage("Waiting to respawn....", 0xFFAAEEEE)
@@ -284,14 +272,12 @@ func onPlayerSpawn(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerEnterCheckpoint(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerEnterCheckpointEvent)
-
+func onPlayerEnterCheckpoint(ctx context.Context, e *omp.PlayerEnterCheckpointEvent) error {
 	if isObjectiveReached {
 		return nil
 	}
 
-	char := chars[ep.Player.ID()]
+	char := chars[e.Player.ID()]
 
 	charVeh, err := char.Vehicle()
 	if err != nil {
@@ -331,24 +317,22 @@ func onPlayerEnterCheckpoint(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerDeath(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerDeathEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerDeath(ctx context.Context, e *omp.PlayerDeathEvent) error {
+	char := chars[e.Player.ID()]
 	var killer *Character
 
-	if ep.Killer == nil {
-		omp.SendDeathMessage(nil, char.Player, ep.Reason)
+	if e.Killer == nil {
+		omp.SendDeathMessage(nil, char.Player, e.Reason)
 	} else {
-		killer = chars[ep.Killer.ID()]
+		killer = chars[e.Killer.ID()]
 
 		if killer.Team() != char.Team() {
 			// Valid kill
-			omp.SendDeathMessage(killer.Player, char.Player, ep.Reason)
+			omp.SendDeathMessage(killer.Player, char.Player, e.Reason)
 			killer.SetScore(killer.Score() + 1)
 		} else {
 			// Team kill
-			omp.SendDeathMessage(killer.Player, char.Player, ep.Reason)
+			omp.SendDeathMessage(killer.Player, char.Player, e.Reason)
 		}
 	}
 
@@ -358,14 +342,13 @@ func onPlayerDeath(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onVehicleStreamIn(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.VehicleStreamInEvent)
-
+func onVehicleStreamIn(ctx context.Context, e *omp.VehicleStreamInEvent) error {
 	// As the vehicle streams in, player team dependant params are applied. They can't be
 	// applied to vehicles that don't exist in the player's world.
-	char := chars[ep.ForPlayer.ID()]
+	char := chars[e.ForPlayer.ID()]
 
-	if *ep.Vehicle == objectiveVehBlue {
+	switch *e.Vehicle {
+	case objectiveVehBlue:
 		if char.Team() == TeamGreen {
 			objectiveVehBlue.EnableObjectiveFor(char.Player)
 			objectiveVehBlue.LockDoorsFor(char.Player)
@@ -373,7 +356,7 @@ func onVehicleStreamIn(ctx context.Context, e omp.Event) error {
 			objectiveVehBlue.EnableObjectiveFor(char.Player)
 			objectiveVehBlue.UnlockDoorsFor(char.Player)
 		}
-	} else if *ep.Vehicle == objectiveVehGreen {
+	case objectiveVehGreen:
 		if char.Team() == TeamBlue {
 			objectiveVehGreen.EnableObjectiveFor(char.Player)
 			objectiveVehGreen.LockDoorsFor(char.Player)
@@ -386,10 +369,8 @@ func onVehicleStreamIn(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerUpdate(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerUpdateEvent)
-
-	char := chars[ep.Player.ID()]
+func onPlayerUpdate(ctx context.Context, e *omp.PlayerUpdateEvent) error {
+	char := chars[e.Player.ID()]
 
 	if char.IsBot() {
 		return nil
@@ -423,12 +404,11 @@ func onPlayerUpdate(ctx context.Context, e omp.Event) error {
 	return nil
 }
 
-func onPlayerStateChange(ctx context.Context, e omp.Event) error {
-	ep := e.Payload().(*omp.PlayerStateChangeEvent)
+func onPlayerStateChange(ctx context.Context, e *omp.PlayerStateChangeEvent) error {
+	char := chars[e.Player.ID()]
 
-	char := chars[ep.Player.ID()]
-
-	if ep.NewState == omp.PlayerStateDriver {
+	switch e.NewState {
+	case omp.PlayerStateDriver:
 		veh, err := char.Vehicle()
 		if err != nil {
 			return nil
@@ -457,12 +437,13 @@ func onPlayerStateChange(ctx context.Context, e omp.Event) error {
 
 			objectiveBlueChar = *char
 		}
-	} else if ep.NewState == omp.PlayerStateOnFoot {
-		if *char == objectiveGreenChar {
+	case omp.PlayerStateOnFoot:
+		switch *char {
+		case objectiveGreenChar:
 			objectiveGreenChar = Character{}
 			char.SetColorFromTeam()
 			char.DefaultCheckpoint().Disable()
-		} else if *char == objectiveBlueChar {
+		case objectiveBlueChar:
 			objectiveBlueChar = Character{}
 			char.SetColorFromTeam()
 			char.DefaultCheckpoint().Disable()
