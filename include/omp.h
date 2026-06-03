@@ -1,5 +1,5 @@
-#ifndef GOMP_H
-#define GOMP_H
+#ifndef OMP_H
+#define OMP_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -110,4 +110,4 @@ R call(const std::string& funcName, Args... args)
 }
 #endif
 
-#endif // GOMP_H
+#endif // OMP_H

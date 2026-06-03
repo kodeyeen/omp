@@ -3,6 +3,7 @@ package omp
 // #include "include/player.h"
 import "C"
 import (
+	"context"
 	"strings"
 )
 
@@ -25,13 +26,12 @@ type dialog interface {
 }
 
 type MessageDialog struct {
-	Events                        *Dispatcher
 	Title, Body, Button1, Button2 string
+	onResponse                    func(ctx context.Context, e *MessageDialogResponseEvent) error
 }
 
 func NewMessageDialog(title, body, button1, button2 string) *MessageDialog {
 	return &MessageDialog{
-		Events:  NewDispatcher(),
 		Title:   title,
 		Body:    body,
 		Button1: button1,
@@ -51,15 +51,18 @@ func (d *MessageDialog) HideFor(player *Player) {
 	player.hideDialog()
 }
 
+func (d *MessageDialog) OnResponse(f func(ctx context.Context, e *MessageDialogResponseEvent) error) {
+	d.onResponse = f
+}
+
 type InputDialog struct {
-	Events                        *Dispatcher
 	Title, Body, Button1, Button2 string
 	isPassword                    bool
+	onResponse                    func(ctx context.Context, e *InputDialogResponseEvent) error
 }
 
 func NewInputDialog(title, body, button1, button2 string) *InputDialog {
 	return &InputDialog{
-		Events:     NewDispatcher(),
 		Title:      title,
 		Body:       body,
 		Button1:    button1,
@@ -70,7 +73,6 @@ func NewInputDialog(title, body, button1, button2 string) *InputDialog {
 
 func NewPasswordDialog(title, body, button1, button2 string) *InputDialog {
 	return &InputDialog{
-		Events:     NewDispatcher(),
 		Title:      title,
 		Body:       body,
 		Button1:    button1,
@@ -96,15 +98,18 @@ func (d *InputDialog) HideFor(player *Player) {
 	player.hideDialog()
 }
 
+func (d *InputDialog) OnResponse(f func(ctx context.Context, e *InputDialogResponseEvent) error) {
+	d.onResponse = f
+}
+
 type ListDialog struct {
-	Events                  *Dispatcher
 	Title, Button1, Button2 string
 	items                   []string
+	onResponse              func(ctx context.Context, e *ListDialogResponseEvent) error
 }
 
 func NewListDialog(title, button1, button2 string) *ListDialog {
 	return &ListDialog{
-		Events:  NewDispatcher(),
 		Title:   title,
 		Button1: button1,
 		Button2: button2,
@@ -133,18 +138,21 @@ func (d *ListDialog) HideFor(player *Player) {
 	player.hideDialog()
 }
 
+func (d *ListDialog) OnResponse(f func(ctx context.Context, e *ListDialogResponseEvent) error) {
+	d.onResponse = f
+}
+
 type TabListItem []string
 
 type TabListDialog struct {
-	Events                  *Dispatcher
 	Title, Button1, Button2 string
 	header                  TabListItem
 	items                   []TabListItem
+	onResponse              func(ctx context.Context, e *TabListDialogResponseEvent) error
 }
 
 func NewTabListDialog(title, button1, button2 string) *TabListDialog {
 	return &TabListDialog{
-		Events:  NewDispatcher(),
 		Title:   title,
 		Button1: button1,
 		Button2: button2,
@@ -194,4 +202,8 @@ func (d *TabListDialog) HideFor(player *Player) {
 	delete(activeDialogs, player.ID())
 
 	player.hideDialog()
+}
+
+func (d *TabListDialog) OnResponse(f func(ctx context.Context, e *TabListDialogResponseEvent) error) {
+	d.onResponse = f
 }
