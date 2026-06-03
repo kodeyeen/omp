@@ -28,16 +28,17 @@ Note the i686. Otherwise it won't build.
 package main
 
 import (
+	"context"
+
 	"github.com/kodeyeen/omp"
 )
 
 // Gamemode entry point
 func init() {
 	// Listen to some predefined event
-	omp.ListenFunc(omp.EventTypePlayerConnect, func(ctx context.Context, e omp.Event) error {
-		ep := e.Payload().(*omp.PlayerConnectEvent)
+	omp.On(func(ctx context.Context, e *omp.PlayerConnectEvent) error {
 		// Send client message to the connected player
-		ep.Player.SendClientMessage("Hello, world!", 0xFFFF00FF)
+		e.Player.SendClientMessage("Hello, world!", 0xFFFF00FF)
 		return nil
 	})
 }
