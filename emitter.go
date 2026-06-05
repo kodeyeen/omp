@@ -18,7 +18,7 @@ type eventEmitter struct {
 	listeners map[reflect.Type][]listener
 }
 
-func newEventEmitter() *eventEmitter {
+func newEventEmitter() EventEmitter {
 	return &eventEmitter{
 		listeners: make(map[reflect.Type][]listener),
 	}
